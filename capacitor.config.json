@@ -1,0 +1,9 @@
+{
+  "appId": "com.ridex.venezuela",
+  "appName": "RideX Venezuela",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}
