@@ -1,0 +1,31 @@
+{
+  "name": "RideX Venezuela — Transporte y Mototaxis",
+  "short_name": "RideX",
+  "description": "Plataforma de transporte bajo demanda estilo Uber para Venezuela con Pago Móvil y Efectivo USD",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090D14",
+  "theme_color": "#090D14",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["travel", "navigation", "transportation"],
+  "lang": "es-VE"
+}
