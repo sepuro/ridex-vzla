@@ -5,6 +5,7 @@ import express from 'express';
 import { WebSocketServer } from 'ws';
 import { RideManager } from './rideManager.js';
 import { bcvService } from './bcvService.js';
+import { db } from './db/database.js';
 import { VEHICLE_TYPES } from '../shared/constants.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' });
 
-app.use(express.json());
+app.use(express.json({ limit: '15mb' }));
 
 // Servir archivos estáticos del frontend (dist o public)
 const distPath = path.resolve(__dirname, '../../dist');
@@ -29,38 +30,43 @@ bcvService.onRateChanged = (rateData) => {
   rideManager.broadcast('bcv:updated', rateData);
 };
 
-// Inicializar conductores de demostración para Caracas (uno para moto, uno para carro)
-rideManager.drivers.set('drv_demo_moto', {
-  driverId: 'drv_demo_moto',
-  clientId: null,
-  name: 'Alejandro Colmenares',
-  phone: '04127654321',
-  vehicleType: VEHICLE_TYPES.MOTO,
-  plate: 'AC881ZZ',
-  model: 'Empire Keeway Express 150',
-  color: 'Azul',
-  rating: 4.96,
-  totalRides: 312,
-  isOnline: true,
-  location: { lat: 10.4950, lng: -66.8810 },
-  activeRideId: null
-});
+// Cargar y sincronizar conductores registrados en la base de datos persistente
+for (const drv of db.getAllDrivers()) {
+  rideManager.drivers.set(drv.id, {
+    driverId: drv.id,
+    clientId: null,
+    name: drv.name,
+    phone: drv.phone,
+    vehicleType: drv.vehicle?.vehicleType || VEHICLE_TYPES.MOTO,
+    plate: drv.vehicle?.plate || 'AC881ZZ',
+    model: drv.vehicle?.model || 'Bera SBR 150',
+    color: drv.vehicle?.color || 'Rojo',
+    rating: drv.rating || 4.97,
+    totalRides: drv.totalRides || 0,
+    isOnline: true,
+    location: { lat: 10.4950, lng: -66.8810 },
+    activeRideId: null
+  });
+}
 
-rideManager.drivers.set('drv_demo_carro', {
-  driverId: 'drv_demo_carro',
-  clientId: null,
-  name: 'Franklin Rivas',
-  phone: '04141239876',
-  vehicleType: VEHICLE_TYPES.CARRO_STANDARD,
-  plate: 'AE430KK',
-  model: 'Chevrolet Optra',
-  color: 'Plata',
-  rating: 4.89,
-  totalRides: 540,
-  isOnline: true,
-  location: { lat: 10.4980, lng: -66.8600 },
-  activeRideId: null
-});
+// Inicializar conductor de demostración adicional para pruebas
+if (!rideManager.drivers.has('drv_demo_moto')) {
+  rideManager.drivers.set('drv_demo_moto', {
+    driverId: 'drv_demo_moto',
+    clientId: null,
+    name: 'Alejandro Colmenares',
+    phone: '04127654321',
+    vehicleType: VEHICLE_TYPES.MOTO,
+    plate: 'AC881ZZ',
+    model: 'Empire Keeway Express 150',
+    color: 'Azul',
+    rating: 4.96,
+    totalRides: 312,
+    isOnline: true,
+    location: { lat: 10.4950, lng: -66.8810 },
+    activeRideId: null
+  });
+}
 
 // --- API REST Endpoints ---
 
@@ -115,6 +121,131 @@ app.get('/api/drivers', (req, res) => {
   res.json(Array.from(rideManager.drivers.values()));
 });
 
+// --- Rutas de Autenticación y Registro de Usuarios ---
+
+app.post('/api/auth/register', (req, res) => {
+  try {
+    const { user, token } = db.createUser(req.body);
+
+    // Si se registra como conductor, integrarlo de inmediato al pool activo
+    if (user.role === 'driver') {
+      rideManager.drivers.set(user.id, {
+        driverId: user.id,
+        clientId: null,
+        name: user.name,
+        phone: user.phone,
+        vehicleType: user.vehicle?.vehicleType || VEHICLE_TYPES.MOTO,
+        plate: user.vehicle?.plate || 'AC881ZZ',
+        model: user.vehicle?.model || 'Bera SBR 150',
+        color: user.vehicle?.color || 'Rojo',
+        rating: user.rating || 5.0,
+        totalRides: user.totalRides || 0,
+        isOnline: true,
+        location: { lat: 10.4950, lng: -66.8810 },
+        activeRideId: null
+      });
+    }
+
+    res.status(201).json({ success: true, user, token });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/auth/login', (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+    const { user, token } = db.authenticateUser(identifier, password);
+
+    if (user.role === 'driver' && !rideManager.drivers.has(user.id)) {
+      rideManager.drivers.set(user.id, {
+        driverId: user.id,
+        clientId: null,
+        name: user.name,
+        phone: user.phone,
+        vehicleType: user.vehicle?.vehicleType || VEHICLE_TYPES.MOTO,
+        plate: user.vehicle?.plate || 'AC881ZZ',
+        model: user.vehicle?.model || 'Bera SBR 150',
+        color: user.vehicle?.color || 'Rojo',
+        rating: user.rating || 4.97,
+        totalRides: user.totalRides || 0,
+        isOnline: true,
+        location: { lat: 10.4950, lng: -66.8810 },
+        activeRideId: null
+      });
+    }
+
+    res.json({ success: true, user, token });
+  } catch (err) {
+    res.status(401).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/auth/me', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : req.query.token;
+  if (!token) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  const user = db.getUserByToken(token);
+  if (!user) {
+    return res.status(401).json({ error: 'Sesión no encontrada o expirada' });
+  }
+
+  res.json({ success: true, user });
+});
+
+app.put('/api/auth/profile', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : req.query.token;
+  const user = db.getUserByToken(token);
+  if (!user) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  try {
+    const updatedUser = db.updateUser(user.id, req.body);
+    if (updatedUser.role === 'driver') {
+      const driver = rideManager.drivers.get(user.id);
+      if (driver) {
+        driver.name = updatedUser.name;
+        driver.phone = updatedUser.phone;
+        if (updatedUser.vehicle) {
+          driver.model = updatedUser.vehicle.model;
+          driver.plate = updatedUser.vehicle.plate;
+          driver.color = updatedUser.vehicle.color;
+          driver.vehicleType = updatedUser.vehicle.vehicleType;
+        }
+      }
+    }
+    res.json({ success: true, user: updatedUser });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/auth/avatar', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : req.query.token;
+  const user = db.getUserByToken(token);
+  if (!user) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  const { avatar } = req.body;
+  if (!avatar) {
+    return res.status(400).json({ error: 'Avatar requerido' });
+  }
+
+  const updatedUser = db.updateAvatar(user.id, avatar);
+  res.json({ success: true, user: updatedUser });
+});
+
+app.get('/api/auth/users', (req, res) => {
+  res.json(db.getAllUsers());
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({
@@ -122,7 +253,8 @@ app.get('/api/health', (req, res) => {
     service: 'RideX Venezuela Backend',
     uptime: process.uptime(),
     activeConnections: rideManager.clients.size,
-    activeRides: rideManager.getActiveRides().length
+    activeRides: rideManager.getActiveRides().length,
+    registeredUsers: db.getAllUsers().length
   });
 });
 

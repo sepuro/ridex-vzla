@@ -24,6 +24,8 @@ import { ActivityView } from './components/ActivityView.jsx';
 import { WalletView } from './components/WalletView.jsx';
 import { ProfileView } from './components/ProfileView.jsx';
 import { ReceiptModal } from './components/ReceiptModal.jsx';
+import { AuthModal } from './components/AuthModal.jsx';
+import { EditProfileModal } from './components/EditProfileModal.jsx';
 import { useGeolocation } from './hooks/useGeolocation.js';
 import { useRideSocket } from './hooks/useRideSocket.js';
 import { calculateDistance, calculateFare } from './utils/pricing.js';
@@ -78,6 +80,31 @@ export default function App() {
   const [searchModalTarget, setSearchModalTarget] = useState('dropoff'); // 'pickup' | 'dropoff'
   const [receiptModalOpen, setReceiptModalOpen] = useState(false);
   const [selectedRideForReceipt, setSelectedRideForReceipt] = useState(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+
+  // --- Usuario Autenticado y Perfil ---
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ridex_user');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return {
+      id: 'usr_demo_mariana',
+      name: 'Mariana Silva',
+      phone: '0414-2345678',
+      email: 'mariana.silva@gmail.com',
+      nationalId: 'V-26.112.334',
+      role: 'passenger',
+      city: 'Caracas',
+      rating: 4.98,
+      totalRides: 42,
+      avatar: null,
+      vehicle: null
+    };
+  });
 
   // --- Estados de Ubicación y Ruteo ---
   const { coords: gpsCoords, requestLocation } = useGeolocation();
@@ -92,8 +119,8 @@ export default function App() {
 
   // --- Estados del Conductor ---
   const [isDriverOnline, setIsDriverOnline] = useState(true);
-  const [driverProfile, setDriverProfile] = useState({
-    driverId: 'drv_my_phone',
+  const [driverProfile, setDriverProfile] = useState(() => ({
+    driverId: 'drv_demo_carlos',
     name: 'Carlos Mendoza',
     phone: '0412-9876543',
     vehicleType: VEHICLE_TYPES.MOTO,
@@ -101,7 +128,7 @@ export default function App() {
     model: 'Bera SBR 150',
     color: 'Rojo',
     rating: 4.97
-  });
+  }));
   const [driverIncomingOffer, setDriverIncomingOffer] = useState(null);
 
   // Distancia real de calle o aproximada
@@ -226,12 +253,68 @@ export default function App() {
       .catch((err) => console.log('BCV init:', err.message));
   }, []);
 
+  const handleSuccessAuth = (user, token) => {
+    setCurrentUser(user);
+    setRole(user.role);
+    if (user.role === 'driver') {
+      setDriverProfile({
+        driverId: user.id,
+        name: user.name,
+        phone: user.phone,
+        vehicleType: user.vehicle?.vehicleType || VEHICLE_TYPES.MOTO,
+        plate: user.vehicle?.plate || 'AC881ZZ',
+        model: user.vehicle?.model || 'Bera SBR 150',
+        color: user.vehicle?.color || 'Rojo',
+        rating: user.rating || 5.0
+      });
+      sendEvent('client:init', {
+        role: 'driver',
+        meta: {
+          driverId: user.id,
+          name: user.name,
+          phone: user.phone,
+          vehicleType: user.vehicle?.vehicleType || VEHICLE_TYPES.MOTO,
+          plate: user.vehicle?.plate || 'AC881ZZ'
+        }
+      });
+    } else {
+      sendEvent('client:init', {
+        role: 'passenger',
+        meta: { name: user.name, phone: user.phone }
+      });
+    }
+    triggerHaptic(80);
+  };
+
+  const handleProfileUpdated = (updatedUser) => {
+    setCurrentUser(updatedUser);
+    if (updatedUser.role === 'driver') {
+      setDriverProfile((prev) => ({
+        ...prev,
+        name: updatedUser.name,
+        phone: updatedUser.phone,
+        model: updatedUser.vehicle?.model || prev.model,
+        plate: updatedUser.vehicle?.plate || prev.plate,
+        color: updatedUser.vehicle?.color || prev.color,
+        vehicleType: updatedUser.vehicle?.vehicleType || prev.vehicleType
+      }));
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('ridex_token');
+    localStorage.removeItem('ridex_user');
+    setCurrentUser(null);
+    setIsAuthModalOpen(true);
+    triggerHaptic(60);
+  };
+
   const handleToggleRole = () => {
     const nextRole = role === 'passenger' ? 'driver' : 'passenger';
     setRole(nextRole);
     sendEvent('client:init', {
       role: nextRole,
-      meta: nextRole === 'driver' ? driverProfile : { name: 'Pasajero Android' }
+      meta: nextRole === 'driver' ? driverProfile : { name: currentUser?.name || 'Pasajero Android' }
     });
     triggerHaptic(60);
   };
@@ -533,7 +616,10 @@ export default function App() {
           <ProfileView
             role={role}
             onToggleRole={handleToggleRole}
-            driverProfile={driverProfile}
+            currentUser={currentUser}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+            onOpenEditProfile={() => setIsEditProfileModalOpen(true)}
+            onLogout={handleLogout}
           />
         </div>
       )}
@@ -576,6 +662,20 @@ export default function App() {
         isOpen={receiptModalOpen}
         onClose={() => setReceiptModalOpen(false)}
         ride={selectedRideForReceipt}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccessAuth={handleSuccessAuth}
+        currentRole={role}
+      />
+
+      <EditProfileModal
+        isOpen={isEditProfileModalOpen}
+        onClose={() => setIsEditProfileModalOpen(false)}
+        currentUser={currentUser}
+        onProfileUpdated={handleProfileUpdated}
       />
     </div>
   );

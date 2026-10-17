@@ -1,0 +1,381 @@
+{
+  "users": {
+    "drv_demo_carlos": {
+      "id": "drv_demo_carlos",
+      "name": "Carlos Mendoza",
+      "email": "carlos.mendoza@gmail.com",
+      "phone": "0412-9876543",
+      "nationalId": "V-22987654",
+      "role": "driver",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%231A73E8\"/><circle cx=\"50\" cy=\"40\" r=\"20\" fill=\"%23FFFFFF\"/><path d=\"M20 85c0-16 13-28 30-28s30 12 30 28\" fill=\"%23FFFFFF\"/><circle cx=\"50\" cy=\"35\" r=\"10\" fill=\"%23090D14\"/><path d=\"M42 35h16v6h-16z\" fill=\"%23FBBC04\"/></svg>",
+      "rating": 4.97,
+      "totalRides": 184,
+      "salt": "3c1eb579746f03dd3a13602e6632e84f",
+      "passwordHash": "935a9f4932a3206a5db78c9d6fa125f465ec1e90bfb7559acc3a6bf9184dfafa3425a71df79006661d64cd7666f71e33e49f86ffe9295a4ba9fcad63170ef09e",
+      "createdAt": "2026-01-15T10:00:00.000Z",
+      "vehicle": {
+        "vehicleType": "moto",
+        "make": "Bera",
+        "model": "Bera SBR 150",
+        "plate": "AD712YZ",
+        "color": "Rojo",
+        "year": "2024",
+        "hasAc": false
+      },
+      "documents": {
+        "license": "Vigente (INTT Grado 2)",
+        "rcv": "Activo (Seguros Caracas)",
+        "medicalCert": "Aprobado (Vence 2028)"
+      },
+      "emergencyContact": {
+        "name": "Elena Mendoza (Hermana)",
+        "phone": "0414-1122334",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_demo_mariana": {
+      "id": "usr_demo_mariana",
+      "name": "Mariana Silva",
+      "email": "mariana.silva@gmail.com",
+      "phone": "0414-2345678",
+      "nationalId": "V-26112334",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%239333EA\"/><circle cx=\"50\" cy=\"38\" r=\"19\" fill=\"%23FED7AA\"/><path d=\"M31 38c0 14 38 14 38 0-4-12-14-18-19-18s-15 6-19 18z\" fill=\"%237C2D12\"/><path d=\"M22 86c0-15 12-26 28-26s28 11 28 26\" fill=\"%23EC4899\"/></svg>",
+      "rating": 4.98,
+      "totalRides": 42,
+      "salt": "ebdb7ef0e833c1f08105025cfa327996",
+      "passwordHash": "a327b866b84f80d1b477bf15387df4d6c9efcc83a543a12100e2b4f1a0a0eaa6cd16ea079b41737b749cb5372b6377acad46bd78d4f23e2dfac35e9d44055a8d",
+      "createdAt": "2026-02-01T14:30:00.000Z",
+      "vehicle": null,
+      "emergencyContact": {
+        "name": "Roberto Silva (Padre)",
+        "phone": "0424-9988776",
+        "relationship": "Padre"
+      }
+    },
+    "usr_7e53c43e": {
+      "id": "usr_7e53c43e",
+      "name": "José Gregorio Hernández",
+      "email": "jose.gregorio@gmail.com",
+      "phone": "0412-5554433",
+      "nationalId": "V-19888777",
+      "role": "passenger",
+      "city": "Valencia",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%230EA5E9\"/><circle cx=\"50\" cy=\"38\" r=\"19\" fill=\"%23FED7AA\"/><path d=\"M32 28c4-8 32-8 36 0-3-4-12-6-18-6s-15 2-18 6z\" fill=\"%231E293B\"/><path d=\"M22 86c0-15 12-26 28-26s28 11 28 26\" fill=\"%2338BDF8\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "bf730433d2a7a669b678e5c81632d219",
+      "passwordHash": "3779c526233650e65af1d87a7e08364008ad58bcba68ce16e9f40456eb2e7fc287f3bd6a2a0818049ddb3479386ec2344adb822aa08ac067244a42b66c3cb398",
+      "createdAt": "2026-10-17T17:20:23.608Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_3e4ab4de": {
+      "id": "usr_3e4ab4de",
+      "name": "Andrea Valentina",
+      "email": "test_1792257671557@ridex.ve",
+      "phone": "04248778394",
+      "nationalId": "V-27888999",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%230EA5E9\"/><circle cx=\"50\" cy=\"38\" r=\"19\" fill=\"%23FED7AA\"/><path d=\"M32 28c4-8 32-8 36 0-3-4-12-6-18-6s-15 2-18 6z\" fill=\"%231E293B\"/><path d=\"M22 86c0-15 12-26 28-26s28 11 28 26\" fill=\"%2338BDF8\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "45bc60b5b2ddebe15c1a1f21e41b9501",
+      "passwordHash": "bdfd20904680d732c5692b1240a452d78ef54cf754b22a05d7998772b21db6f2f62d293aff1de9e8ebaead755315803f55b6606147ca72a32a9079495794dc49",
+      "createdAt": "2026-10-17T17:21:11.588Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "drv_33fe4d6f": {
+      "id": "drv_33fe4d6f",
+      "name": "Conductor Test",
+      "email": "",
+      "phone": "04165432423",
+      "nationalId": "V-20111222",
+      "role": "driver",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%2334A853\"/><circle cx=\"50\" cy=\"40\" r=\"20\" fill=\"%23FFFFFF\"/><path d=\"M20 85c0-16 13-28 30-28s30 12 30 28\" fill=\"%23FFFFFF\"/><path d=\"M38 32h24v12H38z\" fill=\"%23090D14\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "ee9b6594c45d1dd661daf5253bd11f44",
+      "passwordHash": "068909856c221c9ca1962311aa7492f8846af7b76a94e276c7868c229bfa5fab58bb4f7c23eb4362ad6e00549de5875df49fb6bdffba9e28a8c74610be922b73",
+      "createdAt": "2026-10-17T17:21:11.595Z",
+      "vehicle": {
+        "vehicleType": "carro_standard",
+        "make": "Toyota",
+        "model": "Yaris",
+        "plate": "AB123CD",
+        "color": "Gris",
+        "year": "2022",
+        "hasAc": false
+      },
+      "documents": {
+        "license": "Vigente (INTT)",
+        "rcv": "Activo",
+        "medicalCert": "Aprobado"
+      },
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_c10f62ef": {
+      "id": "usr_c10f62ef",
+      "name": "Usuario Avatar",
+      "email": "",
+      "phone": "04143970933",
+      "nationalId": "V-00000000",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "d206072a7275c085c892f6c7fd4e32ba",
+      "passwordHash": "55419125e8d7c5b2b37a8026d568f5914e5e0204386e865fb677c519ca8b646ec09518996235c98f07cf85f62dbb941268ca17550aed9e84844b762e6c28fff8",
+      "createdAt": "2026-10-17T17:21:11.613Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_bfb4a633": {
+      "id": "usr_bfb4a633",
+      "name": "Andrea Valentina",
+      "email": "test_1792258554890@ridex.ve",
+      "phone": "04241715577",
+      "nationalId": "V-27888999",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%230EA5E9\"/><circle cx=\"50\" cy=\"38\" r=\"19\" fill=\"%23FED7AA\"/><path d=\"M32 28c4-8 32-8 36 0-3-4-12-6-18-6s-15 2-18 6z\" fill=\"%231E293B\"/><path d=\"M22 86c0-15 12-26 28-26s28 11 28 26\" fill=\"%2338BDF8\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "55ca90a948c6b5860b26d8c6d3991925",
+      "passwordHash": "15a289f6bbf50088a7ed77f40446e94329ee8c39c0417b10cb84a49f955fc32e75f18ff8c245a650d4d975dd21130551407b1b997658d1674164a9f86d24234e",
+      "createdAt": "2026-10-17T17:35:54.893Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "drv_b5a19323": {
+      "id": "drv_b5a19323",
+      "name": "Conductor Test",
+      "email": "",
+      "phone": "04165408782",
+      "nationalId": "V-20111222",
+      "role": "driver",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%2334A853\"/><circle cx=\"50\" cy=\"40\" r=\"20\" fill=\"%23FFFFFF\"/><path d=\"M20 85c0-16 13-28 30-28s30 12 30 28\" fill=\"%23FFFFFF\"/><path d=\"M38 32h24v12H38z\" fill=\"%23090D14\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "52bfbdcb63938d5178214df03c525be3",
+      "passwordHash": "03a3bc4bfd5b75ac93671db8169068868f78560091d394861493e660a5e0c63b4f5e53d7f306fc850a6b88cc18c4fbc5b876e9e59fa19af74ef347ff81a67c88",
+      "createdAt": "2026-10-17T17:35:54.898Z",
+      "vehicle": {
+        "vehicleType": "carro_standard",
+        "make": "Toyota",
+        "model": "Yaris",
+        "plate": "AB123CD",
+        "color": "Gris",
+        "year": "2022",
+        "hasAc": false
+      },
+      "documents": {
+        "license": "Vigente (INTT)",
+        "rcv": "Activo",
+        "medicalCert": "Aprobado"
+      },
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_2f616655": {
+      "id": "usr_2f616655",
+      "name": "Usuario Avatar",
+      "email": "",
+      "phone": "04148743128",
+      "nationalId": "V-00000000",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "ef807ed4e7a63b484bfdd8c69925d133",
+      "passwordHash": "a7c9bc1357bfd6db19e0b0cc288bc0ff18682dd66a96b5b5962c0993a8edb493b3d224fc163aa89d65c18ba3be9caa3c75eb201c72c7ca8c33c2e78ce8589a37",
+      "createdAt": "2026-10-17T17:35:54.904Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_c29d81c3": {
+      "id": "usr_c29d81c3",
+      "name": "Andrea Valentina",
+      "email": "test_1792258800747@ridex.ve",
+      "phone": "04246308089",
+      "nationalId": "V-27888999",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%230EA5E9\"/><circle cx=\"50\" cy=\"38\" r=\"19\" fill=\"%23FED7AA\"/><path d=\"M32 28c4-8 32-8 36 0-3-4-12-6-18-6s-15 2-18 6z\" fill=\"%231E293B\"/><path d=\"M22 86c0-15 12-26 28-26s28 11 28 26\" fill=\"%2338BDF8\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "032e98fa007efa80b8d2e84978850b4b",
+      "passwordHash": "d1a0cddfd65289e56bdc7bd17676651ec59e9928443a5121c7416b02124ddd89d08838bd9951b65ad5c4c04e9706687e597deebb8acad79e70c2fa41d25eebf3",
+      "createdAt": "2026-10-17T17:40:00.753Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "drv_caeb031a": {
+      "id": "drv_caeb031a",
+      "name": "Conductor Test",
+      "email": "",
+      "phone": "04161539589",
+      "nationalId": "V-20111222",
+      "role": "driver",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%2334A853\"/><circle cx=\"50\" cy=\"40\" r=\"20\" fill=\"%23FFFFFF\"/><path d=\"M20 85c0-16 13-28 30-28s30 12 30 28\" fill=\"%23FFFFFF\"/><path d=\"M38 32h24v12H38z\" fill=\"%23090D14\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "dc99354e041ac5ac201a35dd2b41ffba",
+      "passwordHash": "df87345203e7f8ecb691d5b83e160704df3962f638f50bcb4177c17a41cdcfc63675529ef71d5f21009f772ce48fb3e09f55f8484d9bdd102f646010ba3bc0f2",
+      "createdAt": "2026-10-17T17:40:00.761Z",
+      "vehicle": {
+        "vehicleType": "carro_standard",
+        "make": "Toyota",
+        "model": "Yaris",
+        "plate": "AB123CD",
+        "color": "Gris",
+        "year": "2022",
+        "hasAc": false
+      },
+      "documents": {
+        "license": "Vigente (INTT)",
+        "rcv": "Activo",
+        "medicalCert": "Aprobado"
+      },
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_a2f51285": {
+      "id": "usr_a2f51285",
+      "name": "Usuario Avatar",
+      "email": "",
+      "phone": "04149691593",
+      "nationalId": "V-00000000",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "b35e1d5a792b4fb14cabce0a2555fc79",
+      "passwordHash": "11ad744d58985c779f1bdd328ab4e6325f08cea3c14a22baa6dc4b6cf7f712df560374bb19a41df49adfb4cb963d05eb19e0c79a829c1a303ab31ed4526749c7",
+      "createdAt": "2026-10-17T17:40:00.776Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    }
+  },
+  "sessions": {
+    "tok_c2e75adf8af043ed98ffc9a3725a09a8": {
+      "userId": "drv_demo_carlos",
+      "createdAt": "2026-10-17T17:18:57.305Z"
+    },
+    "tok_56481d67e8204e44948cd92e3e9b1d45": {
+      "userId": "usr_7e53c43e",
+      "createdAt": "2026-10-17T17:20:23.609Z"
+    },
+    "tok_bac82283ce414497a5bb0a3fbb5ab8c1": {
+      "userId": "usr_7e53c43e",
+      "createdAt": "2026-10-17T17:20:45.349Z"
+    },
+    "tok_bbaee827d84d40fcbfd4cc42cd1eda36": {
+      "userId": "usr_3e4ab4de",
+      "createdAt": "2026-10-17T17:21:11.592Z"
+    },
+    "tok_c6fa8e7351654701aaffe305e0df5f41": {
+      "userId": "drv_33fe4d6f",
+      "createdAt": "2026-10-17T17:21:11.595Z"
+    },
+    "tok_f96d412e49d94a15b819ceb46e125549": {
+      "userId": "drv_33fe4d6f",
+      "createdAt": "2026-10-17T17:21:11.597Z"
+    },
+    "tok_b8a3b7b00e774d10b9e428f1a1a42193": {
+      "userId": "usr_c10f62ef",
+      "createdAt": "2026-10-17T17:21:11.622Z"
+    },
+    "tok_e6b120abd1304bc0bc3f3fa3562f0ba1": {
+      "userId": "usr_bfb4a633",
+      "createdAt": "2026-10-17T17:35:54.895Z"
+    },
+    "tok_c3e404675e4f4312be9aa8e1de25d959": {
+      "userId": "drv_b5a19323",
+      "createdAt": "2026-10-17T17:35:54.899Z"
+    },
+    "tok_32ff875b05864fc0895d4fced9822868": {
+      "userId": "drv_b5a19323",
+      "createdAt": "2026-10-17T17:35:54.901Z"
+    },
+    "tok_787a37622df34f3bb702c818dc8f8a9b": {
+      "userId": "usr_2f616655",
+      "createdAt": "2026-10-17T17:35:54.905Z"
+    },
+    "tok_0dc6946314c543e3909d0e26739d8bb3": {
+      "userId": "usr_c29d81c3",
+      "createdAt": "2026-10-17T17:40:00.756Z"
+    },
+    "tok_3b3653f96a8646c99ce27c84dcfe245d": {
+      "userId": "drv_caeb031a",
+      "createdAt": "2026-10-17T17:40:00.762Z"
+    },
+    "tok_64747eb7df924a22a74bdbc0d5f0423c": {
+      "userId": "drv_caeb031a",
+      "createdAt": "2026-10-17T17:40:00.766Z"
+    },
+    "tok_aff189a7434c405c9115564951a04abc": {
+      "userId": "usr_a2f51285",
+      "createdAt": "2026-10-17T17:40:00.777Z"
+    }
+  },
+  "stats": {
+    "totalRidesRegistered": 0,
+    "createdAt": "2026-10-17T17:18:57.286Z"
+  }
+}

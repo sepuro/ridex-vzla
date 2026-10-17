@@ -79,3 +79,11 @@ export const POPULAR_LOCATIONS = [
   { name: 'La Candelaria, Caracas', lat: 10.5068, lng: -66.9034 },
   { name: 'Terminal La Bandera', lat: 10.4795, lng: -66.9095 }
 ];
+
+// Avatares venezolanos predeterminados en SVG optimizado
+export const DEFAULT_AVATARS = {
+  driver_moto: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="30" fill="%231A73E8"/><circle cx="50" cy="40" r="20" fill="%23FFFFFF"/><path d="M20 85c0-16 13-28 30-28s30 12 30 28" fill="%23FFFFFF"/><circle cx="50" cy="35" r="10" fill="%23090D14"/><path d="M42 35h16v6h-16z" fill="%23FBBC04"/></svg>',
+  driver_car: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="30" fill="%2334A853"/><circle cx="50" cy="40" r="20" fill="%23FFFFFF"/><path d="M20 85c0-16 13-28 30-28s30 12 30 28" fill="%23FFFFFF"/><path d="M38 32h24v12H38z" fill="%23090D14"/></svg>',
+  passenger_female: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="30" fill="%239333EA"/><circle cx="50" cy="38" r="19" fill="%23FED7AA"/><path d="M31 38c0 14 38 14 38 0-4-12-14-18-19-18s-15 6-19 18z" fill="%237C2D12"/><path d="M22 86c0-15 12-26 28-26s28 11 28 26" fill="%23EC4899"/></svg>',
+  passenger_male: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="30" fill="%230EA5E9"/><circle cx="50" cy="38" r="19" fill="%23FED7AA"/><path d="M32 28c4-8 32-8 36 0-3-4-12-6-18-6s-15 2-18 6z" fill="%231E293B"/><path d="M22 86c0-15 12-26 28-26s28 11 28 26" fill="%2338BDF8"/></svg>'
+};
