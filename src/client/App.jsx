@@ -414,6 +414,19 @@ export default function App() {
     }
   };
 
+  const handleReorderRide = (ride) => {
+    if (ride?.pickup && ride?.dropoff) {
+      setPickup(ride.pickup);
+      setDropoff(ride.dropoff);
+      if (ride.vehicleType) {
+        setSelectedVehicleType(ride.vehicleType);
+      }
+      setActiveTab('rides');
+      triggerHaptic(80);
+    }
+  };
+
+
   const handleUpdateRate = async (newRate) => {
     try {
       const res = await fetch('/api/bcv', {
@@ -599,6 +612,7 @@ export default function App() {
               setSelectedRideForReceipt(ride);
               setReceiptModalOpen(true);
             }}
+            onReorderRide={handleReorderRide}
           />
         </div>
       )}
