@@ -18,6 +18,12 @@ import {
 } from 'lucide-react';
 import { triggerHaptic } from '../utils/soundEffects.js';
 import { DEFAULT_AVATARS } from '../../shared/constants.js';
+import {
+  getBrandsForVehicleType,
+  getModelsForBrand,
+  VENEZUELAN_VEHICLE_COLORS,
+  VENEZUELAN_VEHICLE_YEARS
+} from '../../shared/vehiclesCatalog.js';
 
 export function AuthModal({
   isOpen,
@@ -43,9 +49,27 @@ export function AuthModal({
   const [vehicleType, setVehicleType] = useState('moto'); // 'moto' | 'carro_standard' | 'carro_confort'
   const [vehicleMake, setVehicleMake] = useState('Bera');
   const [vehicleModel, setVehicleModel] = useState('Bera SBR 150');
+  const [vehicleYear, setVehicleYear] = useState('2024');
   const [vehiclePlate, setVehiclePlate] = useState('');
   const [vehicleColor, setVehicleColor] = useState('Rojo');
   const [hasAc, setHasAc] = useState(false);
+
+  const handleVehicleTypeChange = (newType) => {
+    setVehicleType(newType);
+    const brands = getBrandsForVehicleType(newType);
+    const defaultBrand = newType === 'moto' ? 'Bera' : 'Chevrolet';
+    const brandToSet = brands.includes(defaultBrand) ? defaultBrand : brands[0];
+    setVehicleMake(brandToSet);
+    const models = getModelsForBrand(brandToSet, newType);
+    setVehicleModel(models[0] || '');
+    setHasAc(newType === 'carro_confort');
+  };
+
+  const handleVehicleMakeChange = (newMake) => {
+    setVehicleMake(newMake);
+    const models = getModelsForBrand(newMake, vehicleType);
+    setVehicleModel(models[0] || '');
+  };
 
   // Campos de Login
   const [loginIdentifier, setLoginIdentifier] = useState('');
@@ -136,6 +160,7 @@ export function AuthModal({
           vehicleType,
           make: vehicleMake,
           model: vehicleModel,
+          year: vehicleYear,
           plate: vehiclePlate.toUpperCase().trim(),
           color: vehicleColor,
           hasAc: vehicleType === 'carro_confort' ? true : hasAc
@@ -505,10 +530,7 @@ export function AuthModal({
                 <div className="grid grid-cols-3 gap-1.5 text-[10px]">
                   <button
                     type="button"
-                    onClick={() => {
-                      setVehicleType('moto');
-                      setVehicleModel('Bera SBR 150');
-                    }}
+                    onClick={() => handleVehicleTypeChange('moto')}
                     className={`p-2 rounded-xl border text-center transition ${
                       vehicleType === 'moto'
                         ? 'bg-pixel-yellow/20 border-pixel-yellow text-white font-bold'
@@ -519,10 +541,7 @@ export function AuthModal({
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setVehicleType('carro_standard');
-                      setVehicleModel('Chevrolet Optra');
-                    }}
+                    onClick={() => handleVehicleTypeChange('carro_standard')}
                     className={`p-2 rounded-xl border text-center transition ${
                       vehicleType === 'carro_standard'
                         ? 'bg-pixel-blue/20 border-pixel-blue text-white font-bold'
@@ -533,11 +552,7 @@ export function AuthModal({
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setVehicleType('carro_confort');
-                      setVehicleModel('Toyota Yaris');
-                      setHasAc(true);
-                    }}
+                    onClick={() => handleVehicleTypeChange('carro_confort')}
                     className={`p-2 rounded-xl border text-center transition ${
                       vehicleType === 'carro_confort'
                         ? 'bg-pixel-green/20 border-pixel-green text-white font-bold'
@@ -548,26 +563,76 @@ export function AuthModal({
                   </button>
                 </div>
 
+                {/* Marca y Modelo de Venezuela */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[10px] text-slate-400 block mb-1">Marca / Modelo</label>
-                    <input
-                      type="text"
+                    <label className="text-[10px] text-slate-400 block mb-1">Marca ({vehicleType === 'moto' ? 'Moto' : 'Carro'})</label>
+                    <select
+                      value={vehicleMake}
+                      onChange={(e) => handleVehicleMakeChange(e.target.value)}
+                      className="w-full px-2.5 py-2 rounded-xl bg-slate-900 border border-white/15 text-white text-xs font-semibold focus:outline-none focus:border-pixel-yellow"
+                    >
+                      {getBrandsForVehicleType(vehicleType).map((brand) => (
+                        <option key={brand} value={brand}>
+                          {brand}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-1">Modelo Venezolano</label>
+                    <select
                       value={vehicleModel}
                       onChange={(e) => setVehicleModel(e.target.value)}
-                      placeholder="Bera SBR 150"
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-white"
-                    />
+                      className="w-full px-2.5 py-2 rounded-xl bg-slate-900 border border-white/15 text-white text-xs font-semibold focus:outline-none focus:border-pixel-yellow"
+                    >
+                      {getModelsForBrand(vehicleMake, vehicleType).map((model) => (
+                        <option key={model} value={model}>
+                          {model}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+                </div>
+
+                {/* Año, Color y Placa */}
+                <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="text-[10px] text-slate-400 block mb-1">Placa Venezolana</label>
+                    <label className="text-[10px] text-slate-400 block mb-1">Año</label>
+                    <select
+                      value={vehicleYear}
+                      onChange={(e) => setVehicleYear(e.target.value)}
+                      className="w-full px-2 py-2 rounded-xl bg-slate-900 border border-white/15 text-white text-xs font-semibold focus:outline-none"
+                    >
+                      {VENEZUELAN_VEHICLE_YEARS.slice(0, 20).map((year) => (
+                        <option key={year} value={year}>{year}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-1">Color</label>
+                    <select
+                      value={vehicleColor}
+                      onChange={(e) => setVehicleColor(e.target.value)}
+                      className="w-full px-2 py-2 rounded-xl bg-slate-900 border border-white/15 text-white text-xs font-semibold focus:outline-none"
+                    >
+                      {VENEZUELAN_VEHICLE_COLORS.map((color) => (
+                        <option key={color} value={color}>{color}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-1">Placa (INTT)</label>
                     <input
                       type="text"
                       required
                       value={vehiclePlate}
                       onChange={(e) => setVehiclePlate(e.target.value.toUpperCase())}
-                      placeholder="AC881ZZ"
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-white font-mono uppercase font-bold text-center"
+                      placeholder={vehicleType === 'moto' ? 'AD712YZ' : 'AC881ZZ'}
+                      className="w-full px-2 py-2 rounded-xl bg-slate-900 border border-white/15 text-white font-mono uppercase font-bold text-center text-xs tracking-wider"
                     />
                   </div>
                 </div>

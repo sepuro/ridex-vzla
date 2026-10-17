@@ -149,7 +149,7 @@ export function ProfileView({
                     {currentUser?.vehicle?.model || 'Bera SBR 150'}
                   </h4>
                   <p className="text-[11px] text-slate-400 font-mono mt-0.5">
-                    Placa: <strong className="text-white">{currentUser?.vehicle?.plate || 'AD712YZ'}</strong> • Color: {currentUser?.vehicle?.color || 'Rojo'}
+                    Placa: <strong className="text-white">{currentUser?.vehicle?.plate || 'AD712YZ'}</strong> • Color: {currentUser?.vehicle?.color || 'Rojo'}{currentUser?.vehicle?.year ? ` • Año: ${currentUser.vehicle.year}` : ''}
                   </p>
                 </div>
               </div>

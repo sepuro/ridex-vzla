@@ -1,6 +1,6 @@
 {
   "name": "ridex-vzla",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Plataforma de transporte bajo demanda estilo Uber/Ridery adaptada para Venezuela",
   "type": "module",
   "scripts": {
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@capacitor/core": "^8.5.3",
+    "@capacitor/local-notifications": "^8.3.1",
     "express": "^4.21.2",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.475.0",

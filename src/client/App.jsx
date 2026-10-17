@@ -26,6 +26,8 @@ import { ProfileView } from './components/ProfileView.jsx';
 import { ReceiptModal } from './components/ReceiptModal.jsx';
 import { AuthModal } from './components/AuthModal.jsx';
 import { EditProfileModal } from './components/EditProfileModal.jsx';
+import { PushNotificationToast } from './components/PushNotificationToast.jsx';
+import { sendPushNotification } from './utils/notifications.js';
 import { useGeolocation } from './hooks/useGeolocation.js';
 import { useRideSocket } from './hooks/useRideSocket.js';
 import { calculateDistance, calculateFare } from './utils/pricing.js';
@@ -164,7 +166,12 @@ export default function App() {
 
       case 'ride:new_offer': {
         setDriverIncomingOffer(data);
-        playNotificationChime();
+        sendPushNotification({
+          title: '🔔 ¡Nueva Carrera Solicitada!',
+          body: `Ganancia: $${data.fareUsd?.toFixed(2)} (Bs. ${data.fareBs?.toFixed(2)}) • ${data.distanceKm || 3.5} km • Recogida: ${data.pickup?.name?.split(',')[0] || 'Caracas'}`,
+          type: 'ride_offer',
+          data
+        });
         break;
       }
 
@@ -172,7 +179,12 @@ export default function App() {
       case 'ride:assigned': {
         setActiveRide(data);
         setDriverIncomingOffer(null);
-        playAcceptChime();
+        sendPushNotification({
+          title: '🚗 ¡Conductor Asignado!',
+          body: `${data.driver?.name || 'Tu conductor'} va en camino en su ${data.driver?.model || 'Vehículo'} (${data.driver?.plate || 'Placa asignada'}).`,
+          type: 'ride_assigned',
+          data
+        });
         break;
       }
 
@@ -199,7 +211,19 @@ export default function App() {
       case 'ride:status_changed': {
         setActiveRide((prev) => prev ? { ...prev, status: data.status } : data);
         if (data.status === RIDE_STATUS.ARRIVED) {
-          playArrivalChime();
+          sendPushNotification({
+            title: '📍 ¡Tu Conductor Ha Llegado!',
+            body: 'El vehículo te espera en el punto de recogida seleccionado.',
+            type: 'driver_arrived',
+            data
+          });
+        } else if (data.status === RIDE_STATUS.IN_PROGRESS) {
+          sendPushNotification({
+            title: '🛡️ ¡Viaje en Curso!',
+            body: 'Monitoreo GPS RideX activado hacia tu destino.',
+            type: 'info',
+            data
+          });
         } else {
           triggerHaptic(120);
         }
@@ -209,13 +233,23 @@ export default function App() {
       case 'ride:payment_submitted':
       case 'ride:payment_pending_confirmation': {
         setActiveRide(data);
-        triggerHaptic(100);
+        sendPushNotification({
+          title: '💳 Comprobante Recibido',
+          body: 'Verificando liquidación de Pago Móvil...',
+          type: 'wallet',
+          data
+        });
         break;
       }
 
       case 'ride:completed_and_paid': {
         setActiveRide(data);
-        playAcceptChime();
+        sendPushNotification({
+          title: '✅ ¡Viaje Liquidado y Completado!',
+          body: `Monto: $${data.fareUsd?.toFixed(2)} (Bs. ${data.fareBs?.toFixed(2)}). Tu recibo digital está listo.`,
+          type: 'ride_completed',
+          data
+        });
         setSelectedRideForReceipt(data);
         setReceiptModalOpen(true);
         break;
@@ -224,7 +258,11 @@ export default function App() {
       case 'ride:cancelled': {
         setActiveRide(null);
         setDriverIncomingOffer(null);
-        triggerHaptic([100, 50, 100]);
+        sendPushNotification({
+          title: '⚠️ Viaje Cancelado',
+          body: 'La carrera fue cancelada.',
+          type: 'info'
+        });
         break;
       }
 
@@ -462,6 +500,17 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-darkBg text-slate-100 flex flex-col max-w-md mx-auto relative shadow-2xl overflow-x-hidden safe-area-pt">
+      {/* Sistema de Notificaciones Push Flotante tipo Dynamic Island */}
+      <PushNotificationToast
+        onNotificationClick={(notif) => {
+          if (notif.type === 'ride_offer' || notif.type === 'ride_assigned' || notif.type === 'driver_arrived') {
+            setActiveTab('rides');
+          } else if (notif.type === 'wallet') {
+            setActiveTab('wallet');
+          }
+        }}
+      />
+
       {/* 1. Header con switch de rol y tasa BCV en vivo */}
       <Header
         role={role}

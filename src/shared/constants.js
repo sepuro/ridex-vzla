@@ -20,7 +20,7 @@ export const VEHICLE_CONFIGS = {
   [VEHICLE_TYPES.MOTO]: {
     id: VEHICLE_TYPES.MOTO,
     name: 'Moto Express',
-    subtitle: 'Rápido, ideal para el tráfico caraqueño',
+    subtitle: 'Bera SBR, Empire Horse, Toro Rex • Ágil en colas',
     icon: 'Bike',
     baseFareUsd: 1.5,
     perKmUsd: 0.70,
@@ -31,7 +31,7 @@ export const VEHICLE_CONFIGS = {
   [VEHICLE_TYPES.CARRO_STANDARD]: {
     id: VEHICLE_TYPES.CARRO_STANDARD,
     name: 'Carro Estándar',
-    subtitle: 'Económico y cómodo para 3-4 personas',
+    subtitle: 'Chevrolet Aveo, Spark, Corsa, Fiesta • Hasta 4 pasajeros',
     icon: 'Car',
     baseFareUsd: 2.5,
     perKmUsd: 1.10,
@@ -42,7 +42,7 @@ export const VEHICLE_CONFIGS = {
   [VEHICLE_TYPES.CARRO_CONFORT]: {
     id: VEHICLE_TYPES.CARRO_CONFORT,
     name: 'Carro Confort (A/C)',
-    subtitle: 'Vehículo moderno con aire acondicionado full',
+    subtitle: 'Toyota Corolla, Yaris, Optra, Changan • Full A/C',
     icon: 'Sparkles',
     baseFareUsd: 4.0,
     perKmUsd: 1.50,

@@ -388,6 +388,84 @@
         "phone": "0412-0000000",
         "relationship": "Familiar"
       }
+    },
+    "usr_97b81354": {
+      "id": "usr_97b81354",
+      "name": "Andrea Valentina",
+      "email": "test_1792260926933@ridex.ve",
+      "phone": "04243480629",
+      "nationalId": "V-27888999",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%230EA5E9\"/><circle cx=\"50\" cy=\"38\" r=\"19\" fill=\"%23FED7AA\"/><path d=\"M32 28c4-8 32-8 36 0-3-4-12-6-18-6s-15 2-18 6z\" fill=\"%231E293B\"/><path d=\"M22 86c0-15 12-26 28-26s28 11 28 26\" fill=\"%2338BDF8\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "75fd63a73cb6b19eec561e89a54c8ef4",
+      "passwordHash": "a8872ac1cef082561f4e04acf9c47caa0199b3d08652f2b118fbae87eb45dfa6b2fd0ce38e04827c1aed76d751e488dd5aa847b901d4782c9f8bb3acdb46f36e",
+      "createdAt": "2026-10-17T18:15:26.941Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "drv_4bafbabe": {
+      "id": "drv_4bafbabe",
+      "name": "Conductor Test",
+      "email": "",
+      "phone": "04164528712",
+      "nationalId": "V-20111222",
+      "role": "driver",
+      "city": "Caracas",
+      "avatar": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" rx=\"30\" fill=\"%2334A853\"/><circle cx=\"50\" cy=\"40\" r=\"20\" fill=\"%23FFFFFF\"/><path d=\"M20 85c0-16 13-28 30-28s30 12 30 28\" fill=\"%23FFFFFF\"/><path d=\"M38 32h24v12H38z\" fill=\"%23090D14\"/></svg>",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "f7fe6af0f51ba695bef3e6a55e5b55bd",
+      "passwordHash": "3ff14318958f9d71052a79ae478a6a71e9cd215dfe9e59f282fb07d527653c965915db81ef50863ef2f61347a01d9f4079388755fb111a0e30ca8900a869c4f8",
+      "createdAt": "2026-10-17T18:15:26.952Z",
+      "vehicle": {
+        "vehicleType": "carro_standard",
+        "make": "Toyota",
+        "model": "Yaris",
+        "plate": "AB123CD",
+        "color": "Gris",
+        "year": "2022",
+        "hasAc": false
+      },
+      "documents": {
+        "license": "Vigente (INTT)",
+        "rcv": "Activo",
+        "medicalCert": "Aprobado"
+      },
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
+    },
+    "usr_503cf3cc": {
+      "id": "usr_503cf3cc",
+      "name": "Usuario Avatar",
+      "email": "",
+      "phone": "04142552524",
+      "nationalId": "V-00000000",
+      "role": "passenger",
+      "city": "Caracas",
+      "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "rating": 5,
+      "totalRides": 0,
+      "salt": "600a27d35a220e98498cef1533aa9604",
+      "passwordHash": "b3b78233d2e8f659ce0029cc1a50740b4fcddeb96d4e6554c2451a9690180f5bf22cfde132c50d7f7e1b3152aa3b72b3558c5c16e03b66c6e575836ae046ccd4",
+      "createdAt": "2026-10-17T18:15:26.960Z",
+      "vehicle": null,
+      "documents": null,
+      "emergencyContact": {
+        "name": "Contacto de Emergencia",
+        "phone": "0412-0000000",
+        "relationship": "Familiar"
+      }
     }
   },
   "sessions": {
@@ -466,6 +544,22 @@
     "tok_0864ef9c6f284929851442f13d500b3b": {
       "userId": "usr_5300b443",
       "createdAt": "2026-10-17T17:57:50.539Z"
+    },
+    "tok_1b91cf80604e4f9ca8a676b5ec4447fd": {
+      "userId": "usr_97b81354",
+      "createdAt": "2026-10-17T18:15:26.946Z"
+    },
+    "tok_b68d30f92b7c4f168ec2c8ed6522256a": {
+      "userId": "drv_4bafbabe",
+      "createdAt": "2026-10-17T18:15:26.953Z"
+    },
+    "tok_e02a35aa144746b2bf140888de0419be": {
+      "userId": "drv_4bafbabe",
+      "createdAt": "2026-10-17T18:15:26.956Z"
+    },
+    "tok_fd60de77da994ea4b7ef026c8d6f3c60": {
+      "userId": "usr_503cf3cc",
+      "createdAt": "2026-10-17T18:15:26.960Z"
     }
   },
   "stats": {
