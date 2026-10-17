@@ -48,8 +48,28 @@ export default function App() {
   // --- Estados de Rol y Moneda ---
   const [role, setRole] = useState('passenger'); // 'passenger' | 'driver'
   const [bcvRate, setBcvRate] = useState(DEFAULT_BCV_RATE);
-  const [rateSource, setRateSource] = useState('Oficial BCV');
+  const [rateSource, setRateSource] = useState('BCV Oficial');
   const [lastUpdatedRate, setLastUpdatedRate] = useState(null);
+  const [officialDate, setOfficialDate] = useState(new Date().toISOString().split('T')[0]);
+  const [changePercent, setChangePercent] = useState(0.0);
+  const [isLiveBcv, setIsLiveBcv] = useState(true);
+
+  // Cargar tasa BCV oficial en vivo al montar la app
+  useEffect(() => {
+    fetch('/api/bcv')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && data.rate) {
+          setBcvRate(data.rate);
+          setRateSource(data.source || 'BCV Oficial');
+          setLastUpdatedRate(data.lastUpdated);
+          if (data.officialDate) setOfficialDate(data.officialDate);
+          if (data.changePercent !== undefined) setChangePercent(data.changePercent);
+          if (data.isLive !== undefined) setIsLiveBcv(data.isLive);
+        }
+      })
+      .catch((e) => console.log('[BCV] Fallback local inicial:', e));
+  }, []);
 
   // --- Modales ---
   const [isRateModalOpen, setIsRateModalOpen] = useState(false);
@@ -100,8 +120,11 @@ export default function App() {
       case 'bcv:updated': {
         if (data.rate) {
           setBcvRate(data.rate);
-          setRateSource(data.source || 'BCV');
+          setRateSource(data.source || 'BCV Oficial');
           setLastUpdatedRate(data.lastUpdated);
+          if (data.officialDate) setOfficialDate(data.officialDate);
+          if (data.changePercent !== undefined) setChangePercent(data.changePercent);
+          if (data.isLive !== undefined) setIsLiveBcv(data.isLive);
         }
         break;
       }
@@ -318,8 +341,9 @@ export default function App() {
       const data = await res.json();
       if (data && data.rate) {
         setBcvRate(data.rate);
-        setRateSource(data.source);
+        setRateSource(data.source || 'Ajuste manual');
         setLastUpdatedRate(data.lastUpdated);
+        if (data.changePercent !== undefined) setChangePercent(data.changePercent);
       }
     } catch (err) {
       console.error('Error guardando tasa:', err);
@@ -328,29 +352,41 @@ export default function App() {
 
   const handleRefreshLiveBcv = async () => {
     const res = await fetch('/api/bcv/refresh', { method: 'POST' });
-    return await res.json();
+    const data = await res.json();
+    if (data && data.rate) {
+      setBcvRate(data.rate);
+      setRateSource(data.source || 'BCV Oficial');
+      setLastUpdatedRate(data.lastUpdated);
+      if (data.officialDate) setOfficialDate(data.officialDate);
+      if (data.changePercent !== undefined) setChangePercent(data.changePercent);
+      if (data.isLive !== undefined) setIsLiveBcv(data.isLive);
+    }
+    return data;
   };
 
   return (
     <div className="min-h-screen bg-darkBg text-slate-100 flex flex-col max-w-md mx-auto relative shadow-2xl overflow-x-hidden safe-area-pt">
-      {/* 1. Header con switch de rol y tasa BCV */}
+      {/* 1. Header con switch de rol y tasa BCV en vivo */}
       <Header
         role={role}
         onToggleRole={handleToggleRole}
         bcvRate={bcvRate}
         onOpenRateModal={() => setIsRateModalOpen(true)}
         connected={connected}
+        rateSource={rateSource}
+        isLiveBcv={isLiveBcv}
       />
 
       {/* 2. Contenido según la pestaña activa */}
       {activeTab === 'rides' && (
         <div className="flex flex-col flex-1 pb-20">
-          {/* Mapa Interactivo con API de Calles Reales (OSRM) */}
+          {/* Mapa Interactivo con Google Maps, Satélite y Calles Reales (OSRM) */}
           <MapView
             pickup={pickup}
             dropoff={dropoff}
             driverLocation={activeRide?.driver?.location}
             vehicleType={activeRide?.vehicleType || selectedVehicleType}
+            userLocation={gpsCoords}
             onSelectPickup={setPickup}
             onSelectDropoff={setDropoff}
             onCenterUser={handleCenterUser}
@@ -359,24 +395,27 @@ export default function App() {
             onRouteCalculated={setStreetRoute}
           />
 
-          {/* Panel Inferior Móvil (Bottom Sheet) */}
-          <main className="flex-1 -mt-6 z-10 bg-cardBg rounded-t-3xl border-t border-borderCol p-4 shadow-2xl space-y-4">
+          {/* Panel Inferior Móvil (Bottom Sheet estilo Uber y Google Maps) */}
+          <main className="flex-1 -mt-6 z-10 bg-[#0c101b]/95 backdrop-blur-2xl rounded-t-[32px] border-t border-white/15 p-4 shadow-[0_-12px_40px_rgba(0,0,0,0.5)] space-y-4">
+            {/* Manija de arrastre táctil para el Bottom Sheet */}
+            <div className="w-12 h-1.5 rounded-full bg-slate-500/30 mx-auto -mt-1 mb-1 active:bg-slate-400 transition" />
+
             {role === 'passenger' && (
               <>
                 {!activeRide ? (
                   <div className="space-y-3.5 animate-fade-in">
-                    {/* Selector de Origen y Destino con búsqueda integrada */}
-                    <div className="bg-surfaceBg/70 p-3 rounded-2xl border border-borderCol/80 relative space-y-2">
+                    {/* Selector de Origen y Destino con búsqueda integrada estilo Pixel & iPhone */}
+                    <div className="bg-[#111622]/90 backdrop-blur-xl p-3.5 rounded-2xl border border-white/10 relative space-y-2 shadow-inner">
                       {/* Origen */}
                       <div
                         onClick={() => handleOpenSearchModal('pickup')}
                         className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer ${
                           selectingMapMode === 'pickup'
-                            ? 'bg-darkBg border border-accentGreen shadow-sm'
-                            : 'hover:bg-darkBg/50'
+                            ? 'bg-[#182030] border border-pixel-green shadow-sm'
+                            : 'hover:bg-white/5'
                         }`}
                       >
-                        <span className="w-6 h-6 rounded-full bg-accentGreen/20 text-accentGreen flex items-center justify-center font-bold text-xs flex-shrink-0">
+                        <span className="w-6 h-6 rounded-full bg-pixel-green/20 text-pixel-greenLight flex items-center justify-center font-black text-xs flex-shrink-0">
                           A
                         </span>
                         <div className="flex-1 min-w-0">
@@ -391,11 +430,11 @@ export default function App() {
                         onClick={() => handleOpenSearchModal('dropoff')}
                         className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer ${
                           selectingMapMode === 'dropoff'
-                            ? 'bg-darkBg border border-accentYellow shadow-sm'
-                            : 'hover:bg-darkBg/50'
+                            ? 'bg-[#182030] border border-pixel-red shadow-sm'
+                            : 'hover:bg-white/5'
                         }`}
                       >
-                        <span className="w-6 h-6 rounded-full bg-accentYellow/20 text-accentYellow flex items-center justify-center font-bold text-xs flex-shrink-0">
+                        <span className="w-6 h-6 rounded-full bg-pixel-red/20 text-pixel-redLight flex items-center justify-center font-black text-xs flex-shrink-0">
                           B
                         </span>
                         <div className="flex-1 min-w-0">
@@ -411,7 +450,7 @@ export default function App() {
                           e.stopPropagation();
                           handleSwapLocations();
                         }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surfaceBg border border-borderCol text-slate-300 flex items-center justify-center active:scale-90 transition hover:text-white hover:border-accentGreen shadow-md"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900 border border-white/15 text-slate-300 flex items-center justify-center active:scale-90 transition hover:text-white hover:border-pixel-blueLight shadow-md"
                         title="Invertir ruta"
                       >
                         <ArrowUpDown className="w-3.5 h-3.5" />
@@ -432,10 +471,10 @@ export default function App() {
                       bcvRate={bcvRate}
                     />
 
-                    {/* Botón Principal de Solicitud */}
+                    {/* Botón Principal de Solicitud con degradado Pixel Green */}
                     <button
                       onClick={handleRequestRide}
-                      className="w-full py-4 rounded-2xl bg-accentGreen hover:bg-emerald-400 text-black font-black text-sm tracking-wide shadow-xl shadow-accentGreen/25 transition active:scale-98 flex items-center justify-center space-x-2 mt-2"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-pixel-green to-emerald-400 hover:brightness-105 text-black font-black text-sm tracking-wide shadow-xl shadow-pixel-green/30 transition active:scale-[0.98] flex items-center justify-center space-x-2 mt-2"
                     >
                       <Navigation className="w-4 h-4 fill-current" />
                       <span>SOLICITAR RIDEX • {formatUsd(currentFare.fareUsd)} ({formatBs(currentFare.fareBs)})</span>
@@ -513,6 +552,8 @@ export default function App() {
         currentRate={bcvRate}
         rateSource={rateSource}
         lastUpdated={lastUpdatedRate}
+        officialDate={officialDate}
+        changePercent={changePercent}
         onUpdateRate={handleUpdateRate}
         onRefreshLive={handleRefreshLiveBcv}
       />

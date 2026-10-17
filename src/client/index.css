@@ -18,11 +18,11 @@ html, body {
 .leaflet-container {
   height: 100%;
   width: 100%;
-  background-color: #101622 !important;
+  background-color: #0b0e14 !important;
 }
 
-/* Leaflet dark tile filter */
-.leaflet-tile-pane {
+/* Leaflet dark tile filter (solo cuando se activa el modo dark invert) */
+.map-dark-invert .leaflet-tile-pane {
   filter: brightness(0.7) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
 }
 
@@ -35,13 +35,23 @@ html, body {
   scrollbar-width: none;
 }
 
-/* Pulsing radar animation for driver search */
+/* Pulsing radar animation for driver search & GPS dot */
 @keyframes radar-ping {
-  0% { transform: scale(0.6); opacity: 0.8; }
-  100% { transform: scale(2.4); opacity: 0; }
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.6); opacity: 0; }
 }
 .animate-radar {
   animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* GPS User Live Location Pulse */
+@keyframes gps-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.7); }
+  70% { box-shadow: 0 0 0 16px rgba(26, 115, 232, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0); }
+}
+.gps-pulse-dot {
+  animation: gps-pulse 2s infinite;
 }
 
 /* Safe area adjustments for Android camera notch and gesture navigation bar */

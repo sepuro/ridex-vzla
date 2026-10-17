@@ -13,8 +13,9 @@ import {
 } from 'lucide-react';
 import { formatUsd, formatBs } from '../utils/formatters.js';
 import { VENEZUELAN_BANKS } from '../utils/banks.js';
+import { DEFAULT_BCV_RATE } from '../../shared/constants.js';
 
-export function WalletView({ bcvRate = 54.20, role = 'passenger' }) {
+export function WalletView({ bcvRate = DEFAULT_BCV_RATE, role = 'passenger' }) {
   const [balanceUsd, setBalanceUsd] = useState(role === 'driver' ? 84.50 : 25.00);
   const [showAddAccountModal, setShowAddAccountModal] = useState(false);
   const [copiedBank, setCopiedBank] = useState(false);

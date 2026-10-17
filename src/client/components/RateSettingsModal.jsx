@@ -1,123 +1,210 @@
 import React, { useState } from 'react';
-import { X, RefreshCw, CheckCircle2, TrendingUp } from 'lucide-react';
+import { X, RefreshCw, CheckCircle2, TrendingUp, ShieldCheck, DollarSign, Calculator, AlertCircle } from 'lucide-react';
+import { triggerHaptic } from '../utils/soundEffects.js';
 
 export function RateSettingsModal({
   isOpen,
   onClose,
   currentRate,
-  rateSource,
+  rateSource = 'Banco Central de Venezuela (BCV)',
   lastUpdated,
+  officialDate,
+  changePercent = 0.0,
   onUpdateRate,
   onRefreshLive
 }) {
-  const [inputRate, setInputRate] = useState(currentRate?.toString() || '54.20');
+  const [inputRate, setInputRate] = useState(currentRate?.toString() || '880.12');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [syncStatus, setSyncStatus] = useState(null);
+  const [showManualOverride, setShowManualOverride] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    const num = parseFloat(inputRate);
-    if (!isNaN(num) && num > 0) {
-      onUpdateRate(num);
-      setMessage('Tasa actualizada correctamente.');
-      setTimeout(() => {
-        setMessage('');
-        onClose();
-      }, 1000);
-    }
-  };
-
   const handleRefresh = async () => {
     setLoading(true);
-    setMessage('');
+    setSyncStatus(null);
+    triggerHaptic(50);
     try {
       const updated = await onRefreshLive();
       if (updated && updated.rate) {
         setInputRate(updated.rate.toString());
-        setMessage('Tasa sincronizada con BCV Oficial.');
+        setSyncStatus({
+          type: 'success',
+          message: `Sincronizado con BCV Oficial: Bs. ${Number(updated.rate).toFixed(2)}`
+        });
+        triggerHaptic(80);
+      } else {
+        setSyncStatus({
+          type: 'error',
+          message: 'No se pudo obtener la tasa en vivo. Conservando valor actual.'
+        });
       }
     } catch {
-      setMessage('No se pudo conectar con la API externa.');
+      setSyncStatus({
+        type: 'error',
+        message: 'Error de conexión. Verifique su red móvil.'
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSaveManual = (e) => {
+    e.preventDefault();
+    const num = parseFloat(inputRate);
+    if (!isNaN(num) && num > 0) {
+      onUpdateRate(num);
+      triggerHaptic(60);
+      setSyncStatus({
+        type: 'success',
+        message: 'Tasa personalizada guardada correctamente.'
+      });
+      setTimeout(() => {
+        onClose();
+      }, 900);
+    }
+  };
+
+  const activeRateNum = typeof currentRate === 'number' ? currentRate : parseFloat(currentRate) || 880.12;
+  const quickConversions = [1, 5, 10, 20, 50];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-sm rounded-2xl bg-cardBg border border-borderCol p-5 shadow-2xl">
-        <div className="flex items-center justify-between pb-3 border-b border-borderCol">
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="w-5 h-5 text-accentGreen" />
-            <h3 className="font-bold text-white text-base">Tasa de Cambio Oficial (BCV)</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb">
+      <div className="w-full max-w-sm rounded-[28px] bg-[#111622]/95 border border-white/15 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-slate-100 space-y-4">
+        {/* Cabecera estilo iOS / Pixel */}
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded-full bg-pixel-green/20 border border-pixel-green/40 flex items-center justify-center">
+              <ShieldCheck className="w-4 h-4 text-pixel-greenLight" />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-white text-sm">Banco Central de Venezuela</h3>
+              <p className="text-[10px] text-slate-400 font-medium">Tasa Oficial Referencial (BCV)</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-surfaceBg"
+            className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition active:scale-90"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="mt-4 space-y-3">
-          <div className="p-3 rounded-xl bg-surfaceBg/60 border border-borderCol/60 text-xs">
-            <div className="flex justify-between text-slate-400">
-              <span>Fuente:</span>
-              <span className="text-white font-medium">{rateSource || 'Oficial BCV'}</span>
-            </div>
-            <div className="flex justify-between text-slate-400 mt-1">
-              <span>Última actualización:</span>
-              <span className="text-white font-medium">
-                {lastUpdated ? new Date(lastUpdated).toLocaleTimeString('es-VE') : 'Hoy'}
+        {/* Tarjeta de Tasa Oficial Activa */}
+        <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900/90 to-slate-800/60 border border-white/10 shadow-inner space-y-3">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span className="flex items-center space-x-1.5">
+              <span className="w-2 h-2 rounded-full bg-pixel-green animate-pulse" />
+              <span className="font-semibold text-slate-300">Dólar Oficial (USD)</span>
+            </span>
+            <span className="px-2 py-0.5 rounded-full bg-pixel-green/15 text-pixel-greenLight text-[10px] font-bold border border-pixel-green/30">
+              {changePercent >= 0 ? `+${changePercent}%` : `${changePercent}%`} 24h
+            </span>
+          </div>
+
+          <div className="flex items-baseline space-x-2">
+            <span className="text-3xl font-black text-white tracking-tight">
+              Bs. {activeRateNum.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+            <span className="text-xs text-slate-400 font-bold">/ 1.00 USD</span>
+          </div>
+
+          <div className="text-[11px] text-slate-400 pt-1 border-t border-white/5 flex items-center justify-between">
+            <span>Fecha Valor BCV:</span>
+            <span className="text-white font-medium">
+              {officialDate ? new Date(officialDate).toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Actualizado hoy'}
+            </span>
+          </div>
+        </div>
+
+        {/* Botón Sincronizar en Vivo */}
+        <button
+          onClick={handleRefresh}
+          disabled={loading}
+          className="w-full py-2.5 px-4 rounded-2xl bg-pixel-blue hover:bg-blue-600 active:scale-98 transition text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-md shadow-pixel-blue/30 disabled:opacity-50"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <span>{loading ? 'Consultando al BCV en tiempo real...' : 'Sincronizar con el BCV Oficial'}</span>
+        </button>
+
+        {syncStatus && (
+          <div className={`p-2.5 rounded-xl text-xs flex items-center space-x-2 border ${
+            syncStatus.type === 'success'
+              ? 'bg-pixel-green/15 text-pixel-greenLight border-pixel-green/30'
+              : 'bg-pixel-red/15 text-pixel-redLight border-pixel-red/30'
+          }`}>
+            {syncStatus.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            )}
+            <span className="font-medium text-[11px]">{syncStatus.message}</span>
+          </div>
+        )}
+
+        {/* Tabla de Conversión Rápida Oficial */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-semibold">
+            <span className="flex items-center space-x-1">
+              <Calculator className="w-3 h-3 text-pixel-yellowLight" />
+              <span>Conversión Directa</span>
+            </span>
+            <span className="text-[10px] text-slate-500">Tasa oficial BCV</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-1.5">
+            {quickConversions.map((usdVal) => (
+              <div
+                key={usdVal}
+                className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-slate-900/60 border border-white/5 text-[11px]"
+              >
+                <span className="font-bold text-slate-300">${usdVal}.00</span>
+                <span className="font-extrabold text-pixel-greenLight">
+                  Bs. {(usdVal * activeRateNum).toLocaleString('es-VE', { maximumFractionDigits: 1 })}
+                </span>
+              </div>
+            ))}
+            <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-slate-900/60 border border-white/5 text-[11px]">
+              <span className="font-bold text-slate-300">$100.00</span>
+              <span className="font-extrabold text-pixel-greenLight">
+                Bs. {(100 * activeRateNum).toLocaleString('es-VE', { maximumFractionDigits: 0 })}
               </span>
             </div>
           </div>
+        </div>
 
-          <form onSubmit={handleSave} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Valor del Dólar en Bolívares (Bs. / USD)
+        {/* Acordeón de Ajuste Manual por Contingencia */}
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={() => setShowManualOverride(!showManualOverride)}
+            className="w-full text-center text-[10px] text-slate-400 hover:text-white transition font-medium py-1"
+          >
+            {showManualOverride ? 'Ocultar ajuste manual' : '¿Sin conexión o necesitas ajustar manualmente?'}
+          </button>
+
+          {showManualOverride && (
+            <form onSubmit={handleSaveManual} className="mt-2 space-y-2 animate-fade-in p-2.5 rounded-xl bg-black/40 border border-white/10">
+              <label className="block text-[10px] text-slate-300 font-semibold">
+                Ingresar tasa manual de contingencia (Bs./USD):
               </label>
-              <div className="relative">
-                <span className="absolute left-3 top-2.5 text-sm font-bold text-accentGreen">Bs.</span>
+              <div className="flex space-x-2">
                 <input
                   type="number"
                   step="0.01"
                   value={inputRate}
                   onChange={(e) => setInputRate(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surfaceBg border border-borderCol text-white font-bold text-base focus:outline-none focus:border-accentGreen focus:ring-1 focus:ring-accentGreen"
-                  placeholder="54.20"
+                  className="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white font-bold text-xs focus:outline-none focus:border-pixel-green"
                 />
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 rounded-xl bg-pixel-green text-black font-extrabold text-xs active:scale-95 transition"
+                >
+                  Guardar
+                </button>
               </div>
-            </div>
-
-            {message && (
-              <div className="flex items-center space-x-1.5 text-xs text-accentGreen">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>{message}</span>
-              </div>
-            )}
-
-            <div className="flex space-x-2 pt-2">
-              <button
-                type="button"
-                onClick={handleRefresh}
-                disabled={loading}
-                className="flex-1 flex items-center justify-center space-x-1.5 py-2.5 px-3 rounded-xl bg-surfaceBg hover:bg-surfaceBg/80 border border-borderCol text-xs font-semibold text-slate-200 transition"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 text-accentYellow ${loading ? 'animate-spin' : ''}`} />
-                <span>Actualizar API</span>
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-2.5 px-3 rounded-xl bg-accentGreen hover:bg-emerald-400 text-black font-bold text-xs shadow-md transition"
-              >
-                Guardar Tasa
-              </button>
-            </div>
-          </form>
+            </form>
+          )}
         </div>
       </div>
     </div>

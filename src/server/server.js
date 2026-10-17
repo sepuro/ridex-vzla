@@ -24,6 +24,11 @@ app.use(express.static(publicPath));
 
 const rideManager = new RideManager();
 
+// Notificar automáticamente a todos los clientes por WebSocket cuando cambie la tasa oficial BCV
+bcvService.onRateChanged = (rateData) => {
+  rideManager.broadcast('bcv:updated', rateData);
+};
+
 // Inicializar conductores de demostración para Caracas (uno para moto, uno para carro)
 rideManager.drivers.set('drv_demo_moto', {
   driverId: 'drv_demo_moto',
