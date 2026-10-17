@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RideX Venezuela</string>
+    <string name="title_activity_main">RideX Venezuela</string>
+    <string name="package_name">com.ridex.venezuela</string>
+    <string name="custom_url_scheme">com.ridex.venezuela</string>
+</resources>
