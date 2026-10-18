@@ -98,6 +98,7 @@ export function EditProfileModal({
 
         canvas.width = width;
         canvas.height = height;
+
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
@@ -173,31 +174,34 @@ export function EditProfileModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb overflow-y-auto">
-      <div className="w-full max-w-md my-auto rounded-[32px] bg-[#0d121c]/95 border border-white/15 p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-slate-100 space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb overflow-y-auto select-none">
+      <div className="w-full max-w-md my-auto rounded-[32px] bg-[#0D111A] border border-white/15 p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-slate-100 space-y-4">
         {/* Cabecera */}
-        <div className="flex items-center justify-between pb-2 border-b border-white/10">
+        <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
           <div className="flex items-center space-x-2">
-            <User className="w-5 h-5 text-pixel-greenLight" />
-            <h3 className="font-extrabold text-white text-base">Editar Perfil</h3>
+            <User className="w-5 h-5 text-[#00E599]" />
+            <h3 className="font-black text-white text-base">Editar Perfil</h3>
           </div>
           <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition active:scale-90"
+            onClick={() => {
+              triggerHaptic(30);
+              onClose();
+            }}
+            className="w-8 h-8 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white transition active:scale-90"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {error && (
-          <div className="p-2.5 rounded-2xl bg-pixel-red/15 border border-pixel-red/30 text-pixel-redLight text-xs flex items-center space-x-2">
+          <div className="p-2.5 rounded-2xl bg-[#FF3B5C]/15 border border-[#FF3B5C]/30 text-[#FF7088] text-xs flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {message && (
-          <div className="p-2.5 rounded-2xl bg-pixel-green/15 border border-pixel-green/30 text-pixel-greenLight text-xs flex items-center space-x-2">
+          <div className="p-2.5 rounded-2xl bg-[#00E599]/15 border border-[#00E599]/30 text-[#00E599] text-xs flex items-center space-x-2">
             <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
             <span>{message}</span>
           </div>
@@ -205,9 +209,9 @@ export function EditProfileModal({
 
         <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
           {/* Foto de Perfil */}
-          <div className="flex items-center space-x-4 p-3 rounded-2xl bg-black/30 border border-white/10">
+          <div className="flex items-center space-x-4 p-3 rounded-2xl bg-black/40 border border-white/[0.08]">
             <div className="relative">
-              <div className="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-pixel-green/50 overflow-hidden flex items-center justify-center shadow-md">
+              <div className="w-16 h-16 rounded-2xl bg-[#141A26] border-2 border-[#00E599]/50 overflow-hidden flex items-center justify-center shadow-md">
                 {avatar ? (
                   <img src={avatar} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -217,7 +221,7 @@ export function EditProfileModal({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-pixel-green text-black flex items-center justify-center shadow-lg active:scale-90"
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#00E599] text-black flex items-center justify-center shadow-lg active:scale-90"
               >
                 <Camera className="w-3.5 h-3.5" />
               </button>
@@ -243,14 +247,14 @@ export function EditProfileModal({
                 <button
                   type="button"
                   onClick={() => setAvatar(currentUser.role === 'driver' ? DEFAULT_AVATARS.driver_moto : DEFAULT_AVATARS.passenger_female)}
-                  className="px-2 py-1 rounded-xl bg-white/5 text-[10px] text-slate-400"
+                  className="px-2 py-1 rounded-xl bg-white/[0.05] text-[10px] text-slate-400"
                 >
                   Preset 1
                 </button>
                 <button
                   type="button"
                   onClick={() => setAvatar(currentUser.role === 'driver' ? DEFAULT_AVATARS.driver_car : DEFAULT_AVATARS.passenger_male)}
-                  className="px-2 py-1 rounded-xl bg-white/5 text-[10px] text-slate-400"
+                  className="px-2 py-1 rounded-xl bg-white/[0.05] text-[10px] text-slate-400"
                 >
                   Preset 2
                 </button>
@@ -267,7 +271,7 @@ export function EditProfileModal({
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-white focus:outline-none focus:border-pixel-green"
+                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#00E599]"
               />
             </div>
 
@@ -279,7 +283,7 @@ export function EditProfileModal({
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-white font-mono"
+                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white font-mono"
                 />
               </div>
 
@@ -288,7 +292,7 @@ export function EditProfileModal({
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-white focus:outline-none"
+                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none"
                 >
                   <option value="Caracas">Caracas</option>
                   <option value="Valencia">Valencia</option>
@@ -303,8 +307,8 @@ export function EditProfileModal({
 
           {/* Vehículo (si es conductor) con Catálogo de Venezuela */}
           {currentUser.role === 'driver' && (
-            <div className="p-3.5 rounded-2xl bg-pixel-yellow/5 border border-pixel-yellow/20 space-y-2.5">
-              <span className="font-bold text-pixel-yellow text-[11px] flex items-center space-x-1">
+            <div className="p-3.5 rounded-2xl bg-[#FFB800]/5 border border-[#FFB800]/20 space-y-2.5">
+              <span className="font-bold text-[#FFB800] text-[11px] flex items-center space-x-1">
                 <Car className="w-3.5 h-3.5" />
                 <span>Datos del Vehículo (Catálogo Venezolano)</span>
               </span>
@@ -316,8 +320,8 @@ export function EditProfileModal({
                   onClick={() => handleVehicleTypeChange('moto')}
                   className={`p-1.5 rounded-xl border text-center transition ${
                     vehicleType === 'moto'
-                      ? 'bg-pixel-yellow/20 border-pixel-yellow text-white font-bold'
-                      : 'bg-black/30 border-white/10 text-slate-400'
+                      ? 'bg-[#FFB800]/20 border-[#FFB800] text-white font-bold'
+                      : 'bg-black/40 border-white/10 text-slate-400'
                   }`}
                 >
                   Moto Express
@@ -327,8 +331,8 @@ export function EditProfileModal({
                   onClick={() => handleVehicleTypeChange('carro_standard')}
                   className={`p-1.5 rounded-xl border text-center transition ${
                     vehicleType === 'carro_standard'
-                      ? 'bg-pixel-blue/20 border-pixel-blue text-white font-bold'
-                      : 'bg-black/30 border-white/10 text-slate-400'
+                      ? 'bg-[#00D2FF]/20 border-[#00D2FF] text-white font-bold'
+                      : 'bg-black/40 border-white/10 text-slate-400'
                   }`}
                 >
                   Carro Estándar
@@ -338,8 +342,8 @@ export function EditProfileModal({
                   onClick={() => handleVehicleTypeChange('carro_confort')}
                   className={`p-1.5 rounded-xl border text-center transition ${
                     vehicleType === 'carro_confort'
-                      ? 'bg-pixel-green/20 border-pixel-green text-white font-bold'
-                      : 'bg-black/30 border-white/10 text-slate-400'
+                      ? 'bg-[#00E599]/20 border-[#00E599] text-white font-bold'
+                      : 'bg-black/40 border-white/10 text-slate-400'
                   }`}
                 >
                   Confort A/C
@@ -353,7 +357,7 @@ export function EditProfileModal({
                   <select
                     value={vehicleMake}
                     onChange={(e) => handleVehicleMakeChange(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white text-xs font-semibold focus:outline-none"
+                    className="w-full px-2.5 py-1.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-semibold focus:outline-none"
                   >
                     {getBrandsForVehicleType(vehicleType).map((brand) => (
                       <option key={brand} value={brand}>{brand}</option>
@@ -366,7 +370,7 @@ export function EditProfileModal({
                   <select
                     value={vehicleModel}
                     onChange={(e) => setVehicleModel(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white text-xs font-semibold focus:outline-none"
+                    className="w-full px-2.5 py-1.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-semibold focus:outline-none"
                   >
                     {getModelsForBrand(vehicleMake, vehicleType).map((model) => (
                       <option key={model} value={model}>{model}</option>
@@ -382,7 +386,7 @@ export function EditProfileModal({
                   <select
                     value={vehicleYear}
                     onChange={(e) => setVehicleYear(e.target.value)}
-                    className="w-full px-2 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white text-xs focus:outline-none"
+                    className="w-full px-2 py-1.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none"
                   >
                     {VENEZUELAN_VEHICLE_YEARS.slice(0, 20).map((year) => (
                       <option key={year} value={year}>{year}</option>
@@ -395,7 +399,7 @@ export function EditProfileModal({
                   <select
                     value={vehicleColor}
                     onChange={(e) => setVehicleColor(e.target.value)}
-                    className="w-full px-2 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white text-xs focus:outline-none"
+                    className="w-full px-2 py-1.5 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none"
                   >
                     {VENEZUELAN_VEHICLE_COLORS.map((c) => (
                       <option key={c} value={c}>{c}</option>
@@ -409,7 +413,7 @@ export function EditProfileModal({
                     type="text"
                     value={vehiclePlate}
                     onChange={(e) => setVehiclePlate(e.target.value.toUpperCase())}
-                    className="w-full px-2 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white font-mono uppercase font-bold text-center text-xs tracking-wider"
+                    className="w-full px-2 py-1.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono uppercase font-bold text-center text-xs tracking-wider"
                   />
                 </div>
               </div>
@@ -417,8 +421,8 @@ export function EditProfileModal({
           )}
 
           {/* Contacto de Emergencia para SOS */}
-          <div className="p-3 rounded-2xl bg-red-950/20 border border-red-500/20 space-y-2">
-            <span className="font-bold text-red-400 text-[11px] flex items-center space-x-1">
+          <div className="p-3 rounded-2xl bg-[#FF3B5C]/10 border border-[#FF3B5C]/20 space-y-2">
+            <span className="font-bold text-[#FF7088] text-[11px] flex items-center space-x-1">
               <HeartHandshake className="w-3.5 h-3.5" />
               <span>Contacto de Seguridad (Para SOS VEN 911)</span>
             </span>
@@ -431,7 +435,7 @@ export function EditProfileModal({
                   value={emergencyName}
                   onChange={(e) => setEmergencyName(e.target.value)}
                   placeholder="Ej: Mamá / Hermano"
-                  className="w-full px-3 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white"
+                  className="w-full px-3 py-1.5 rounded-xl bg-black/60 border border-white/15 text-white"
                 />
               </div>
               <div>
@@ -441,7 +445,7 @@ export function EditProfileModal({
                   value={emergencyPhone}
                   onChange={(e) => setEmergencyPhone(e.target.value)}
                   placeholder="0414-0000000"
-                  className="w-full px-3 py-1.5 rounded-xl bg-slate-900 border border-white/15 text-white font-mono"
+                  className="w-full px-3 py-1.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono"
                 />
               </div>
             </div>
@@ -450,7 +454,7 @@ export function EditProfileModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-2xl bg-pixel-green hover:bg-emerald-400 text-black font-extrabold text-xs shadow-lg active:scale-98 transition flex items-center justify-center space-x-1.5"
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/25 active:scale-95 transition flex items-center justify-center space-x-1.5"
           >
             <Save className="w-4 h-4" />
             <span>{loading ? 'Guardando...' : 'Guardar Cambios'}</span>

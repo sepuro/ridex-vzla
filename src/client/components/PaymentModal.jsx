@@ -3,6 +3,7 @@ import { X, Smartphone, Banknote, QrCode, Copy, CheckCircle2, AlertCircle, Arrow
 import { PAYMENT_METHODS } from '../../shared/constants.js';
 import { VENEZUELAN_BANKS, validatePagoMovil, calculateCashChange } from '../utils/banks.js';
 import { formatUsd, formatBs } from '../utils/formatters.js';
+import { triggerHaptic } from '../utils/soundEffects.js';
 
 export function PaymentModal({
   isOpen,
@@ -37,6 +38,7 @@ export function PaymentModal({
     const text = `Pago Móvil RideX:\nBanco: ${driverPaymentData.bank}\nTel: ${driverPaymentData.phone}\nCI: ${driverPaymentData.idDoc}\nMonto: ${formatBs(ride.fareBs)}`;
     navigator.clipboard?.writeText(text);
     setCopied(true);
+    triggerHaptic(40);
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -53,9 +55,11 @@ export function PaymentModal({
 
     if (!validation.isValid) {
       setPagoMovilError(validation.errors[0]);
+      triggerHaptic(80);
       return;
     }
 
+    triggerHaptic(100);
     onSubmitPayment({
       method: PAYMENT_METHODS.PAGO_MOVIL,
       senderBank,
@@ -82,6 +86,7 @@ export function PaymentModal({
       return;
     }
 
+    triggerHaptic(100);
     onSubmitPayment({
       method: PAYMENT_METHODS.EFECTIVO_USD,
       billReceivedUsd: cashBill,
@@ -101,32 +106,39 @@ export function PaymentModal({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb">
-      <div className="w-full max-w-md rounded-t-[32px] sm:rounded-[32px] bg-[#0c101b]/95 border-t sm:border border-white/15 p-5 shadow-2xl backdrop-blur-2xl max-h-[90vh] overflow-y-auto no-scrollbar text-slate-100 space-y-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb select-none">
+      <div className="w-full max-w-md rounded-t-[32px] sm:rounded-[32px] bg-[#0D111A] border-t sm:border border-white/15 p-5 shadow-2xl backdrop-blur-2xl max-h-[90vh] overflow-y-auto no-scrollbar text-slate-100 space-y-4">
         {/* Cabecera */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
           <div>
-            <h3 className="font-extrabold text-white text-base">Liquidar Pago del Viaje</h3>
+            <h3 className="font-black text-white text-base">Liquidar Pago del Viaje</h3>
             <p className="text-xs text-slate-400">
-              Total a pagar: <strong className="text-white">{formatUsd(ride.fareUsd)}</strong> ({formatBs(ride.fareBs)})
+              Total a pagar: <strong className="text-white">{formatUsd(ride.fareUsd)}</strong>{' '}
+              <span className="text-[#00E599] font-bold">({formatBs(ride.fareBs)})</span>
             </p>
           </div>
           <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white"
+            onClick={() => {
+              triggerHaptic(30);
+              onClose();
+            }}
+            className="w-8 h-8 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Pestañas de Métodos de Pago estilo Material You */}
+        {/* Pestañas de Métodos de Pago */}
         <div className="grid grid-cols-2 gap-2">
           <button
-            onClick={() => setActiveTab(PAYMENT_METHODS.PAGO_MOVIL)}
-            className={`py-2.5 px-3 rounded-2xl flex items-center justify-center space-x-1.5 text-xs font-bold transition border ${
+            onClick={() => {
+              triggerHaptic(30);
+              setActiveTab(PAYMENT_METHODS.PAGO_MOVIL);
+            }}
+            className={`py-2.5 px-3 rounded-2xl flex items-center justify-center space-x-1.5 text-xs font-black transition border active:scale-95 ${
               activeTab === PAYMENT_METHODS.PAGO_MOVIL
-                ? 'bg-pixel-green text-black border-pixel-green shadow-lg shadow-pixel-green/20'
-                : 'bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
+                ? 'bg-[#00E599] text-black border-[#00E599] shadow-lg shadow-[#00E599]/25'
+                : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.08]'
             }`}
           >
             <Smartphone className="w-4 h-4" />
@@ -134,11 +146,14 @@ export function PaymentModal({
           </button>
 
           <button
-            onClick={() => setActiveTab(PAYMENT_METHODS.EFECTIVO_USD)}
-            className={`py-2.5 px-3 rounded-2xl flex items-center justify-center space-x-1.5 text-xs font-bold transition border ${
+            onClick={() => {
+              triggerHaptic(30);
+              setActiveTab(PAYMENT_METHODS.EFECTIVO_USD);
+            }}
+            className={`py-2.5 px-3 rounded-2xl flex items-center justify-center space-x-1.5 text-xs font-black transition border active:scale-95 ${
               activeTab === PAYMENT_METHODS.EFECTIVO_USD
-                ? 'bg-pixel-yellow text-black border-pixel-yellow shadow-lg shadow-pixel-yellow/20'
-                : 'bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
+                ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/25'
+                : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.08]'
             }`}
           >
             <Banknote className="w-4 h-4" />
@@ -150,16 +165,16 @@ export function PaymentModal({
         {activeTab === PAYMENT_METHODS.PAGO_MOVIL && (
           <div className="space-y-4 animate-fade-in">
             {/* Tarjeta con los datos de cobro del conductor */}
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-2.5">
-              <div className="flex justify-between items-center pb-2 border-b border-white/10">
-                <span className="text-[11px] font-black text-pixel-greenLight uppercase tracking-wider">
+            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.08] space-y-2.5">
+              <div className="flex justify-between items-center pb-2 border-b border-white/[0.08]">
+                <span className="text-[11px] font-black text-[#00E599] uppercase tracking-wider">
                   Datos del Conductor
                 </span>
                 <button
                   onClick={handleCopyPaymentData}
-                  className="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-pixel-green/15 text-pixel-greenLight hover:bg-pixel-green/25 border border-pixel-green/30 text-[11px] font-bold transition active:scale-95"
+                  className="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-[#00E599]/15 text-[#00E599] hover:bg-[#00E599]/25 border border-[#00E599]/30 text-[11px] font-bold transition active:scale-95"
                 >
-                  {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-pixel-green" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-[#00E599]" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? '¡Copiado!' : 'Copiar todo'}</span>
                 </button>
               </div>
@@ -177,9 +192,9 @@ export function PaymentModal({
                   <span className="text-slate-400">Cédula / RIF:</span>
                   <span className="font-mono font-bold text-white">{driverPaymentData.idDoc}</span>
                 </div>
-                <div className="flex justify-between pt-1 border-t border-white/10">
+                <div className="flex justify-between pt-1 border-t border-white/[0.08]">
                   <span className="font-bold text-slate-300">Monto exacto:</span>
-                  <span className="font-black text-pixel-greenLight text-sm">{formatBs(ride.fareBs)}</span>
+                  <span className="font-black text-[#00E599] text-sm">{formatBs(ride.fareBs)}</span>
                 </div>
               </div>
             </div>
@@ -193,7 +208,7 @@ export function PaymentModal({
                 <select
                   value={senderBank}
                   onChange={(e) => setSenderBank(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-900 border border-white/15 text-xs font-medium text-white focus:outline-none focus:border-pixel-green"
+                  className="w-full p-2.5 rounded-xl bg-black/60 border border-white/15 text-xs font-medium text-white focus:outline-none focus:border-[#00E599]"
                 >
                   {VENEZUELAN_BANKS.map((b) => (
                     <option key={b.code} value={b.code}>
@@ -213,7 +228,7 @@ export function PaymentModal({
                     value={senderPhone}
                     onChange={(e) => setSenderPhone(e.target.value)}
                     placeholder="04121234567"
-                    className="w-full p-2.5 rounded-xl bg-slate-900 border border-white/15 text-xs font-mono text-white focus:outline-none focus:border-pixel-green"
+                    className="w-full p-2.5 rounded-xl bg-black/60 border border-white/15 text-xs font-mono text-white focus:outline-none focus:border-[#00E599]"
                   />
                 </div>
                 <div>
@@ -225,7 +240,7 @@ export function PaymentModal({
                     value={senderId}
                     onChange={(e) => setSenderId(e.target.value)}
                     placeholder="V-12345678"
-                    className="w-full p-2.5 rounded-xl bg-slate-900 border border-white/15 text-xs font-mono text-white focus:outline-none focus:border-pixel-green"
+                    className="w-full p-2.5 rounded-xl bg-black/60 border border-white/15 text-xs font-mono text-white focus:outline-none focus:border-[#00E599]"
                   />
                 </div>
               </div>
@@ -240,7 +255,7 @@ export function PaymentModal({
                   value={reference}
                   onChange={(e) => setReference(e.target.value.replace(/\D/g, ''))}
                   placeholder="Ej: 849302"
-                  className="w-full p-3 rounded-xl bg-slate-900 border border-white/15 text-sm font-mono font-bold text-pixel-green text-center tracking-widest focus:outline-none focus:border-pixel-green"
+                  className="w-full p-3 rounded-xl bg-black/60 border border-white/15 text-sm font-mono font-bold text-[#00E599] text-center tracking-widest focus:outline-none focus:border-[#00E599]"
                   required
                 />
               </div>
@@ -254,7 +269,7 @@ export function PaymentModal({
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pixel-green to-emerald-400 hover:brightness-105 text-black font-black text-xs shadow-xl shadow-pixel-green/30 transition active:scale-98 mt-2 flex items-center justify-center space-x-1.5"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-xl shadow-[#00E599]/30 transition active:scale-98 mt-2 flex items-center justify-center space-x-1.5"
               >
                 <span>Enviar Comprobante de Pago</span>
                 <ArrowRight className="w-4 h-4" />
@@ -266,8 +281,8 @@ export function PaymentModal({
         {/* 2. Vista Efectivo USD */}
         {activeTab === PAYMENT_METHODS.EFECTIVO_USD && (
           <div className="space-y-4 animate-fade-in">
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-              <span className="text-[11px] font-black text-pixel-yellow uppercase tracking-wider block">
+            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.08] space-y-3">
+              <span className="text-[11px] font-black text-[#FFB800] uppercase tracking-wider block">
                 Calculadora de Vuelto en Efectivo
               </span>
 
@@ -281,11 +296,14 @@ export function PaymentModal({
                   <button
                     key={bill}
                     type="button"
-                    onClick={() => setCashBill(bill)}
-                    className={`py-2 rounded-xl font-black text-sm transition border ${
+                    onClick={() => {
+                      triggerHaptic(25);
+                      setCashBill(bill);
+                    }}
+                    className={`py-2 rounded-xl font-black text-sm transition border active:scale-95 ${
                       cashBill === bill
-                        ? 'bg-pixel-yellow text-black border-pixel-yellow shadow-md shadow-pixel-yellow/30'
-                        : 'bg-white/5 border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
+                        ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-md shadow-[#FFB800]/25'
+                        : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.08]'
                     }`}
                   >
                     ${bill}
@@ -294,7 +312,7 @@ export function PaymentModal({
               </div>
 
               {/* Resultado del Vuelto */}
-              <div className="p-3 rounded-xl bg-slate-900 border border-white/10 space-y-1 text-xs">
+              <div className="p-3 rounded-xl bg-black/60 border border-white/[0.08] space-y-1 text-xs">
                 <div className="flex justify-between text-slate-400">
                   <span>Monto del viaje:</span>
                   <span className="font-semibold text-white">{formatUsd(ride.fareUsd)}</span>
@@ -303,13 +321,13 @@ export function PaymentModal({
                   <span>Billete entregado:</span>
                   <span className="font-semibold text-white">${cashBill}.00</span>
                 </div>
-                <div className="flex justify-between text-white font-bold pt-1 border-t border-white/10">
-                  <span className="text-pixel-yellow">Vuelto a recibir:</span>
+                <div className="flex justify-between text-white font-bold pt-1 border-t border-white/[0.08]">
+                  <span className="text-[#FFB800]">Vuelto a recibir:</span>
                   <div className="text-right">
-                    <span className="text-sm font-extrabold text-pixel-yellow">
+                    <span className="text-sm font-black text-[#FFB800]">
                       {formatUsd(changeResult.changeUsd)}
                     </span>
-                    <span className="block text-[11px] text-pixel-greenLight font-semibold">
+                    <span className="block text-[11px] text-[#00E599] font-black">
                       ({formatBs(changeResult.changeBs)})
                     </span>
                   </div>
@@ -320,7 +338,7 @@ export function PaymentModal({
             <button
               type="button"
               onClick={handleSubmitCash}
-              className="w-full py-3.5 rounded-2xl bg-pixel-yellow hover:brightness-105 text-black font-black text-xs shadow-xl shadow-pixel-yellow/30 transition active:scale-98"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-xl shadow-[#FFB800]/25 transition active:scale-98"
             >
               Confirmar Pago en Efectivo (${cashBill})
             </button>

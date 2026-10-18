@@ -14,10 +14,13 @@ import {
   Compass,
   Car,
   Bike,
-  AlertTriangle
+  AlertTriangle,
+  Sparkles,
+  Shield
 } from 'lucide-react';
 import { RIDE_STATUS } from '../../shared/constants.js';
 import { formatUsd, formatBs } from '../utils/formatters.js';
+import { triggerHaptic } from '../utils/soundEffects.js';
 
 export function RideStatusCard({
   ride,
@@ -41,6 +44,7 @@ export function RideStatusCard({
 
   // Enlace para compartir viaje por WhatsApp en tiempo real
   const handleShareWhatsApp = () => {
+    triggerHaptic(40);
     const text = encodeURIComponent(
       `🛡️ *RideX Venezuela - Monitoreo de Viaje en Vivo*\n\n` +
       `👤 *Conductor:* ${ride.driver?.name || 'Asignado'}\n` +
@@ -56,53 +60,61 @@ export function RideStatusCard({
   };
 
   return (
-    <div className="bg-[#111622]/95 backdrop-blur-2xl border border-white/15 rounded-3xl p-4 shadow-2xl space-y-4 animate-slide-up text-slate-100">
+    <div className="bg-[#0D111A]/95 backdrop-blur-2xl border border-white/[0.12] rounded-3xl p-4 shadow-[0_12px_40px_rgba(0,0,0,0.6)] space-y-4 animate-slide-up text-slate-100 relative overflow-hidden select-none">
       {/* 1. MODO BÚSQUEDA DE CONDUCTOR */}
       {isSearching && (
-        <div className="text-center py-4 space-y-3.5">
-          <div className="relative mx-auto w-16 h-16 flex items-center justify-center">
-            <span className="absolute w-full h-full rounded-full bg-pixel-green/20 animate-ping" />
-            <div className="w-12 h-12 rounded-full bg-slate-900 border-2 border-pixel-green flex items-center justify-center shadow-lg shadow-pixel-green/30">
-              <span className="w-4 h-4 rounded-full bg-pixel-green animate-pulse" />
+        <div className="text-center py-4 space-y-4">
+          {/* Radar Animado Multi-Anillo */}
+          <div className="relative mx-auto w-20 h-20 flex items-center justify-center">
+            <span className="absolute w-full h-full rounded-full bg-[#00E599]/20 animate-radar" />
+            <span className="absolute w-3/4 h-3/4 rounded-full bg-[#00D2FF]/25 animate-radar-multi" />
+            <div className="w-14 h-14 rounded-full bg-[#06080D] border-2 border-[#00E599] flex items-center justify-center shadow-[0_0_25px_rgba(0,229,153,0.4)] relative z-10">
+              <span className="w-4 h-4 rounded-full bg-[#00E599] animate-pulse" />
             </div>
           </div>
 
           <div>
-            <h3 className="font-extrabold text-white text-base">Buscando conductores cercanos</h3>
-            <p className="text-xs text-slate-400 mt-0.5">Enviando solicitud a conductores y mototaxis verificados...</p>
+            <h3 className="font-black text-white text-base">Buscando conductores cercanos</h3>
+            <p className="text-xs text-slate-400 mt-0.5">Contactando con conductores y mototaxis verificados...</p>
           </div>
 
-          <div className="flex justify-between items-center py-2.5 px-3.5 rounded-2xl bg-black/40 border border-white/10 text-xs">
-            <span className="text-slate-400 font-semibold">Tarifa garantizada:</span>
+          <div className="flex justify-between items-center py-2.5 px-3.5 rounded-2xl bg-black/40 border border-white/[0.08] text-xs">
+            <span className="text-slate-400 font-semibold">Tarifa fija garantizada:</span>
             <div className="text-right">
               <span className="font-black text-white mr-1.5 text-sm">{formatUsd(ride.fareUsd)}</span>
-              <span className="font-bold text-pixel-greenLight">({formatBs(ride.fareBs)})</span>
+              <span className="font-black text-[#00E599]">({formatBs(ride.fareBs)})</span>
             </div>
           </div>
 
           {!showCancelConfirm ? (
             <button
-              onClick={() => setShowCancelConfirm(true)}
-              className="w-full py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 font-bold text-xs transition active:scale-98 flex items-center justify-center space-x-1"
+              onClick={() => {
+                triggerHaptic(30);
+                setShowCancelConfirm(true);
+              }}
+              className="w-full py-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 font-bold text-xs transition active:scale-95 flex items-center justify-center space-x-1"
             >
-              <X className="w-4 h-4 text-rose-500" />
+              <X className="w-4 h-4 text-[#FF3B5C]" />
               <span>Cancelar Solicitud</span>
             </button>
           ) : (
-            <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-2">
-              <p className="text-xs text-rose-300 font-bold">¿Seguro que deseas cancelar?</p>
+            <div className="p-3 rounded-2xl bg-[#FF3B5C]/10 border border-[#FF3B5C]/30 space-y-2">
+              <p className="text-xs text-[#FF7088] font-bold">¿Seguro que deseas cancelar la carrera?</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setShowCancelConfirm(false)}
-                  className="py-1.5 rounded-xl bg-white/10 text-white text-xs font-semibold"
+                  className="py-1.5 rounded-xl bg-white/10 text-white text-xs font-semibold active:scale-95 transition"
                 >
                   Seguir esperando
                 </button>
                 <button
-                  onClick={() => onCancel(ride.id)}
-                  className="py-1.5 rounded-xl bg-rose-500 text-white text-xs font-bold shadow-md"
+                  onClick={() => {
+                    triggerHaptic(50);
+                    onCancel(ride.id);
+                  }}
+                  className="py-1.5 rounded-xl bg-[#FF3B5C] text-white text-xs font-black shadow-md active:scale-95 transition"
                 >
-                  Confirmar cancelación
+                  Sí, Cancelar
                 </button>
               </div>
             </div>
@@ -110,181 +122,137 @@ export function RideStatusCard({
         </div>
       )}
 
-      {/* 2. CONDUCTOR ASIGNADO / EN CAMINO / EN VIAJE / FINALIZADO */}
-      {!isSearching && (
-        <>
-          {/* Header de Estado con Progress Bar Dinámica */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between pb-1">
-              <div className="flex items-center space-x-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${
-                  isPaid
-                    ? 'bg-pixel-green shadow-md shadow-pixel-green/50'
-                    : isCompleted
-                    ? 'bg-pixel-yellow animate-pulse'
-                    : 'bg-pixel-blueLight animate-ping'
-                }`} />
-                <span className="text-xs font-black uppercase tracking-wider text-slate-200">
-                  {isAccepted && 'Conductor en camino (3-5 min)'}
-                  {isArrived && '¡Conductor en el sitio de recogida!'}
-                  {isInProgress && 'Viaje en desarrollo hacia destino'}
-                  {isCompleted && 'Viaje finalizado • Pago pendiente'}
-                  {isPaid && 'Viaje liquidado y completado'}
+      {/* 2. MODO CONDUCTOR ASIGNADO, EN CAMINO, LLEGÓ O EN VIAJE */}
+      {(isAccepted || isArrived || isInProgress || isCompleted || isPaid) && (
+        <div className="space-y-4">
+          {/* Banner de Estado del Viaje */}
+          <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <div className="flex items-center space-x-2">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E599] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#00E599]"></span>
+              </span>
+              <div>
+                <h3 className="font-black text-white text-sm">
+                  {isAccepted && 'Conductor asignado — en camino'}
+                  {isArrived && '¡El conductor ha llegado al punto!'}
+                  {isInProgress && 'Viaje en curso hacia tu destino'}
+                  {isCompleted && '¡Has llegado a tu destino!'}
+                  {isPaid && 'Viaje finalizado y liquidado'}
+                </h3>
+                <span className="text-[11px] text-slate-400">
+                  {isAccepted && 'Llegada estimada en 4-6 minutos'}
+                  {isArrived && 'Te espera en la dirección indicada'}
+                  {isInProgress && 'Monitoreo satelital activo'}
+                  {isCompleted && 'Listo para procesar el pago'}
+                  {isPaid && '¡Gracias por viajar con RideX!'}
                 </span>
               </div>
-              <span className="text-[10px] font-mono font-bold text-slate-400 bg-black/40 px-2 py-0.5 rounded-full border border-white/5">
-                #{ride.id}
-              </span>
             </div>
 
-            {/* Stepper visual de etapas del viaje */}
-            <div className="grid grid-cols-4 gap-1.5 pt-1">
-              {[
-                { label: 'Asignado', done: true },
-                { label: 'En camino', done: isAccepted || isArrived || isInProgress || isCompleted || isPaid },
-                { label: 'En viaje', done: isInProgress || isCompleted || isPaid },
-                { label: 'Llegada', done: isCompleted || isPaid }
-              ].map((step, idx) => (
-                <div key={idx} className="space-y-1">
-                  <div className={`h-1.5 rounded-full transition-all ${
-                    step.done ? 'bg-pixel-green shadow-sm shadow-pixel-green/50' : 'bg-white/10'
-                  }`} />
-                  <span className={`block text-[9px] text-center font-bold truncate ${
-                    step.done ? 'text-pixel-greenLight' : 'text-slate-500'
-                  }`}>
-                    {step.label}
-                  </span>
-                </div>
-              ))}
+            {/* PIN de Seguridad del Viaje */}
+            <div className="text-right">
+              <span className="text-[9px] uppercase font-bold text-slate-400 block">PIN Seguridad</span>
+              <span className="font-mono font-black text-base text-[#00E599] tracking-wider bg-[#00E599]/10 px-2 py-0.5 rounded-lg border border-[#00E599]/30">
+                {ridePin}
+              </span>
             </div>
           </div>
 
-          {/* Información del Conductor y PIN de Seguridad */}
-          {ride.driver && (
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1a2336] to-[#0f1725] border border-white/15 flex items-center justify-center text-pixel-greenLight font-black text-lg shadow-inner">
-                    {ride.driver.name.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-1.5">
-                      <h4 className="font-extrabold text-white text-sm">{ride.driver.name}</h4>
-                      <span className="text-[11px] text-pixel-yellow font-bold flex items-center">
-                        ★ {ride.driver.rating || '4.95'}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-300 font-medium">
-                      {ride.driver.model} ({ride.driver.color || 'Color original'})
-                    </p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className="px-2 py-0.5 rounded-md bg-white/10 border border-white/15 text-[11px] font-mono font-black text-white">
-                        {ride.driver.plate}
-                      </span>
-                      {/* PIN de seguridad estilo Uber */}
-                      <span className="px-2 py-0.5 rounded-md bg-pixel-yellow/15 border border-pixel-yellow/30 text-[10px] font-mono font-black text-pixel-yellow">
-                        PIN: {ridePin}
-                      </span>
-                    </div>
-                  </div>
+          {/* Tarjeta del Conductor y Vehículo */}
+          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08]">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#00E599] to-[#00D2FF] p-0.5 shadow-md">
+                <div className="w-full h-full bg-[#06080D] rounded-[14px] flex items-center justify-center text-white font-black text-base">
+                  {ride.driver?.name?.charAt(0) || 'C'}
                 </div>
+              </div>
 
-                {/* Acciones de Contacto Rápido */}
-                <div className="flex flex-col space-y-1.5">
-                  <a
-                    href={`tel:${ride.driver.phone}`}
-                    className="w-9 h-9 rounded-full bg-pixel-green/15 border border-pixel-green/30 flex items-center justify-center text-pixel-green hover:bg-pixel-green/25 active:scale-95 transition"
-                    title="Llamar al conductor"
-                  >
-                    <Phone className="w-4 h-4" />
-                  </a>
-                  <a
-                    href={`https://wa.me/58${String(ride.driver.phone || '').replace(/\D/g, '').replace(/^0/, '')}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-9 h-9 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/25 active:scale-95 transition"
-                    title="WhatsApp"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                  </a>
+              <div>
+                <div className="flex items-center space-x-1.5">
+                  <span className="font-black text-white text-sm">{ride.driver?.name || 'Carlos Mendoza'}</span>
+                  <ShieldCheck className="w-4 h-4 text-[#00E599]" />
                 </div>
+                <p className="text-xs text-slate-300 font-medium">
+                  {ride.driver?.model || 'Bera SBR 150'} • <span className="text-slate-400">{ride.driver?.color || 'Rojo'}</span>
+                </p>
+                <div className="flex items-center space-x-2 mt-1">
+                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                    Placa: {ride.driver?.plate || 'AB123CD'}
+                  </span>
+                  <span className="text-[11px] text-[#FFB800] font-bold">
+                    ★ {ride.driver?.rating || '4.98'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Botones de Comunicación Rápida */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleShareWhatsApp}
+                className="w-9 h-9 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 flex items-center justify-center active:scale-95 transition"
+                title="Compartir ruta en WhatsApp"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
+              <a
+                href={`tel:${ride.driver?.phone || '04121234567'}`}
+                className="w-9 h-9 rounded-xl bg-[#00D2FF]/20 hover:bg-[#00D2FF]/30 border border-[#00D2FF]/30 text-[#00D2FF] flex items-center justify-center active:scale-95 transition"
+                title="Llamar al conductor"
+              >
+                <Phone className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+
+          {/* Botón de Pago si está Completado */}
+          {isCompleted && (
+            <button
+              onClick={() => {
+                triggerHaptic(50);
+                onOpenPayment();
+              }}
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E599] via-[#00F5A0] to-[#00D2FF] text-black font-black text-sm tracking-wide shadow-xl shadow-[#00E599]/30 transition active:scale-[0.98] flex items-center justify-center space-x-2"
+            >
+              <CreditCard className="w-4 h-4" />
+              <span>PAGAR VIAJE • {formatUsd(ride.fareUsd)} ({formatBs(ride.fareBs)})</span>
+            </button>
+          )}
+
+          {/* Botón de Cancelar si aún está en fase inicial */}
+          {(isAccepted || isArrived) && !showCancelConfirm && (
+            <button
+              onClick={() => setShowCancelConfirm(true)}
+              className="w-full py-2 text-center text-xs text-slate-400 hover:text-[#FF7088] transition font-semibold"
+            >
+              ¿Deseas cancelar este viaje?
+            </button>
+          )}
+
+          {showCancelConfirm && (
+            <div className="p-3 rounded-2xl bg-[#FF3B5C]/10 border border-[#FF3B5C]/30 space-y-2">
+              <p className="text-xs text-[#FF7088] font-bold">¿Cancelar carrera con conductor en camino?</p>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => setShowCancelConfirm(false)}
+                  className="py-1.5 rounded-xl bg-white/10 text-white text-xs font-semibold"
+                >
+                  Continuar viaje
+                </button>
+                <button
+                  onClick={() => {
+                    triggerHaptic(50);
+                    onCancel(ride.id);
+                  }}
+                  className="py-1.5 rounded-xl bg-[#FF3B5C] text-white text-xs font-black"
+                >
+                  Confirmar Cancelación
+                </button>
               </div>
             </div>
           )}
-
-          {/* Ruta del viaje en tarjeta visual */}
-          <div className="p-3 rounded-2xl bg-black/30 border border-white/5 space-y-2 text-xs">
-            <div className="flex items-start space-x-2">
-              <span className="w-2 h-2 rounded-full bg-pixel-green mt-1 flex-shrink-0" />
-              <div className="truncate">
-                <span className="text-[10px] text-slate-400 font-semibold block leading-none">RECOGIDA</span>
-                <span className="text-slate-200 font-medium truncate block">{ride.pickup?.name || 'Origen fijado'}</span>
-              </div>
-            </div>
-            <div className="flex items-start space-x-2">
-              <span className="w-2 h-2 rounded-full bg-pixel-yellow mt-1 flex-shrink-0" />
-              <div className="truncate">
-                <span className="text-[10px] text-slate-400 font-semibold block leading-none">DESTINO</span>
-                <span className="text-slate-200 font-medium truncate block">{ride.dropoff?.name || 'Destino fijado'}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Botones de Seguridad y Compartir Viaje */}
-          <div className="flex space-x-2">
-            <button
-              onClick={handleShareWhatsApp}
-              className="flex-1 py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-200 flex items-center justify-center space-x-1.5 transition active:scale-95"
-            >
-              <Share2 className="w-3.5 h-3.5 text-pixel-blueLight" />
-              <span>Compartir con Familiar</span>
-            </button>
-
-            <a
-              href="tel:911"
-              className="py-2 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-xs font-bold text-rose-400 flex items-center justify-center space-x-1 transition active:scale-95"
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>VEN 911</span>
-            </a>
-          </div>
-
-          {/* Tarifa y Botón de Pago */}
-          <div className="flex items-center justify-between pt-2 border-t border-white/10">
-            <div>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Monto Total</span>
-              <div className="flex items-baseline space-x-1.5">
-                <span className="text-lg font-black text-white">{formatUsd(ride.fareUsd)}</span>
-                <span className="text-xs font-bold text-pixel-greenLight">{formatBs(ride.fareBs)}</span>
-              </div>
-            </div>
-
-            {/* Acción de Pago */}
-            {isPaid ? (
-              <div className="flex items-center space-x-1.5 px-3 py-2 rounded-2xl bg-pixel-green/20 text-pixel-greenLight border border-pixel-green/30 text-xs font-black shadow-lg shadow-pixel-green/10">
-                <CheckCircle className="w-4 h-4" />
-                <span>Liquidado con Éxito</span>
-              </div>
-            ) : ride.payment ? (
-              <div className="text-right">
-                <span className="text-[11px] font-bold text-pixel-yellow block animate-pulse">
-                  Verificando Pago...
-                </span>
-                <span className="text-[10px] text-slate-400 font-mono">
-                  Ref: {ride.payment.reference || 'Efectivo recibido'}
-                </span>
-              </div>
-            ) : (
-              <button
-                onClick={onOpenPayment}
-                className="py-2.5 px-4 rounded-2xl bg-gradient-to-r from-pixel-green to-emerald-400 hover:brightness-105 text-black font-black text-xs shadow-xl shadow-pixel-green/30 flex items-center space-x-1.5 active:scale-95 transition"
-              >
-                <CreditCard className="w-4 h-4" />
-                <span>Pagar Viaje</span>
-              </button>
-            )}
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

@@ -1,36 +1,91 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#090D14" />
-      <stop offset="100%" stop-color="#161F30" />
+    <!-- Background Radial Gradient -->
+    <radialGradient id="bgGrad" cx="30%" cy="25%" r="85%">
+      <stop offset="0%" stop-color="#141C2E" />
+      <stop offset="45%" stop-color="#0A0E17" />
+      <stop offset="100%" stop-color="#05070B" />
+    </radialGradient>
+
+    <!-- Velocity Emerald to Cyan Brand Gradient -->
+    <linearGradient id="velocityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E599" />
+      <stop offset="50%" stop-color="#00F5A0" />
+      <stop offset="100%" stop-color="#00D2FF" />
     </linearGradient>
-    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10B981" />
-      <stop offset="100%" stop-color="#34D399" />
+
+    <!-- Sleek White/Cyan Sheen Gradient -->
+    <linearGradient id="sheenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#00E599" stop-opacity="0" />
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="16" result="blur" />
+
+    <!-- Outer Ambient Glow -->
+    <filter id="ambientGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="28" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Crisp Drop Shadow -->
+    <filter id="crispShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.65" />
     </filter>
   </defs>
 
-  <!-- Fondo oscuro redondeado -->
+  <!-- Base Squircle Container (iOS / Android Adaptive Icon Standard) -->
   <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
-  <rect x="12" y="12" width="488" height="488" rx="116" fill="none" stroke="#27354D" stroke-width="6" />
+  
+  <!-- Subtle Outer Border -->
+  <rect x="8" y="8" width="496" height="496" rx="122" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="3" />
+  
+  <!-- Inner Ambient Neon Halo -->
+  <circle cx="256" cy="230" r="140" fill="#00E599" opacity="0.10" filter="url(#ambientGlow)" />
 
-  <!-- Acento de brillo circular -->
-  <circle cx="256" cy="256" r="160" fill="#10B981" opacity="0.08" filter="url(#glow)" />
+  <!-- Geometric Minimalist Monogram: R + Velocity Path + X Wing -->
+  <g filter="url(#crispShadow)">
+    <!-- Vertical Spine (Pillar of Stability) -->
+    <rect x="144" y="128" width="44" height="256" rx="22" fill="url(#velocityGrad)" />
+    
+    <!-- Top Aerodynamic Loop (The Curve of the R) -->
+    <path
+      d="M 166 128
+         C 260 128, 336 142, 336 216
+         C 336 286, 260 300, 166 300"
+      fill="none"
+      stroke="url(#velocityGrad)"
+      stroke-width="44"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
 
-  <!-- Símbolo estilizado 'R' con flecha de movilidad -->
-  <g fill="none" stroke="url(#accentGrad)" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
-    <!-- Barra vertical de la R -->
-    <line x1="168" y1="130" x2="168" y2="382" />
-    <!-- Bucle superior de la R -->
-    <path d="M 168 140 C 260 140, 330 150, 330 220 C 330 290, 260 300, 168 300" />
-    <!-- Pata diagonal dinámica / flecha -->
-    <path d="M 240 290 L 334 382" />
+    <!-- Velocity Slash (The Dynamic X Cross & Fast Drive) -->
+    <path
+      d="M 230 270
+         L 348 384"
+      fill="none"
+      stroke="url(#velocityGrad)"
+      stroke-width="44"
+      stroke-linecap="round"
+    />
+
+    <!-- Secondary Aerodynamic Flare (Minimalist X Wing Tip) -->
+    <path
+      d="M 344 140
+         L 310 174"
+      fill="none"
+      stroke="#00D2FF"
+      stroke-width="20"
+      stroke-linecap="round"
+      opacity="0.85"
+    />
+
+    <!-- Center Navigation GPS Beacon / Live Point -->
+    <circle cx="240" cy="216" r="14" fill="#FFFFFF" />
+    <circle cx="240" cy="216" r="26" fill="none" stroke="#00E599" stroke-width="4" opacity="0.7" />
   </g>
 
-  <!-- Pequeño punto de geolocalización / GPS -->
-  <circle cx="346" cy="154" r="22" fill="#F59E0B" filter="url(#glow)" />
+  <!-- Speed Dash Highlights on the Left -->
+  <line x1="104" y1="210" x2="116" y2="210" stroke="#00E599" stroke-width="8" stroke-linecap="round" opacity="0.4" />
+  <line x1="94" y1="236" x2="116" y2="236" stroke="#00E599" stroke-width="8" stroke-linecap="round" opacity="0.6" />
+  <line x1="104" y1="262" x2="116" y2="262" stroke="#00E599" stroke-width="8" stroke-linecap="round" opacity="0.4" />
 </svg>

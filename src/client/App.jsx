@@ -541,26 +541,26 @@ export default function App() {
           />
 
           {/* Panel Inferior Móvil (Bottom Sheet estilo Uber y Google Maps) */}
-          <main className="flex-1 -mt-6 z-10 bg-[#0c101b]/95 backdrop-blur-2xl rounded-t-[32px] border-t border-white/15 p-4 shadow-[0_-12px_40px_rgba(0,0,0,0.5)] space-y-4">
+          <main className="flex-1 -mt-6 z-10 bg-[#0D111A]/95 backdrop-blur-2xl rounded-t-[32px] border-t border-white/[0.12] p-4 shadow-[0_-16px_40px_rgba(0,0,0,0.7)] space-y-4">
             {/* Manija de arrastre táctil para el Bottom Sheet */}
-            <div className="w-12 h-1.5 rounded-full bg-slate-500/30 mx-auto -mt-1 mb-1 active:bg-slate-400 transition" />
+            <div className="w-12 h-1.5 rounded-full bg-white/20 mx-auto -mt-1 mb-1 active:bg-white/40 transition" />
 
             {role === 'passenger' && (
               <>
                 {!activeRide ? (
                   <div className="space-y-3.5 animate-fade-in">
-                    {/* Selector de Origen y Destino con búsqueda integrada estilo Pixel & iPhone */}
-                    <div className="bg-[#111622]/90 backdrop-blur-xl p-3.5 rounded-2xl border border-white/10 relative space-y-2 shadow-inner">
+                    {/* Selector de Origen y Destino con búsqueda integrada */}
+                    <div className="bg-[#06080D]/90 backdrop-blur-xl p-3.5 rounded-2xl border border-white/[0.08] relative space-y-2 shadow-inner">
                       {/* Origen */}
                       <div
                         onClick={() => handleOpenSearchModal('pickup')}
-                        className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer ${
+                        className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer active:scale-[0.99] ${
                           selectingMapMode === 'pickup'
-                            ? 'bg-[#182030] border border-pixel-green shadow-sm'
-                            : 'hover:bg-white/5'
+                            ? 'bg-[#141A26] border border-[#00E599]/60 shadow-[0_0_15px_rgba(0,229,153,0.15)]'
+                            : 'hover:bg-white/[0.04]'
                         }`}
                       >
-                        <span className="w-6 h-6 rounded-full bg-pixel-green/20 text-pixel-greenLight flex items-center justify-center font-black text-xs flex-shrink-0">
+                        <span className="w-6 h-6 rounded-full bg-[#00E599]/20 text-[#00E599] flex items-center justify-center font-black text-xs flex-shrink-0 shadow-sm">
                           A
                         </span>
                         <div className="flex-1 min-w-0">
@@ -573,13 +573,13 @@ export default function App() {
                       {/* Destino */}
                       <div
                         onClick={() => handleOpenSearchModal('dropoff')}
-                        className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer ${
+                        className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer active:scale-[0.99] ${
                           selectingMapMode === 'dropoff'
-                            ? 'bg-[#182030] border border-pixel-red shadow-sm'
-                            : 'hover:bg-white/5'
+                            ? 'bg-[#141A26] border border-[#FF3B5C]/60 shadow-[0_0_15px_rgba(255,59,92,0.15)]'
+                            : 'hover:bg-white/[0.04]'
                         }`}
                       >
-                        <span className="w-6 h-6 rounded-full bg-pixel-red/20 text-pixel-redLight flex items-center justify-center font-black text-xs flex-shrink-0">
+                        <span className="w-6 h-6 rounded-full bg-[#FF3B5C]/20 text-[#FF7088] flex items-center justify-center font-black text-xs flex-shrink-0 shadow-sm">
                           B
                         </span>
                         <div className="flex-1 min-w-0">
@@ -595,7 +595,7 @@ export default function App() {
                           e.stopPropagation();
                           handleSwapLocations();
                         }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900 border border-white/15 text-slate-300 flex items-center justify-center active:scale-90 transition hover:text-white hover:border-pixel-blueLight shadow-md"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0D111A] border border-white/[0.12] text-slate-300 flex items-center justify-center active:scale-90 transition hover:text-white hover:border-[#00D2FF] shadow-lg"
                         title="Invertir ruta"
                       >
                         <ArrowUpDown className="w-3.5 h-3.5" />
@@ -604,8 +604,8 @@ export default function App() {
 
                     {/* Telemetría de Ruta */}
                     <div className="flex items-center justify-between px-2 text-xs text-slate-400 font-medium">
-                      <span>Distancia: <strong className="text-white">{formatDistance(effectiveDistanceKm)}</strong></span>
-                      <span>Tiempo: <strong className="text-white">{formatDuration(streetRoute?.durationMin || currentFare.estimatedMinutes)}</strong></span>
+                      <span>Distancia: <strong className="text-white font-bold">{formatDistance(effectiveDistanceKm)}</strong></span>
+                      <span>Tiempo: <strong className="text-white font-bold">{formatDuration(streetRoute?.durationMin || currentFare.estimatedMinutes)}</strong></span>
                     </div>
 
                     {/* Selector de Categorías (Moto, Carro Estándar, Carro Confort) */}
@@ -616,10 +616,10 @@ export default function App() {
                       bcvRate={bcvRate}
                     />
 
-                    {/* Botón Principal de Solicitud con degradado Pixel Green */}
+                    {/* Botón Principal de Solicitud con degradado Electric Emerald y brillo */}
                     <button
                       onClick={handleRequestRide}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-pixel-green to-emerald-400 hover:brightness-105 text-black font-black text-sm tracking-wide shadow-xl shadow-pixel-green/30 transition active:scale-[0.98] flex items-center justify-center space-x-2 mt-2"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E599] via-[#00F5A0] to-[#00D2FF] text-black font-black text-sm tracking-wide shadow-xl shadow-[#00E599]/30 transition active:scale-[0.98] flex items-center justify-center space-x-2 mt-2 select-none relative overflow-hidden group"
                     >
                       <Navigation className="w-4 h-4 fill-current" />
                       <span>SOLICITAR RIDEX • {formatUsd(currentFare.fareUsd)} ({formatBs(currentFare.fareBs)})</span>

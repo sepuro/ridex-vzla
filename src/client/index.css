@@ -2,28 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+}
+
 html, body {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #090D14;
-  color: #F1F5F9;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  background-color: #06080D;
+  color: #F8FAFC;
   height: 100%;
   width: 100%;
   overflow-x: hidden;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(13, 17, 26, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-dock {
+  background: rgba(7, 9, 14, 0.90);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-pill {
+  background: rgba(26, 34, 50, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 /* Leaflet map styles */
 .leaflet-container {
   height: 100%;
   width: 100%;
-  background-color: #0b0e14 !important;
+  background-color: #06080D !important;
 }
 
-/* Leaflet dark tile filter (solo cuando se activa el modo dark invert) */
-.map-dark-invert .leaflet-tile-pane {
-  filter: brightness(0.7) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+.leaflet-bar {
+  border: none !important;
 }
 
 /* Custom scrollbars */
@@ -35,20 +62,29 @@ html, body {
   scrollbar-width: none;
 }
 
-/* Pulsing radar animation for driver search & GPS dot */
+/* Custom Radar & Ripple animations */
 @keyframes radar-ping {
   0% { transform: scale(0.6); opacity: 0.9; }
-  100% { transform: scale(2.6); opacity: 0; }
+  50% { opacity: 0.4; }
+  100% { transform: scale(2.8); opacity: 0; }
 }
 .animate-radar {
-  animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation: radar-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes radar-pulse-multi {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+.animate-radar-multi {
+  animation: radar-pulse-multi 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
 }
 
 /* GPS User Live Location Pulse */
 @keyframes gps-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.7); }
-  70% { box-shadow: 0 0 0 16px rgba(26, 115, 232, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(0, 229, 153, 0.75); }
+  70% { box-shadow: 0 0 0 20px rgba(0, 229, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 229, 153, 0); }
 }
 .gps-pulse-dot {
   animation: gps-pulse 2s infinite;
@@ -59,22 +95,41 @@ html, body {
   padding-top: max(0px, env(safe-area-inset-top));
 }
 .safe-area-pb {
-  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in {
-  animation: fadeIn 0.25s ease-out forwards;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes slideUpSpring {
+  0% { opacity: 0; transform: translateY(32px) scale(0.98); }
+  70% { opacity: 1; transform: translateY(-2px) scale(1.005); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-slide-up {
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideUpSpring 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes slideDownToast {
+  0% { opacity: 0; transform: translateY(-24px) scale(0.95); }
+  70% { opacity: 1; transform: translateY(2px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-slide-down {
+  animation: slideDownToast 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Shimmer Light Reflection */
+@keyframes lightSweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer-button {
+  background-size: 200% 100%;
+  animation: lightSweep 4s ease-in-out infinite;
+}

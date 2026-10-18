@@ -18,6 +18,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { formatUsd, formatBs, formatDistance } from '../utils/formatters.js';
+import { triggerHaptic } from '../utils/soundEffects.js';
 
 export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide }) {
   const [filter, setFilter] = useState('todos');
@@ -86,46 +87,47 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
   });
 
   const toggleExpand = (id) => {
+    triggerHaptic(20);
     setExpandedRideId(expandedRideId === id ? null : id);
   };
 
   return (
-    <div className="space-y-4 animate-fade-in pb-16 text-slate-100">
-      {/* 1. Header con Resumen de Métricas de Viaje (Estilo Pixel / iOS Dashboard) */}
-      <div className="p-4 rounded-3xl bg-gradient-to-br from-[#121722] to-[#1a2133] border border-white/10 shadow-xl space-y-3">
+    <div className="space-y-4 animate-fade-in pb-16 text-slate-100 select-none">
+      {/* 1. Header con Resumen de Métricas de Viaje */}
+      <div className="p-4 rounded-3xl bg-gradient-to-br from-[#0D111A] via-[#121824] to-[#0A0E17] border border-white/[0.08] shadow-xl space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-base font-black text-white tracking-tight flex items-center space-x-1.5">
               <span>Tu Actividad de Movilidad</span>
-              <Sparkles className="w-4 h-4 text-pixel-green" />
+              <Sparkles className="w-4 h-4 text-[#00E599]" />
             </h2>
             <p className="text-[11px] text-slate-400">Historial completo con respaldo BCV y comprobantes</p>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full bg-pixel-green/20 border border-pixel-green/30 text-[11px] font-black text-pixel-greenLight">
+          <span className="px-2.5 py-0.5 rounded-full bg-[#00E599]/15 border border-[#00E599]/30 text-[11px] font-black text-[#00E599]">
             {allRides.length} viajes
           </span>
         </div>
 
         {/* 3 Widgets minimalistas de métricas */}
-        <div className="grid grid-cols-3 gap-2 pt-1 border-t border-white/10">
-          <div className="p-2.5 rounded-2xl bg-black/30 border border-white/5 text-center">
-            <span className="text-[10px] text-slate-400 font-semibold block uppercase tracking-wider">Inversión</span>
+        <div className="grid grid-cols-3 gap-2 pt-1 border-t border-white/[0.08]">
+          <div className="p-2.5 rounded-2xl bg-black/40 border border-white/[0.04] text-center">
+            <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Inversión</span>
             <span className="text-sm font-black text-white">{formatUsd(totalSpentUsd)}</span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-black/30 border border-white/5 text-center">
-            <span className="text-[10px] text-slate-400 font-semibold block uppercase tracking-wider">Recorridos</span>
-            <span className="text-sm font-black text-pixel-greenLight">{totalKm.toFixed(1)} km</span>
+          <div className="p-2.5 rounded-2xl bg-black/40 border border-white/[0.04] text-center">
+            <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Recorridos</span>
+            <span className="text-sm font-black text-[#00E599]">{totalKm.toFixed(1)} km</span>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-black/30 border border-white/5 text-center">
-            <span className="text-[10px] text-slate-400 font-semibold block uppercase tracking-wider">Ahorro Prom.</span>
-            <span className="text-sm font-black text-pixel-yellow">18%</span>
+          <div className="p-2.5 rounded-2xl bg-black/40 border border-white/[0.04] text-center">
+            <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Ahorro Prom.</span>
+            <span className="text-sm font-black text-[#FFB800]">18%</span>
           </div>
         </div>
       </div>
 
-      {/* 2. Filtros estilo Chip Píldora Material You */}
+      {/* 2. Filtros estilo Chip Píldora */}
       <div className="flex space-x-1.5 overflow-x-auto no-scrollbar py-0.5">
         {[
           { id: 'todos', label: 'Todos los viajes' },
@@ -134,11 +136,14 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
         ].map(({ id, label }) => (
           <button
             key={id}
-            onClick={() => setFilter(id)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition border whitespace-nowrap ${
+            onClick={() => {
+              triggerHaptic(25);
+              setFilter(id);
+            }}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-black transition border whitespace-nowrap active:scale-95 ${
               filter === id
-                ? 'bg-pixel-green text-black border-pixel-green shadow-sm shadow-pixel-green/30'
-                : 'bg-[#121622]/80 border-white/10 text-slate-300 hover:text-white hover:bg-[#1a2133]'
+                ? 'bg-[#00E599] text-black border-[#00E599] shadow-md shadow-[#00E599]/20'
+                : 'bg-[#0D111A] border-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
             {label}
@@ -149,7 +154,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
       {/* 3. Lista de Viajes */}
       <div className="space-y-3">
         {filteredRides.length === 0 ? (
-          <div className="p-8 text-center rounded-3xl bg-[#121622]/70 border border-white/10 space-y-2">
+          <div className="p-8 text-center rounded-3xl bg-[#0D111A] border border-white/[0.08] space-y-2">
             <Clock className="w-8 h-8 text-slate-500 mx-auto" />
             <p className="text-xs text-slate-400 font-medium">No se encontraron viajes con este filtro.</p>
           </div>
@@ -162,23 +167,23 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
             return (
               <div
                 key={ride.id}
-                className="rounded-3xl bg-[#121622]/90 border border-white/10 shadow-lg hover:border-white/20 transition-all overflow-hidden"
+                className="rounded-3xl bg-[#0D111A]/95 border border-white/[0.08] shadow-lg hover:border-white/20 transition-all overflow-hidden"
               >
                 {/* Cabecera del Viaje */}
                 <div className="p-4 space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
                     <div className="flex items-center space-x-2.5">
                       <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold ${
                         isMoto
-                          ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                          : 'bg-pixel-green/15 text-pixel-green border border-pixel-green/30'
+                          ? 'bg-[#FFB800]/15 text-[#FFB800] border border-[#FFB800]/30'
+                          : 'bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30'
                       }`}>
                         {isMoto ? <Bike className="w-5 h-5" /> : <Car className="w-5 h-5" />}
                       </div>
                       <div>
                         <div className="flex items-center space-x-1.5">
-                          <h4 className="font-extrabold text-white text-xs">{ride.vehicleName || 'Moto Express'}</h4>
-                          <span className="text-[10px] text-pixel-yellow font-bold">★ {ride.rating || 5}</span>
+                          <h4 className="font-black text-white text-xs">{ride.vehicleName || 'Moto Express'}</h4>
+                          <span className="text-[10px] text-[#FFB800] font-bold">★ {ride.rating || 5}</span>
                         </div>
                         <span className="text-[10px] text-slate-400 block font-mono">
                           {ride.date || 'Reciente'} • #{ride.id}
@@ -188,21 +193,21 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
 
                     <div className="text-right">
                       <span className="font-black text-white text-sm block">{formatUsd(ride.fareUsd)}</span>
-                      <span className="text-[11px] font-bold text-pixel-greenLight block">{formatBs(ride.fareBs)}</span>
+                      <span className="text-[11px] font-black text-[#00E599] block">{formatBs(ride.fareBs)}</span>
                     </div>
                   </div>
 
                   {/* Trayecto visual con conector estilo Uber / Google Maps */}
-                  <div className="space-y-2 text-xs relative pl-4 border-l-2 border-dashed border-white/15 ml-2.5 my-1">
+                  <div className="space-y-2 text-xs relative pl-4 border-l-2 border-dashed border-white/20 ml-2.5 my-1">
                     <div className="relative">
-                      <span className="absolute -left-[23px] top-1 w-2.5 h-2.5 rounded-full bg-pixel-green ring-4 ring-black/40" />
-                      <p className="text-[10px] text-slate-400 font-semibold leading-tight">ORIGEN</p>
+                      <span className="absolute -left-[23px] top-1 w-2.5 h-2.5 rounded-full bg-[#00E599] ring-4 ring-black/60" />
+                      <p className="text-[10px] text-slate-400 font-bold leading-tight">ORIGEN</p>
                       <p className="text-xs text-slate-200 font-medium truncate">{ride.pickup?.name || 'Origen fijado'}</p>
                     </div>
 
                     <div className="relative pt-1">
-                      <span className="absolute -left-[23px] top-2 w-2.5 h-2.5 rounded-full bg-pixel-yellow ring-4 ring-black/40" />
-                      <p className="text-[10px] text-slate-400 font-semibold leading-tight">DESTINO</p>
+                      <span className="absolute -left-[23px] top-2 w-2.5 h-2.5 rounded-full bg-[#FF3B5C] ring-4 ring-black/60" />
+                      <p className="text-[10px] text-slate-400 font-bold leading-tight">DESTINO</p>
                       <p className="text-xs text-slate-200 font-medium truncate">{ride.dropoff?.name || 'Destino fijado'}</p>
                     </div>
                   </div>
@@ -217,12 +222,12 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                     <div className="flex items-center space-x-1 font-semibold text-slate-300">
                       {isPagoMovil ? (
                         <>
-                          <Smartphone className="w-3.5 h-3.5 text-pixel-green" />
+                          <Smartphone className="w-3.5 h-3.5 text-[#00E599]" />
                           <span>Pago Móvil</span>
                         </>
                       ) : (
                         <>
-                          <Banknote className="w-3.5 h-3.5 text-pixel-yellow" />
+                          <Banknote className="w-3.5 h-3.5 text-[#FFB800]" />
                           <span>Efectivo USD</span>
                         </>
                       )}
@@ -230,11 +235,11 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                   </div>
 
                   {/* Acciones principales: "Pedir de nuevo" & "Ver Recibo" */}
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.08]">
                     {/* Botón 1: Pedir de nuevo (Re-order) */}
                     <button
                       onClick={() => onReorderRide && onReorderRide(ride)}
-                      className="py-2.5 px-3 rounded-2xl bg-pixel-blue/15 hover:bg-pixel-blue/25 border border-pixel-blue/30 text-pixel-blueLight text-xs font-bold flex items-center justify-center space-x-1.5 active:scale-95 transition"
+                      className="py-2.5 px-3 rounded-2xl bg-[#00D2FF]/15 hover:bg-[#00D2FF]/25 border border-[#00D2FF]/30 text-[#00D2FF] text-xs font-black flex items-center justify-center space-x-1.5 active:scale-95 transition"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       <span>Pedir de nuevo</span>
@@ -243,9 +248,9 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                     {/* Botón 2: Ver Recibo */}
                     <button
                       onClick={() => onSelectRideForReceipt(ride)}
-                      className="py-2.5 px-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 text-white text-xs font-bold flex items-center justify-center space-x-1.5 active:scale-95 transition"
+                      className="py-2.5 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white text-xs font-black flex items-center justify-center space-x-1.5 active:scale-95 transition"
                     >
-                      <FileText className="w-3.5 h-3.5 text-pixel-green" />
+                      <FileText className="w-3.5 h-3.5 text-[#00E599]" />
                       <span>Ver Recibo</span>
                     </button>
                   </div>
@@ -254,14 +259,14 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                 {/* Detalle Desplegable opcional */}
                 <div
                   onClick={() => toggleExpand(ride.id)}
-                  className="px-4 py-2 bg-black/25 border-t border-white/5 flex items-center justify-between text-[10px] text-slate-400 font-semibold cursor-pointer hover:text-white transition"
+                  className="px-4 py-2 bg-black/40 border-t border-white/[0.04] flex items-center justify-between text-[10px] text-slate-400 font-semibold cursor-pointer hover:text-white transition"
                 >
                   <span>Detalles de pago y referencia</span>
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </div>
 
                 {isExpanded && (
-                  <div className="p-3 bg-black/40 border-t border-white/5 text-[11px] space-y-1 text-slate-300">
+                  <div className="p-3 bg-black/60 border-t border-white/[0.04] text-[11px] space-y-1 text-slate-300">
                     <div className="flex justify-between">
                       <span className="text-slate-400">Distancia calculada:</span>
                       <span className="font-mono font-bold text-white">{formatDistance(ride.distanceKm || 3.5)}</span>
@@ -275,7 +280,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                     {ride.payment?.reference && (
                       <div className="flex justify-between">
                         <span className="text-slate-400">Referencia:</span>
-                        <span className="font-mono font-bold text-pixel-green">{ride.payment.reference}</span>
+                        <span className="font-mono font-bold text-[#00E599]">{ride.payment.reference}</span>
                       </div>
                     )}
                   </div>

@@ -4,8 +4,8 @@
   "description": "Plataforma de transporte bajo demanda estilo Uber para Venezuela con Pago Móvil y Efectivo USD",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#090D14",
-  "theme_color": "#090D14",
+  "background_color": "#06080D",
+  "theme_color": "#06080D",
   "orientation": "portrait",
   "icons": [
     {

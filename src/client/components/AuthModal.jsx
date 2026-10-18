@@ -270,29 +270,32 @@ export function AuthModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb overflow-y-auto">
-      <div className="w-full max-w-md my-auto rounded-[32px] bg-[#0d121c]/95 border border-white/15 p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-slate-100 space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb overflow-y-auto select-none">
+      <div className="w-full max-w-md my-auto rounded-[32px] bg-[#0D111A] border border-white/15 p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-slate-100 space-y-4">
         {/* Cabecera Modal */}
-        <div className="flex items-center justify-between pb-2 border-b border-white/10">
+        <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-pixel-green to-emerald-400 flex items-center justify-center font-black text-black text-sm shadow-md">
-              R
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#00E599] to-[#00D2FF] flex items-center justify-center font-black text-black text-sm shadow-md">
+              RX
             </div>
             <div>
-              <h3 className="font-black text-white text-base">Ride<span className="text-pixel-greenLight">X</span> Cuenta</h3>
+              <h3 className="font-black text-white text-base">Ride<span className="text-[#00E599]">X</span> Cuenta</h3>
               <p className="text-[10px] text-slate-400">Movilidad y Transporte Oficial en Venezuela</p>
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition active:scale-90"
+            onClick={() => {
+              triggerHaptic(30);
+              onClose();
+            }}
+            className="w-8 h-8 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white transition active:scale-90"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Selector de Pestañas: Crear Cuenta vs Iniciar Sesión (Estilo Segmented Control Cupertino) */}
-        <div className="p-1 rounded-2xl bg-black/40 border border-white/10 grid grid-cols-2 gap-1 text-xs font-extrabold">
+        {/* Selector de Pestañas: Crear Cuenta vs Iniciar Sesión */}
+        <div className="p-1 rounded-2xl bg-black/40 border border-white/[0.08] grid grid-cols-2 gap-1 text-xs font-black">
           <button
             type="button"
             onClick={() => {
@@ -301,7 +304,7 @@ export function AuthModal({
             }}
             className={`py-2 rounded-xl transition-all ${
               activeTab === 'register'
-                ? 'bg-pixel-green text-black shadow-md'
+                ? 'bg-[#00E599] text-black shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -315,7 +318,7 @@ export function AuthModal({
             }}
             className={`py-2 rounded-xl transition-all ${
               activeTab === 'login'
-                ? 'bg-pixel-green text-black shadow-md'
+                ? 'bg-[#00E599] text-black shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >

@@ -29,8 +29,8 @@ const MAP_PROVIDERS = {
   },
   iphone_dark: {
     id: 'iphone_dark',
-    name: 'iPhone Dark Voyager',
-    badge: 'Cupertino Dark',
+    name: 'Obsidian Dark Voyager',
+    badge: 'Dark Minimal',
     url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
     subdomains: 'abcd',
     maxZoom: 19,
@@ -39,8 +39,8 @@ const MAP_PROVIDERS = {
   },
   iphone_light: {
     id: 'iphone_light',
-    name: 'iPhone Positron Clean',
-    badge: 'Cupertino Clean',
+    name: 'Cupertino Light Clean',
+    badge: 'Light Clean',
     url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     subdomains: 'abcd',
     maxZoom: 19,
@@ -50,7 +50,7 @@ const MAP_PROVIDERS = {
   osm: {
     id: 'osm',
     name: 'OpenStreetMap Estándar',
-    badge: 'Ligero 3G/4G',
+    badge: 'Bajo Consumo 3G',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     subdomains: 'abc',
     maxZoom: 19,
@@ -106,14 +106,14 @@ export function MapView({
     activeTileLayerRef.current = tileLayer;
     mapInstanceRef.current = map;
 
-    // Toque directo en el mapa para marcar punto
+    // Escuchar click en mapa para fijar pickup o dropoff
     map.on('click', (e) => {
-      const coords = { lat: e.latlng.lat, lng: e.latlng.lng };
       triggerHaptic(40);
+      const coords = { lat: e.latlng.lat, lng: e.latlng.lng, name: `Ubicación (${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)})` };
       if (selectingMode === 'pickup') {
-        onSelectPickup({ ...coords, name: `Punto fijado (${coords.lat.toFixed(3)}, ${coords.lng.toFixed(3)})` });
+        onSelectPickup(coords);
       } else {
-        onSelectDropoff({ ...coords, name: `Destino fijado (${coords.lat.toFixed(3)}, ${coords.lng.toFixed(3)})` });
+        onSelectDropoff(coords);
       }
     });
 
@@ -151,7 +151,7 @@ export function MapView({
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    // 1. Marcador Origen (A) - Estilo Verde Pixel/iOS
+    // 1. Marcador Origen (A) - Luminous Emerald Halo
     if (pickup?.lat && pickup?.lng) {
       if (markersRef.current.pickup) {
         markersRef.current.pickup.setLatLng([pickup.lat, pickup.lng]);
@@ -159,12 +159,15 @@ export function MapView({
         const pickupIcon = L.divIcon({
           className: 'pickup-marker',
           html: `
-            <div style="background-color: #34A853; width: 32px; height: 32px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(52,168,83,0.85); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #FFFFFF; font-size: 13px;">
-              A
+            <div style="position: relative; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;">
+              <span style="position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 229, 153, 0.4); animation: radar-ping 2s infinite;"></span>
+              <div style="position: relative; background: #00E599; width: 28px; height: 28px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 16px rgba(0,229,153,0.85); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000000; font-size: 13px;">
+                A
+              </div>
             </div>
           `,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
+          iconSize: [34, 34],
+          iconAnchor: [17, 17]
         });
         markersRef.current.pickup = L.marker([pickup.lat, pickup.lng], { icon: pickupIcon }).addTo(map);
       }
@@ -173,7 +176,7 @@ export function MapView({
       markersRef.current.pickup = null;
     }
 
-    // 2. Marcador Destino (B) - Estilo Rojo Pixel/iOS
+    // 2. Marcador Destino (B) - Luminous Crimson Halo
     if (dropoff?.lat && dropoff?.lng) {
       if (markersRef.current.dropoff) {
         markersRef.current.dropoff.setLatLng([dropoff.lat, dropoff.lng]);
@@ -181,12 +184,15 @@ export function MapView({
         const dropoffIcon = L.divIcon({
           className: 'dropoff-marker',
           html: `
-            <div style="background-color: #EA4335; width: 32px; height: 32px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 14px rgba(234,67,53,0.85); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #FFFFFF; font-size: 13px;">
-              B
+            <div style="position: relative; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;">
+              <span style="position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(255, 59, 92, 0.35); animation: radar-ping 2s infinite;"></span>
+              <div style="position: relative; background: #FF3B5C; width: 28px; height: 28px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 16px rgba(255,59,92,0.85); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #FFFFFF; font-size: 13px;">
+                B
+              </div>
             </div>
           `,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
+          iconSize: [34, 34],
+          iconAnchor: [17, 17]
         });
         markersRef.current.dropoff = L.marker([dropoff.lat, dropoff.lng], { icon: dropoffIcon }).addTo(map);
       }
@@ -199,8 +205,8 @@ export function MapView({
     if (driverLocation?.lat && driverLocation?.lng) {
       const isMoto = vehicleType === 'moto';
       const iconSvg = isMoto
-        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>`
-        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>`;
+        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>`
+        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>`;
 
       if (markersRef.current.driver) {
         markersRef.current.driver.setLatLng([driverLocation.lat, driverLocation.lng]);
@@ -208,12 +214,12 @@ export function MapView({
         const driverIcon = L.divIcon({
           className: 'driver-marker',
           html: `
-            <div style="background-color: #1A73E8; width: 38px; height: 38px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 0 20px rgba(26,115,232,0.9); display: flex; align-items: center; justify-content: center;">
+            <div style="background: linear-gradient(135deg, #00E599 0%, #00D2FF 100%); width: 40px; height: 40px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 0 24px rgba(0,229,153,0.9); display: flex; align-items: center; justify-content: center;">
               ${iconSvg}
             </div>
           `,
-          iconSize: [38, 38],
-          iconAnchor: [19, 19]
+          iconSize: [40, 40],
+          iconAnchor: [20, 20]
         });
         markersRef.current.driver = L.marker([driverLocation.lat, driverLocation.lng], { icon: driverIcon }).addTo(map);
       }
@@ -222,7 +228,7 @@ export function MapView({
       markersRef.current.driver = null;
     }
 
-    // 4. Marcador de Ubicación GPS en Vivo (Punto Azul Google Maps)
+    // 4. Marcador de Ubicación GPS en Vivo
     if (userLocation?.lat && userLocation?.lng) {
       if (markersRef.current.userGps) {
         markersRef.current.userGps.setLatLng([userLocation.lat, userLocation.lng]);
@@ -230,7 +236,7 @@ export function MapView({
         const userGpsIcon = L.divIcon({
           className: 'user-gps-marker',
           html: `
-            <div class="gps-pulse-dot" style="width: 20px; height: 20px; border-radius: 50%; background-color: #1A73E8; border: 3px solid #FFFFFF; box-shadow: 0 0 10px rgba(26,115,232,0.8);">
+            <div class="gps-pulse-dot" style="width: 20px; height: 20px; border-radius: 50%; background-color: #00D2FF; border: 3px solid #FFFFFF; box-shadow: 0 0 14px rgba(0,210,255,0.9);">
             </div>
           `,
           iconSize: [20, 20],
@@ -257,7 +263,7 @@ export function MapView({
             markersRef.current.polyline.setLatLngs(route.coordinates);
           } else {
             markersRef.current.polyline = L.polyline(route.coordinates, {
-              color: '#1A73E8',
+              color: '#00D2FF',
               weight: 5.5,
               opacity: 0.95,
               lineCap: 'round',
@@ -299,18 +305,18 @@ export function MapView({
     <div className="relative w-full h-[50vh] sm:h-[52vh] z-0 overflow-hidden select-none">
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* 1. Barra Flotante de Búsqueda estilo Google Pixel y iPhone */}
+      {/* 1. Barra Flotante de Búsqueda de Destinos */}
       <div className="absolute top-16 left-3 right-3 z-20 flex items-center space-x-2">
         <button
           onClick={onOpenSearch}
-          className="flex-1 flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-[#111622]/85 backdrop-blur-2xl border border-white/15 text-xs font-semibold text-slate-100 shadow-[0_8px_25px_rgba(0,0,0,0.4)] active:scale-98 transition hover:border-pixel-blueLight/60"
+          className="flex-1 flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-[#06080D]/85 backdrop-blur-2xl border border-white/[0.12] text-xs font-bold text-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.5)] active:scale-98 transition hover:border-[#00D2FF]/60"
         >
-          <Search className="w-4 h-4 text-pixel-blueLight flex-shrink-0" />
+          <Search className="w-4 h-4 text-[#00D2FF] flex-shrink-0" />
           <span className="truncate">¿A dónde vas en Venezuela? (Buscar...)</span>
         </button>
       </div>
 
-      {/* 2. Píldoras Rápidas de Destinos Caraqueños con estética Cupertino */}
+      {/* 2. Píldoras Rápidas de Destinos Caraqueños Populares */}
       <div className="absolute top-28 left-0 right-0 z-20 px-3 flex space-x-1.5 overflow-x-auto no-scrollbar py-1">
         {POPULAR_LOCATIONS.map((loc) => (
           <button
@@ -323,15 +329,15 @@ export function MapView({
                 onSelectDropoff(loc);
               }
             }}
-            className="flex-shrink-0 flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#111622]/90 backdrop-blur-xl border border-white/10 text-[11px] font-bold text-slate-200 shadow-md active:scale-95 transition hover:border-pixel-blueLight/50"
+            className="flex-shrink-0 flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.1] text-[11px] font-bold text-slate-200 shadow-md active:scale-95 transition hover:border-[#00E599]/50"
           >
-            <MapPin className="w-3 h-3 text-pixel-yellow" />
+            <MapPin className="w-3 h-3 text-[#FFB800]" />
             <span className="truncate max-w-[130px]">{loc.name.split(',')[0]}</span>
           </button>
         ))}
       </div>
 
-      {/* 3. Stack de Botones Flotantes en el Borde Derecho (Google Maps & Apple Maps style) */}
+      {/* 3. Stack de Botones Flotantes en el Borde Derecho */}
       <div className="absolute bottom-5 right-3.5 z-20 flex flex-col space-y-2.5">
         {/* Selector de Capa / Proveedor de Mapa */}
         <button
@@ -339,10 +345,10 @@ export function MapView({
             triggerHaptic(40);
             setIsLayerMenuOpen(!isLayerMenuOpen);
           }}
-          className="w-11 h-11 rounded-2xl bg-[#111622]/90 backdrop-blur-xl border border-white/15 text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-pixel-blueLight"
+          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-[#00D2FF]"
           title="Cambiar capa de mapa (Google Maps / Satélite / Dark)"
         >
-          <Layers className="w-5 h-5 text-pixel-blueLight" />
+          <Layers className="w-5 h-5 text-[#00D2FF]" />
         </button>
 
         {/* Centrar en Ubicación GPS */}
@@ -351,31 +357,31 @@ export function MapView({
             triggerHaptic(50);
             onCenterUser();
           }}
-          className="w-11 h-11 rounded-2xl bg-[#111622]/90 backdrop-blur-xl border border-white/15 text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-pixel-greenLight"
+          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-[#00E599]"
           title="Centrar en mi ubicación GPS"
         >
-          <Crosshair className="w-5 h-5 text-pixel-greenLight" />
+          <Crosshair className="w-5 h-5 text-[#00E599]" />
         </button>
 
         {/* Recenter Ruta */}
         <button
           onClick={handleRecenterRoute}
-          className="w-11 h-11 rounded-2xl bg-[#111622]/90 backdrop-blur-xl border border-white/15 text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-pixel-yellowLight"
+          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-[#FFB800]"
           title="Ver ruta completa"
         >
-          <Compass className="w-5 h-5 text-pixel-yellow" />
+          <Compass className="w-5 h-5 text-[#FFB800]" />
         </button>
       </div>
 
-      {/* 4. Menú Flotante de Selección de Capas de Mapa (Google Maps / Satélite / Apple Maps) */}
+      {/* 4. Menú Flotante de Selección de Capas de Mapa */}
       {isLayerMenuOpen && (
-        <div className="absolute bottom-20 right-3.5 z-30 w-64 rounded-3xl bg-[#111622]/95 backdrop-blur-2xl border border-white/20 p-3 shadow-2xl animate-fade-in space-y-1.5">
-          <div className="flex items-center justify-between pb-1.5 px-1 border-b border-white/10 text-xs font-extrabold text-white">
+        <div className="absolute bottom-20 right-3.5 z-30 w-64 rounded-3xl bg-[#0D111A]/95 backdrop-blur-2xl border border-white/20 p-3 shadow-2xl animate-fade-in space-y-1.5">
+          <div className="flex items-center justify-between pb-1.5 px-1 border-b border-white/10 text-xs font-black text-white">
             <span className="flex items-center space-x-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-pixel-blueLight" />
+              <Sparkles className="w-3.5 h-3.5 text-[#00D2FF]" />
               <span>Capa de Mapa</span>
             </span>
-            <span className="text-[10px] text-slate-400 font-semibold">APIs Oficiales</span>
+            <span className="text-[10px] text-slate-400 font-semibold">Oficiales</span>
           </div>
 
           <div className="space-y-1">
@@ -385,10 +391,10 @@ export function MapView({
                 <button
                   key={provider.id}
                   onClick={() => handleSelectProvider(provider.id)}
-                  className={`w-full flex items-center justify-between p-2 rounded-2xl text-left text-xs transition ${
+                  className={`w-full flex items-center justify-between p-2 rounded-2xl text-left text-xs transition active:scale-95 ${
                     isSelected
-                      ? 'bg-pixel-blue/20 border border-pixel-blue/40 text-white font-bold'
-                      : 'hover:bg-white/5 text-slate-300 font-medium'
+                      ? 'bg-[#00D2FF]/15 border border-[#00D2FF]/40 text-white font-black'
+                      : 'hover:bg-white/[0.05] text-slate-300 font-medium'
                   }`}
                 >
                   <div className="flex items-center space-x-2">
@@ -398,7 +404,7 @@ export function MapView({
                       <span className="text-[9px] text-slate-400 block mt-0.5">{provider.badge}</span>
                     </div>
                   </div>
-                  {isSelected && <Check className="w-4 h-4 text-pixel-blueLight" />}
+                  {isSelected && <Check className="w-4 h-4 text-[#00D2FF]" />}
                 </button>
               );
             })}
@@ -408,8 +414,8 @@ export function MapView({
 
       {/* 5. Badge de Telemetría de Ruta en Vivo */}
       {routeInfo && (
-        <div className="absolute bottom-5 left-3.5 z-20 bg-[#111622]/90 backdrop-blur-xl px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-bold text-white shadow-lg flex items-center space-x-1.5">
-          <span className="w-2 h-2 rounded-full bg-pixel-greenLight animate-pulse" />
+        <div className="absolute bottom-5 left-3.5 z-20 bg-[#06080D]/90 backdrop-blur-xl px-3.5 py-1.5 rounded-full border border-white/[0.12] text-[11px] font-black text-white shadow-xl flex items-center space-x-1.5">
+          <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse" />
           <span>{routeInfo.distanceKm} km (~{routeInfo.durationMin} min vía OSRM)</span>
         </div>
       )}

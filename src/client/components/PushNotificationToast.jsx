@@ -12,6 +12,7 @@ import {
   ShieldAlert
 } from 'lucide-react';
 import { subscribeInAppNotifications, requestNotificationPermissions, getNotificationPermissionStatus } from '../utils/notifications.js';
+import { triggerHaptic } from '../utils/soundEffects.js';
 
 export function PushNotificationToast({ onNotificationClick }) {
   const [activeToast, setActiveToast] = useState(null);
@@ -47,16 +48,19 @@ export function PushNotificationToast({ onNotificationClick }) {
 
   const handleDismiss = (e) => {
     e?.stopPropagation();
+    triggerHaptic(20);
     setActiveToast(null);
   };
 
   const handleEnablePermissions = async () => {
+    triggerHaptic(50);
     sessionStorage.setItem('ridex_notif_prompted', 'true');
     setPermissionPrompt(false);
     await requestNotificationPermissions();
   };
 
   const handleDismissPrompt = () => {
+    triggerHaptic(20);
     sessionStorage.setItem('ridex_notif_prompted', 'true');
     setPermissionPrompt(false);
   };
@@ -64,29 +68,29 @@ export function PushNotificationToast({ onNotificationClick }) {
   const getIconForType = (type) => {
     switch (type) {
       case 'ride_offer':
-        return <Bell className="w-4 h-4 text-pixel-yellow animate-bounce" />;
+        return <Bell className="w-4 h-4 text-[#FFB800] animate-bounce" />;
       case 'ride_assigned':
-        return <Car className="w-4 h-4 text-pixel-blueLight" />;
+        return <Car className="w-4 h-4 text-[#00D2FF]" />;
       case 'driver_arrived':
-        return <MapPin className="w-4 h-4 text-pixel-green" />;
+        return <MapPin className="w-4 h-4 text-[#00E599]" />;
       case 'ride_completed':
-        return <CheckCircle className="w-4 h-4 text-pixel-greenLight" />;
+        return <CheckCircle className="w-4 h-4 text-[#00E599]" />;
       case 'wallet':
-        return <DollarSign className="w-4 h-4 text-pixel-green" />;
+        return <DollarSign className="w-4 h-4 text-[#00E599]" />;
       case 'bcv_update':
-        return <TrendingUp className="w-4 h-4 text-amber-400" />;
+        return <TrendingUp className="w-4 h-4 text-[#FFB800]" />;
       default:
         return <Sparkles className="w-4 h-4 text-white" />;
     }
   };
 
   return (
-    <div className="fixed top-2 left-0 right-0 z-50 pointer-events-none px-3 sm:px-4 max-w-md mx-auto space-y-2">
+    <div className="fixed top-2 left-0 right-0 z-50 pointer-events-none px-3 sm:px-4 max-w-md mx-auto space-y-2 select-none">
       {/* 1. Banner de Solicitud de Permisos Push */}
       {permissionPrompt && !activeToast && (
-        <div className="pointer-events-auto p-3 rounded-2xl bg-[#111622]/95 backdrop-blur-xl border border-pixel-green/40 shadow-2xl animate-slide-down flex items-center justify-between space-x-2 text-slate-100">
+        <div className="pointer-events-auto p-3 rounded-2xl bg-[#0D111A]/95 backdrop-blur-xl border border-[#00E599]/40 shadow-2xl animate-slide-down flex items-center justify-between space-x-2 text-slate-100">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-xl bg-pixel-green/20 border border-pixel-green/30 flex items-center justify-center text-pixel-green">
+            <div className="w-8 h-8 rounded-xl bg-[#00E599]/20 border border-[#00E599]/30 flex items-center justify-center text-[#00E599]">
               <Bell className="w-4 h-4 animate-pulse" />
             </div>
             <div>
@@ -97,7 +101,7 @@ export function PushNotificationToast({ onNotificationClick }) {
           <div className="flex items-center space-x-1">
             <button
               onClick={handleEnablePermissions}
-              className="px-2.5 py-1 rounded-xl bg-pixel-green text-black font-black text-[11px] shadow-sm active:scale-95 transition"
+              className="px-2.5 py-1 rounded-xl bg-[#00E599] text-black font-black text-[11px] shadow-sm active:scale-95 transition"
             >
               Activar
             </button>
@@ -111,17 +115,18 @@ export function PushNotificationToast({ onNotificationClick }) {
         </div>
       )}
 
-      {/* 2. Push Notification Toast estilo Dynamic Island / Pixel Pill */}
+      {/* 2. Push Notification Toast estilo Dynamic Island */}
       {activeToast && (
         <div
           onClick={() => {
+            triggerHaptic(40);
             if (onNotificationClick) onNotificationClick(activeToast);
             setActiveToast(null);
           }}
-          className="pointer-events-auto p-3.5 rounded-2xl bg-[#0d121c]/95 backdrop-blur-2xl border border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.7)] animate-slide-down flex items-start justify-between space-x-3 text-slate-100 cursor-pointer active:scale-98 transition"
+          className="pointer-events-auto p-3.5 rounded-2xl bg-[#0D111A]/95 backdrop-blur-2xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.7)] animate-slide-down flex items-start justify-between space-x-3 text-slate-100 cursor-pointer active:scale-98 transition"
         >
           <div className="flex items-start space-x-2.5 flex-1 min-w-0">
-            <div className="w-9 h-9 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center flex-shrink-0 shadow-inner mt-0.5">
+            <div className="w-9 h-9 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0 shadow-inner mt-0.5">
               {getIconForType(activeToast.type)}
             </div>
             <div className="flex-1 min-w-0">
