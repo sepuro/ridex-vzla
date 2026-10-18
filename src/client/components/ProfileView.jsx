@@ -19,7 +19,10 @@ import {
   Star,
   CheckCircle2,
   Home,
-  Briefcase
+  Briefcase,
+  Crown,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import { triggerHaptic } from '../utils/soundEffects.js';
 
@@ -29,7 +32,8 @@ export function ProfileView({
   currentUser,
   onOpenAuthModal,
   onOpenEditProfile,
-  onLogout
+  onLogout,
+  onOpenVipModal
 }) {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
@@ -135,6 +139,59 @@ export function ProfileView({
           </button>
         </div>
       </div>
+
+      {/* 1.5. Membresía RideX Pass VIP (Para Pasajeros) */}
+      {role === 'passenger' && (
+        <div className="p-4 rounded-[26px] bg-gradient-to-br from-[#141A26] via-[#0D111A] to-[#06080D] border border-amber-500/30 shadow-lg space-y-3 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center shadow-md shadow-amber-500/20">
+                <Crown className="w-5 h-5 text-black" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-1.5">
+                  <h3 className="font-black text-white text-sm">RideX Pass VIP</h3>
+                  <span className={`text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full border ${
+                    currentUser?.isVip
+                      ? 'bg-[#00E599]/20 text-[#00E599] border-[#00E599]/30'
+                      : 'bg-amber-400/20 text-amber-300 border-amber-400/30'
+                  }`}>
+                    {currentUser?.isVip ? 'ACTIVO' : '15% OFF'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-400">
+                  {currentUser?.isVip
+                    ? `Vence: ${new Date(currentUser?.subscription?.expiresAt).toLocaleDateString('es-VE')}`
+                    : 'Ahorro ilimitado en viajes y envíos'}
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                triggerHaptic(40);
+                if (onOpenVipModal) onOpenVipModal();
+              }}
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black text-xs shadow-md transition active:scale-95"
+            >
+              {currentUser?.isVip ? 'Gestionar' : 'Activar VIP'}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.08] text-[11px] text-slate-300">
+            <div className="flex items-center space-x-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              <span>15% OFF en viajes y envíos</span>
+            </div>
+            <div className="flex items-center space-x-1.5">
+              <Zap className="w-3.5 h-3.5 text-[#00E599] flex-shrink-0" />
+              <span>Despacho prioritario en lluvia</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 2. Si es Conductor: Tarjeta del Vehículo y Documentos Legales Venezolanos */}
       {role === 'driver' && (

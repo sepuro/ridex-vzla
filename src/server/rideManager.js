@@ -89,7 +89,10 @@ export class RideManager {
     fareBs,
     bcvRate,
     distanceKm,
-    estimatedMinutes
+    estimatedMinutes,
+    serviceMode = 'rides',
+    packageDetails = null,
+    isVip = false
   }) {
     this.rideCounter += 1;
     const rideId = `RX-${this.rideCounter}`;
@@ -107,6 +110,9 @@ export class RideManager {
       bcvRate: Number(bcvRate),
       distanceKm: Number(distanceKm),
       estimatedMinutes: Number(estimatedMinutes),
+      serviceMode,
+      packageDetails,
+      isVip: Boolean(isVip),
       status: RIDE_STATUS.SEARCHING,
       driverId: null,
       driver: null,

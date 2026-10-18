@@ -16,7 +16,8 @@ import {
   Bike,
   AlertTriangle,
   Sparkles,
-  Shield
+  Shield,
+  Package
 } from 'lucide-react';
 import { RIDE_STATUS } from '../../shared/constants.js';
 import { formatUsd, formatBs } from '../utils/formatters.js';
@@ -125,7 +126,7 @@ export function RideStatusCard({
       {/* 2. MODO CONDUCTOR ASIGNADO, EN CAMINO, LLEGÓ O EN VIAJE */}
       {(isAccepted || isArrived || isInProgress || isCompleted || isPaid) && (
         <div className="space-y-4">
-          {/* Banner de Estado del Viaje */}
+          {/* Banner de Estado del Viaje o Delivery */}
           <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
             <div className="flex items-center space-x-2">
               <span className="relative flex h-3 w-3">
@@ -134,30 +135,64 @@ export function RideStatusCard({
               </span>
               <div>
                 <h3 className="font-black text-white text-sm">
-                  {isAccepted && 'Conductor asignado — en camino'}
-                  {isArrived && '¡El conductor ha llegado al punto!'}
-                  {isInProgress && 'Viaje en curso hacia tu destino'}
-                  {isCompleted && '¡Has llegado a tu destino!'}
-                  {isPaid && 'Viaje finalizado y liquidado'}
+                  {ride.serviceMode === 'delivery' ? (
+                    isAccepted ? 'Repartidor asignado — en camino' :
+                    isArrived ? '¡El repartidor ha llegado al punto!' :
+                    isInProgress ? 'Encomienda en tránsito hacia destino' :
+                    isCompleted ? '¡Encomienda entregada en destino!' :
+                    'Entrega completada y liquidada'
+                  ) : (
+                    isAccepted ? 'Conductor asignado — en camino' :
+                    isArrived ? '¡El conductor ha llegado al punto!' :
+                    isInProgress ? 'Viaje en curso hacia tu destino' :
+                    isCompleted ? '¡Has llegado a tu destino!' :
+                    'Viaje finalizado y liquidado'
+                  )}
                 </h3>
                 <span className="text-[11px] text-slate-400">
                   {isAccepted && 'Llegada estimada en 4-6 minutos'}
-                  {isArrived && 'Te espera en la dirección indicada'}
+                  {isArrived && (ride.serviceMode === 'delivery' ? 'Esperando entrega de paquete' : 'Te espera en la dirección indicada')}
                   {isInProgress && 'Monitoreo satelital activo'}
                   {isCompleted && 'Listo para procesar el pago'}
-                  {isPaid && '¡Gracias por viajar con RideX!'}
+                  {isPaid && (ride.serviceMode === 'delivery' ? '¡Gracias por usar RideX Envíos!' : '¡Gracias por viajar con RideX!')}
                 </span>
               </div>
             </div>
 
-            {/* PIN de Seguridad del Viaje */}
+            {/* PIN de Seguridad del Viaje o Entrega */}
             <div className="text-right">
-              <span className="text-[9px] uppercase font-bold text-slate-400 block">PIN Seguridad</span>
+              <span className="text-[9px] uppercase font-bold text-slate-400 block">
+                {ride.serviceMode === 'delivery' ? 'PIN Entrega' : 'PIN Seguridad'}
+              </span>
               <span className="font-mono font-black text-base text-[#00E599] tracking-wider bg-[#00E599]/10 px-2 py-0.5 rounded-lg border border-[#00E599]/30">
-                {ridePin}
+                {ride.packageDetails?.deliveryPin || ridePin}
               </span>
             </div>
           </div>
+
+          {/* Tarjeta de Destinatario si es Delivery */}
+          {ride.serviceMode === 'delivery' && ride.packageDetails && (
+            <div className="p-3 rounded-2xl bg-[#00D2FF]/10 border border-[#00D2FF]/25 flex items-center justify-between text-xs">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[#00D2FF]/20 text-[#00D2FF] flex items-center justify-center flex-shrink-0">
+                  <Package className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Destinatario</span>
+                  <span className="font-bold text-white block truncate">{ride.packageDetails.receiverName || 'Receptor'}</span>
+                  {ride.packageDetails.receiverPhone && (
+                    <span className="text-[10px] text-slate-300 font-mono block">{ride.packageDetails.receiverPhone}</span>
+                  )}
+                </div>
+              </div>
+              {ride.packageDetails.notes && (
+                <div className="text-right max-w-[120px]">
+                  <span className="text-[9px] text-slate-400 uppercase font-bold block">Notas</span>
+                  <span className="text-[10px] text-slate-300 truncate block">{ride.packageDetails.notes}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Tarjeta del Conductor y Vehículo */}
           <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08]">

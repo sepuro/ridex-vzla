@@ -6,7 +6,7 @@ import { WebSocketServer } from 'ws';
 import { RideManager } from './rideManager.js';
 import { bcvService } from './bcvService.js';
 import { db } from './db/database.js';
-import { VEHICLE_TYPES } from '../shared/constants.js';
+import { VEHICLE_TYPES, SUBSCRIPTION_PLANS } from '../shared/constants.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -244,6 +244,59 @@ app.post('/api/auth/avatar', (req, res) => {
 
 app.get('/api/auth/users', (req, res) => {
   res.json(db.getAllUsers());
+});
+
+// --- Rutas de Suscripción RideX Pass VIP ---
+
+// Obtener planes disponibles de suscripción
+app.get('/api/subscription/plans', (req, res) => {
+  res.json({
+    success: true,
+    plans: Object.values(SUBSCRIPTION_PLANS)
+  });
+});
+
+// Suscribirse a RideX Pass
+app.post('/api/subscription/subscribe', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : req.query.token;
+  const user = db.getUserByToken(token);
+  if (!user) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  const { planId = 'pass_vip_monthly' } = req.body;
+  try {
+    const updatedUser = db.subscribeUser(user.id, planId);
+    res.json({
+      success: true,
+      message: '¡Bienvenido a RideX Pass VIP!',
+      user: updatedUser
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// Cancelar renovación automática de RideX Pass
+app.post('/api/subscription/cancel', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : req.query.token;
+  const user = db.getUserByToken(token);
+  if (!user) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  try {
+    const updatedUser = db.cancelSubscription(user.id);
+    res.json({
+      success: true,
+      message: 'La suscripción RideX Pass ha sido cancelada',
+      user: updatedUser
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
 });
 
 // Health check

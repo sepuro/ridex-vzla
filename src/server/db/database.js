@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
-import { DEFAULT_AVATARS } from '../../shared/constants.js';
+import { DEFAULT_AVATARS, SUBSCRIPTION_PLANS } from '../../shared/constants.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -275,6 +275,43 @@ class Database {
     return this.sanitizeUser(user);
   }
 
+  subscribeUser(userId, planId) {
+    const user = this.data.users[userId];
+    if (!user) throw new Error('Usuario no encontrado');
+
+    const selectedPlan = Object.values(SUBSCRIPTION_PLANS).find((p) => p.id === planId) || SUBSCRIPTION_PLANS.MONTHLY;
+    const durationDays = selectedPlan.durationDays || 30;
+    const expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+
+    user.subscription = {
+      planId: selectedPlan.id,
+      planName: selectedPlan.name,
+      priceUsd: selectedPlan.priceUsd,
+      discountPercent: selectedPlan.discountPercent,
+      status: 'active',
+      startedAt: new Date().toISOString(),
+      expiresAt,
+      autoRenew: true
+    };
+
+    this.save();
+    return this.sanitizeUser(user);
+  }
+
+  cancelSubscription(userId) {
+    const user = this.data.users[userId];
+    if (!user) throw new Error('Usuario no encontrado');
+
+    if (user.subscription) {
+      user.subscription.status = 'cancelled';
+      user.subscription.autoRenew = false;
+      user.subscription.cancelledAt = new Date().toISOString();
+    }
+
+    this.save();
+    return this.sanitizeUser(user);
+  }
+
   getAllDrivers() {
     return Object.values(this.data.users)
       .filter((u) => u.role === 'driver')
@@ -287,7 +324,15 @@ class Database {
 
   sanitizeUser(user) {
     const { passwordHash, salt, ...safe } = user;
-    return safe;
+    const isVipActive = Boolean(
+      safe.subscription &&
+      safe.subscription.status === 'active' &&
+      new Date(safe.subscription.expiresAt).getTime() > Date.now()
+    );
+    return {
+      ...safe,
+      isVip: isVipActive
+    };
   }
 }
 

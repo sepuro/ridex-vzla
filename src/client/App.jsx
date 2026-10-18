@@ -9,11 +9,14 @@ import {
   AlertCircle,
   CheckCircle2,
   RefreshCw,
-  Search
+  Search,
+  Package,
+  Crown
 } from 'lucide-react';
 import { Header } from './components/Header.jsx';
 import { MapView } from './components/MapView.jsx';
 import { VehicleSelector } from './components/VehicleSelector.jsx';
+import { DeliverySelector } from './components/DeliverySelector.jsx';
 import { RideStatusCard } from './components/RideStatusCard.jsx';
 import { DriverDashboard } from './components/DriverDashboard.jsx';
 import { RateSettingsModal } from './components/RateSettingsModal.jsx';
@@ -26,6 +29,8 @@ import { ProfileView } from './components/ProfileView.jsx';
 import { ReceiptModal } from './components/ReceiptModal.jsx';
 import { AuthModal } from './components/AuthModal.jsx';
 import { EditProfileModal } from './components/EditProfileModal.jsx';
+import { SubscriptionModal } from './components/SubscriptionModal.jsx';
+import { SplashScreen } from './components/SplashScreen.jsx';
 import { PushNotificationToast } from './components/PushNotificationToast.jsx';
 import { sendPushNotification } from './utils/notifications.js';
 import { useGeolocation } from './hooks/useGeolocation.js';
@@ -41,6 +46,7 @@ import {
 import {
   RIDE_STATUS,
   VEHICLE_TYPES,
+  SERVICE_MODES,
   DEFAULT_BCV_RATE,
   POPULAR_LOCATIONS
 } from '../shared/constants.js';
@@ -75,6 +81,9 @@ export default function App() {
       .catch((e) => console.log('[BCV] Fallback local inicial:', e));
   }, []);
 
+  // --- Animación de Inicio (Splash Screen) ---
+  const [showSplash, setShowSplash] = useState(true);
+
   // --- Modales ---
   const [isRateModalOpen, setIsRateModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -84,6 +93,18 @@ export default function App() {
   const [selectedRideForReceipt, setSelectedRideForReceipt] = useState(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+
+  // --- Modo de Servicio (Viajes vs Envíos Delivery) ---
+  const [serviceMode, setServiceMode] = useState(SERVICE_MODES.RIDES); // 'rides' | 'delivery'
+
+  // --- Estados de Delivery / Encomiendas ---
+  const [deliveryVehicleType, setDeliveryVehicleType] = useState(VEHICLE_TYPES.DELIVERY_MOTO);
+  const [packageCategory, setPackageCategory] = useState('parcel');
+  const [receiverName, setReceiverName] = useState('');
+  const [receiverPhone, setReceiverPhone] = useState('');
+  const [deliveryNotes, setDeliveryNotes] = useState('');
+  const [deliveryPin, setDeliveryPin] = useState(() => Math.floor(1000 + Math.random() * 9000).toString());
 
   // --- Usuario Autenticado y Perfil ---
   const [currentUser, setCurrentUser] = useState(() => {
@@ -104,7 +125,8 @@ export default function App() {
       rating: 4.98,
       totalRides: 42,
       avatar: null,
-      vehicle: null
+      vehicle: null,
+      isVip: false
     };
   });
 
@@ -136,10 +158,12 @@ export default function App() {
   // Distancia real de calle o aproximada
   const directDistanceKm = calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
   const effectiveDistanceKm = streetRoute?.distanceKm || directDistanceKm;
+  const activeVehicleType = serviceMode === SERVICE_MODES.DELIVERY ? deliveryVehicleType : selectedVehicleType;
   const currentFare = calculateFare({
     distanceKm: effectiveDistanceKm,
-    vehicleType: selectedVehicleType,
-    bcvRate
+    vehicleType: activeVehicleType,
+    bcvRate,
+    isVip: Boolean(currentUser?.isVip)
   });
 
   // --- WebSocket Eventos en Tiempo Real ---
@@ -364,15 +388,37 @@ export default function App() {
       return;
     }
 
+    if (serviceMode === SERVICE_MODES.DELIVERY) {
+      if (!receiverName.trim()) {
+        alert('Por favor ingresa el nombre de la persona que recibirá la encomienda.');
+        return;
+      }
+      if (!receiverPhone.trim()) {
+        alert('Por favor ingresa el teléfono celular del destinatario.');
+        return;
+      }
+    }
+
+    const packageDetails = serviceMode === SERVICE_MODES.DELIVERY ? {
+      category: packageCategory,
+      receiverName: receiverName.trim(),
+      receiverPhone: receiverPhone.trim(),
+      notes: deliveryNotes.trim(),
+      deliveryPin
+    } : null;
+
     sendEvent('passenger:request_ride', {
       pickup,
       dropoff,
-      vehicleType: selectedVehicleType,
+      vehicleType: activeVehicleType,
       fareUsd: currentFare.fareUsd,
       fareBs: currentFare.fareBs,
       bcvRate,
       distanceKm: effectiveDistanceKm,
-      estimatedMinutes: streetRoute?.durationMin || currentFare.estimatedMinutes
+      estimatedMinutes: streetRoute?.durationMin || currentFare.estimatedMinutes,
+      serviceMode,
+      packageDetails,
+      isVip: Boolean(currentUser?.isVip)
     });
   };
 
@@ -520,6 +566,8 @@ export default function App() {
         connected={connected}
         rateSource={rateSource}
         isLiveBcv={isLiveBcv}
+        isVip={Boolean(currentUser?.isVip)}
+        onOpenVipModal={() => setIsSubscriptionModalOpen(true)}
       />
 
       {/* 2. Contenido según la pestaña activa */}
@@ -549,6 +597,50 @@ export default function App() {
               <>
                 {!activeRide ? (
                   <div className="space-y-3.5 animate-fade-in">
+                    {/* Selector de Modo de Servicio: 🚗 Viajes | 📦 Envíos */}
+                    <div className="grid grid-cols-2 gap-1.5 p-1 rounded-2xl bg-[#06080D]/90 border border-white/[0.08] backdrop-blur-xl shadow-inner">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          triggerHaptic(30);
+                          setServiceMode(SERVICE_MODES.RIDES);
+                        }}
+                        className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+                          serviceMode === SERVICE_MODES.RIDES
+                            ? 'bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black shadow-md shadow-[#00E599]/20'
+                            : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                        }`}
+                      >
+                        <Car className="w-3.5 h-3.5" />
+                        <span>Viajes</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          triggerHaptic(30);
+                          setServiceMode(SERVICE_MODES.DELIVERY);
+                        }}
+                        className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-1.5 transition active:scale-95 relative ${
+                          serviceMode === SERVICE_MODES.DELIVERY
+                            ? 'bg-gradient-to-r from-[#00D2FF] to-[#00E599] text-black shadow-md shadow-[#00D2FF]/20'
+                            : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                        }`}
+                      >
+                        <Package className="w-3.5 h-3.5" />
+                        <span>Envíos</span>
+                        {currentUser?.isVip ? (
+                          <span className="px-1.5 py-0.2 rounded-full bg-amber-400 text-black text-[8px] font-black uppercase tracking-tight">
+                            VIP 15%
+                          </span>
+                        ) : (
+                          <span className="px-1.5 py-0.2 rounded-full bg-[#00E599]/20 text-[#00E599] border border-[#00E599]/30 text-[8px] font-black uppercase tracking-tight">
+                            FLASH
+                          </span>
+                        )}
+                      </button>
+                    </div>
+
                     {/* Selector de Origen y Destino con búsqueda integrada */}
                     <div className="bg-[#06080D]/90 backdrop-blur-xl p-3.5 rounded-2xl border border-white/[0.08] relative space-y-2 shadow-inner">
                       {/* Origen */}
@@ -564,7 +656,9 @@ export default function App() {
                           A
                         </span>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Punto de Recogida</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                            {serviceMode === SERVICE_MODES.DELIVERY ? 'Punto de Recogida (Dónde retirar)' : 'Punto de Recogida'}
+                          </span>
                           <p className="text-xs font-semibold text-white truncate">{pickup.name}</p>
                         </div>
                         <Search className="w-3.5 h-3.5 text-slate-400" />
@@ -583,7 +677,9 @@ export default function App() {
                           B
                         </span>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Destino</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                            {serviceMode === SERVICE_MODES.DELIVERY ? 'Punto de Entrega (Destino paquete)' : 'Destino'}
+                          </span>
                           <p className="text-xs font-semibold text-white truncate">{dropoff.name}</p>
                         </div>
                         <Search className="w-3.5 h-3.5 text-slate-400" />
@@ -608,13 +704,34 @@ export default function App() {
                       <span>Tiempo: <strong className="text-white font-bold">{formatDuration(streetRoute?.durationMin || currentFare.estimatedMinutes)}</strong></span>
                     </div>
 
-                    {/* Selector de Categorías (Moto, Carro Estándar, Carro Confort) */}
-                    <VehicleSelector
-                      selectedType={selectedVehicleType}
-                      onSelectType={setSelectedVehicleType}
-                      distanceKm={effectiveDistanceKm}
-                      bcvRate={bcvRate}
-                    />
+                    {/* Selector de Categorías de Viaje O Delivery */}
+                    {serviceMode === SERVICE_MODES.RIDES ? (
+                      <VehicleSelector
+                        selectedType={selectedVehicleType}
+                        onSelectType={setSelectedVehicleType}
+                        distanceKm={effectiveDistanceKm}
+                        bcvRate={bcvRate}
+                      />
+                    ) : (
+                      <DeliverySelector
+                        selectedType={deliveryVehicleType}
+                        onSelectType={setDeliveryVehicleType}
+                        packageCategory={packageCategory}
+                        onSelectCategory={setPackageCategory}
+                        receiverName={receiverName}
+                        onChangeReceiverName={setReceiverName}
+                        receiverPhone={receiverPhone}
+                        onChangeReceiverPhone={setReceiverPhone}
+                        deliveryNotes={deliveryNotes}
+                        onChangeDeliveryNotes={setDeliveryNotes}
+                        deliveryPin={deliveryPin}
+                        onRegeneratePin={() => setDeliveryPin(Math.floor(1000 + Math.random() * 9000).toString())}
+                        distanceKm={effectiveDistanceKm}
+                        bcvRate={bcvRate}
+                        isVip={Boolean(currentUser?.isVip)}
+                        onOpenVipModal={() => setIsSubscriptionModalOpen(true)}
+                      />
+                    )}
 
                     {/* Botón Principal de Solicitud con degradado Electric Emerald y brillo */}
                     <button
@@ -622,7 +739,9 @@ export default function App() {
                       className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E599] via-[#00F5A0] to-[#00D2FF] text-black font-black text-sm tracking-wide shadow-xl shadow-[#00E599]/30 transition active:scale-[0.98] flex items-center justify-center space-x-2 mt-2 select-none relative overflow-hidden group"
                     >
                       <Navigation className="w-4 h-4 fill-current" />
-                      <span>SOLICITAR RIDEX • {formatUsd(currentFare.fareUsd)} ({formatBs(currentFare.fareBs)})</span>
+                      <span>
+                        {serviceMode === SERVICE_MODES.DELIVERY ? 'SOLICITAR ENVÍO' : 'SOLICITAR RIDEX'} • {formatUsd(currentFare.fareUsd)} ({formatBs(currentFare.fareBs)})
+                      </span>
                     </button>
                   </div>
                 ) : (
@@ -669,7 +788,12 @@ export default function App() {
       {/* Pestaña: Billetera */}
       {activeTab === 'wallet' && (
         <div className="flex-1 p-4 pt-16">
-          <WalletView bcvRate={bcvRate} role={role} />
+          <WalletView
+            bcvRate={bcvRate}
+            role={role}
+            currentUser={currentUser}
+            onOpenVipModal={() => setIsSubscriptionModalOpen(true)}
+          />
         </div>
       )}
 
@@ -683,6 +807,7 @@ export default function App() {
             onOpenAuthModal={() => setIsAuthModalOpen(true)}
             onOpenEditProfile={() => setIsEditProfileModalOpen(true)}
             onLogout={handleLogout}
+            onOpenVipModal={() => setIsSubscriptionModalOpen(true)}
           />
         </div>
       )}
@@ -740,6 +865,21 @@ export default function App() {
         currentUser={currentUser}
         onProfileUpdated={handleProfileUpdated}
       />
+
+      <SubscriptionModal
+        isOpen={isSubscriptionModalOpen}
+        onClose={() => setIsSubscriptionModalOpen(false)}
+        currentUser={currentUser}
+        bcvRate={bcvRate}
+        onSubscriptionUpdated={(updatedUser) => {
+          setCurrentUser(updatedUser);
+        }}
+      />
+
+      {/* 5. Pantalla de Inicio Animada (Splash Screen) */}
+      {showSplash && (
+        <SplashScreen onFinish={() => setShowSplash(false)} />
+      )}
     </div>
   );
 }

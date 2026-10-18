@@ -9,7 +9,9 @@ export function Header({
   onOpenRateModal,
   connected,
   rateSource = 'BCV Oficial',
-  isLiveBcv = true
+  isLiveBcv = true,
+  isVip = false,
+  onOpenVipModal
 }) {
   const handleToggle = () => {
     triggerHaptic(40);
@@ -48,8 +50,27 @@ export function Header({
         </div>
       </div>
 
-      {/* 2. Barra de Acciones: Tasa BCV + Selector Rol + Conectividad */}
+      {/* 2. Barra de Acciones: VIP + Tasa BCV + Selector Rol + Conectividad */}
       <div className="flex items-center space-x-2">
+        {/* Distintivo / Botón RideX Pass VIP */}
+        {role === 'passenger' && (
+          <button
+            onClick={() => {
+              triggerHaptic(30);
+              if (onOpenVipModal) onOpenVipModal();
+            }}
+            className={`flex items-center space-x-1 px-2 py-1.5 rounded-full text-[10px] font-black tracking-wider transition-all active:scale-95 border ${
+              isVip
+                ? 'bg-gradient-to-r from-amber-500/20 to-yellow-400/20 text-amber-300 border-amber-400/60 shadow-[0_0_12px_rgba(251,191,36,0.25)]'
+                : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border-white/10 hover:border-amber-400/40'
+            }`}
+            title={isVip ? 'RideX Pass VIP Activo (15% OFF)' : 'Obtén 15% OFF con RideX Pass VIP'}
+          >
+            <Sparkles className={`w-3 h-3 ${isVip ? 'text-amber-400 fill-amber-400 animate-pulse' : 'text-slate-400'}`} />
+            <span>{isVip ? 'VIP' : 'PASS'}</span>
+          </button>
+        )}
+
         {/* Ticker Tasa BCV Oficial */}
         <button
           onClick={handleRateClick}

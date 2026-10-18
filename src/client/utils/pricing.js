@@ -25,27 +25,43 @@ export function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 /**
- * Calcula la tarifa estimada para un viaje en USD y su equivalente en Bolívares según la tasa BCV.
+ * Calcula la tarifa estimada para un viaje o delivery en USD y su equivalente en Bolívares según la tasa BCV.
+ * Aplica automáticamente el descuento si el usuario es miembro de RideX Pass VIP.
  */
 export function calculateFare({
   distanceKm = 0,
   vehicleType = VEHICLE_TYPES.CARRO_STANDARD,
   bcvRate = DEFAULT_BCV_RATE,
-  surgeMultiplier = 1.0
+  surgeMultiplier = 1.0,
+  isVip = false,
+  vipDiscountPercent = 15
 }) {
   const config = VEHICLE_CONFIGS[vehicleType] || VEHICLE_CONFIGS[VEHICLE_TYPES.CARRO_STANDARD];
 
   // Cálculo de tarifa base + kilometraje
   const rawFareUsd = (config.baseFareUsd + (distanceKm * config.perKmUsd)) * surgeMultiplier;
   
-  // Asegurar tarifa mínima del vehículo
-  const fareUsd = Math.max(config.minFareUsd, Math.round(rawFareUsd * 100) / 100);
+  // Tarifa regular (antes de posible descuento VIP)
+  const regularFareUsd = Math.max(config.minFareUsd, Math.round(rawFareUsd * 100) / 100);
+
+  // Aplicar descuento VIP si está activo
+  let fareUsd = regularFareUsd;
+  let savingsUsd = 0;
+  if (isVip && vipDiscountPercent > 0) {
+    const discounted = regularFareUsd * (1 - vipDiscountPercent / 100);
+    // Permitir descuento sin bajar de una cota prudente
+    fareUsd = Math.max(1.0, Math.round(discounted * 100) / 100);
+    savingsUsd = Math.round((regularFareUsd - fareUsd) * 100) / 100;
+  }
 
   // Conversión exacta a Bolívares usando la tasa oficial BCV
   const fareBs = Math.round(fareUsd * bcvRate * 100) / 100;
+  const regularFareBs = Math.round(regularFareUsd * bcvRate * 100) / 100;
+  const savingsBs = Math.round(savingsUsd * bcvRate * 100) / 100;
 
   // Estimación de tiempo en minutos
-  const avgSpeedKmH = vehicleType === VEHICLE_TYPES.MOTO ? 28 : 22; // Las motos se desplazan más rápido en el tráfico
+  const isMotoType = vehicleType === VEHICLE_TYPES.MOTO || vehicleType === VEHICLE_TYPES.DELIVERY_MOTO;
+  const avgSpeedKmH = isMotoType ? 28 : 22; // Las motos se desplazan más rápido en el tráfico
   const estimatedMinutes = Math.max(3, Math.round((distanceKm / avgSpeedKmH) * 60) + 2);
 
   return {
@@ -53,6 +69,11 @@ export function calculateFare({
     vehicleType,
     fareUsd,
     fareBs,
+    regularFareUsd,
+    regularFareBs,
+    isVip,
+    savingsUsd,
+    savingsBs,
     bcvRate,
     estimatedMinutes
   };

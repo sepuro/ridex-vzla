@@ -10,10 +10,18 @@ export const RIDE_STATUS = {
   CANCELLED: 'CANCELLED'
 };
 
+export const SERVICE_MODES = {
+  RIDES: 'rides',
+  DELIVERY: 'delivery'
+};
+
 export const VEHICLE_TYPES = {
   MOTO: 'moto',
   CARRO_STANDARD: 'carro_standard',
-  CARRO_CONFORT: 'carro_confort'
+  CARRO_CONFORT: 'carro_confort',
+  DELIVERY_MOTO: 'delivery_moto',
+  DELIVERY_CARRO: 'delivery_carro',
+  DELIVERY_CARGA: 'delivery_carga'
 };
 
 export const VEHICLE_CONFIGS = {
@@ -49,12 +57,92 @@ export const VEHICLE_CONFIGS = {
     minFareUsd: 5.0,
     capacity: 4,
     timeFactor: 1.0
+  },
+  // Categorías exclusivas de Delivery / Encomiendas
+  [VEHICLE_TYPES.DELIVERY_MOTO]: {
+    id: VEHICLE_TYPES.DELIVERY_MOTO,
+    name: 'Moto Flash Encomienda',
+    subtitle: 'Sobres, comida, paquetes pequeños • Hasta 10 kg',
+    icon: 'Bike',
+    baseFareUsd: 1.3,
+    perKmUsd: 0.65,
+    minFareUsd: 1.8,
+    capacity: '10 kg máx',
+    timeFactor: 0.75,
+    isDelivery: true
+  },
+  [VEHICLE_TYPES.DELIVERY_CARRO]: {
+    id: VEHICLE_TYPES.DELIVERY_CARRO,
+    name: 'Auto Express Paquete',
+    subtitle: 'Cajas medianas, compras, repuestos • Hasta 50 kg',
+    icon: 'Car',
+    baseFareUsd: 2.8,
+    perKmUsd: 1.15,
+    minFareUsd: 4.0,
+    capacity: '50 kg máx',
+    timeFactor: 1.0,
+    isDelivery: true
+  },
+  [VEHICLE_TYPES.DELIVERY_CARGA]: {
+    id: VEHICLE_TYPES.DELIVERY_CARGA,
+    name: 'Camioneta / Carga Ligera',
+    subtitle: 'Bultos pesados, mercancía comercial • Hasta 200 kg',
+    icon: 'Truck',
+    baseFareUsd: 5.0,
+    perKmUsd: 1.80,
+    minFareUsd: 7.5,
+    capacity: '200 kg máx',
+    timeFactor: 1.1,
+    isDelivery: true
+  }
+};
+
+export const DELIVERY_CATEGORIES = [
+  { id: 'documents', label: 'Documentos / Sobres', icon: 'FileText' },
+  { id: 'food', label: 'Comida / Alimentos', icon: 'Utensils' },
+  { id: 'parcel', label: 'Ropa / Mercancía', icon: 'ShoppingBag' },
+  { id: 'electronics', label: 'Electrónicos / Celulares', icon: 'Smartphone' },
+  { id: 'parts', label: 'Repuestos / Ferretería', icon: 'Wrench' },
+  { id: 'fragile', label: 'Paquete Frágil / Delicado', icon: 'AlertTriangle' }
+];
+
+export const SUBSCRIPTION_PLANS = {
+  MONTHLY: {
+    id: 'pass_vip_monthly',
+    name: 'RideX Pass Mensual',
+    priceUsd: 4.99,
+    discountPercent: 15,
+    durationDays: 30,
+    perks: [
+      '15% de descuento en todos los viajes y envíos delivery',
+      '0% comisión en recargas de saldo vía Pago Móvil',
+      'Despacho prioritario en horas pico y lluvia en Venezuela',
+      'Hasta 3 cancelaciones gratuitas al mes',
+      'Soporte prioritario VIP en WhatsApp 24/7'
+    ]
+  },
+  ANNUAL: {
+    id: 'pass_vip_annual',
+    name: 'RideX Pass Anual',
+    priceUsd: 39.99,
+    discountPercent: 15,
+    durationDays: 365,
+    badge: 'Ahorra 33% • 2 meses gratis',
+    perks: [
+      '15% de descuento en todos los viajes y envíos delivery',
+      '0% comisión en recargas de saldo vía Pago Móvil',
+      'Despacho prioritario en horas pico y lluvia en Venezuela',
+      'Cancelaciones gratuitas ilimitadas',
+      'Soporte prioritario VIP en WhatsApp 24/7',
+      'Insignia dorada VIP en perfil y conductor'
+    ]
   }
 };
 
 export const PAYMENT_METHODS = {
   PAGO_MOVIL: 'pago_movil',
   EFECTIVO_USD: 'efectivo_usd',
+  WALLET: 'wallet',
   BINANCE_USDT: 'binance_usdt',
   ZELLE: 'zelle'
 };
@@ -62,6 +150,7 @@ export const PAYMENT_METHODS = {
 export const PAYMENT_METHOD_NAMES = {
   [PAYMENT_METHODS.PAGO_MOVIL]: 'Pago Móvil (Bolívares)',
   [PAYMENT_METHODS.EFECTIVO_USD]: 'Efectivo USD (Divisas)',
+  [PAYMENT_METHODS.WALLET]: 'Saldo Billetera RideX',
   [PAYMENT_METHODS.BINANCE_USDT]: 'Binance Pay (USDT)',
   [PAYMENT_METHODS.ZELLE]: 'Zelle (USD)'
 };

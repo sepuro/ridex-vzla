@@ -15,7 +15,10 @@ import {
   Compass,
   DollarSign,
   TrendingUp,
-  ChevronDown
+  ChevronDown,
+  Package,
+  Truck,
+  KeyRound
 } from 'lucide-react';
 import { formatUsd, formatBs, formatDistance } from '../utils/formatters.js';
 import { triggerHaptic } from '../utils/soundEffects.js';
@@ -27,10 +30,33 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
   // Historial de viajes con datos representativos venezolanos
   const sampleHistory = [
     {
+      id: 'RX-1049',
+      date: 'Hoy, 02:45 PM',
+      pickup: { name: 'Farmatodo La Castellana, Caracas', lat: 10.4990, lng: -66.8520 },
+      dropoff: { name: 'Residencias Los Pinos, Chacao', lat: 10.4920, lng: -66.8580 },
+      serviceMode: 'delivery',
+      vehicleType: 'delivery_moto',
+      vehicleName: 'Moto Flash Encomienda',
+      driverName: 'Carlos Mendoza',
+      fareUsd: 2.10,
+      fareBs: 1848.25,
+      distanceKm: 2.1,
+      status: 'PAID',
+      packageDetails: {
+        category: 'parcel',
+        receiverName: 'Valeria Benítez',
+        receiverPhone: '0424-5551234',
+        deliveryPin: '4912'
+      },
+      payment: { method: 'pago_movil', reference: '381920', bank: 'Banesco' },
+      rating: 5
+    },
+    {
       id: 'RX-1042',
       date: 'Hoy, 10:15 AM',
       pickup: { name: 'Plaza Venezuela, Sabana Grande, Caracas', lat: 10.4955, lng: -66.8835 },
       dropoff: { name: 'Centro Comercial CCCT, Chuao, Caracas', lat: 10.4851, lng: -66.8522 },
+      serviceMode: 'rides',
       vehicleType: 'moto',
       vehicleName: 'Moto Express',
       driverName: 'Alejandro Colmenares',
@@ -46,6 +72,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
       date: 'Ayer, 06:40 PM',
       pickup: { name: 'Plaza Francia, Altamira, Chacao', lat: 10.4984, lng: -66.8505 },
       dropoff: { name: 'Calle París, Las Mercedes, Baruta', lat: 10.4789, lng: -66.8643 },
+      serviceMode: 'rides',
       vehicleType: 'carro_standard',
       vehicleName: 'Carro Estándar',
       driverName: 'Franklin Rivas',
@@ -61,6 +88,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
       date: '15 Octubre, 02:10 PM',
       pickup: { name: 'Parroquia La Candelaria, Caracas', lat: 10.5052, lng: -66.9015 },
       dropoff: { name: 'Terminal La Bandera, El Valle', lat: 10.4746, lng: -66.9112 },
+      serviceMode: 'rides',
       vehicleType: 'carro_confort',
       vehicleName: 'Carro Confort (A/C)',
       driverName: 'Marcos Villegas',
@@ -81,6 +109,8 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
 
   const filteredRides = allRides.filter((r) => {
     if (filter === 'todos') return true;
+    if (filter === 'viajes') return r.serviceMode !== 'delivery';
+    if (filter === 'delivery') return r.serviceMode === 'delivery';
     if (filter === 'pago_movil') return r.payment?.method === 'pago_movil';
     if (filter === 'efectivo') return r.payment?.method === 'efectivo_usd';
     return true;
@@ -101,10 +131,10 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
               <span>Tu Actividad de Movilidad</span>
               <Sparkles className="w-4 h-4 text-[#00E599]" />
             </h2>
-            <p className="text-[11px] text-slate-400">Historial completo con respaldo BCV y comprobantes</p>
+            <p className="text-[11px] text-slate-400">Historial de viajes y envíos con respaldo BCV</p>
           </div>
           <span className="px-2.5 py-0.5 rounded-full bg-[#00E599]/15 border border-[#00E599]/30 text-[11px] font-black text-[#00E599]">
-            {allRides.length} viajes
+            {allRides.length} órdenes
           </span>
         </div>
 
@@ -130,7 +160,9 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
       {/* 2. Filtros estilo Chip Píldora */}
       <div className="flex space-x-1.5 overflow-x-auto no-scrollbar py-0.5">
         {[
-          { id: 'todos', label: 'Todos los viajes' },
+          { id: 'todos', label: 'Todos' },
+          { id: 'viajes', label: '🚗 Viajes' },
+          { id: 'delivery', label: '📦 Envíos' },
           { id: 'pago_movil', label: 'Pago Móvil' },
           { id: 'efectivo', label: 'Efectivo USD' }
         ].map(({ id, label }) => (
@@ -160,7 +192,9 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
           </div>
         ) : (
           filteredRides.map((ride) => {
-            const isMoto = ride.vehicleType === 'moto';
+            const isDelivery = ride.serviceMode === 'delivery' || ride.vehicleType?.startsWith('delivery_');
+            const isMoto = ride.vehicleType === 'moto' || ride.vehicleType === 'delivery_moto';
+            const isTruck = ride.vehicleType === 'delivery_carga';
             const isPagoMovil = ride.payment?.method === 'pago_movil';
             const isExpanded = expandedRideId === ride.id;
 
@@ -174,15 +208,28 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                   <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
                     <div className="flex items-center space-x-2.5">
                       <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold ${
-                        isMoto
-                          ? 'bg-[#FFB800]/15 text-[#FFB800] border border-[#FFB800]/30'
-                          : 'bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30'
+                        isDelivery
+                          ? 'bg-[#00D2FF]/15 text-[#00D2FF] border border-[#00D2FF]/30'
+                          : isMoto
+                            ? 'bg-[#FFB800]/15 text-[#FFB800] border border-[#FFB800]/30'
+                            : 'bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30'
                       }`}>
-                        {isMoto ? <Bike className="w-5 h-5" /> : <Car className="w-5 h-5" />}
+                        {isDelivery ? (
+                          isTruck ? <Truck className="w-5 h-5" /> : <Package className="w-5 h-5" />
+                        ) : isMoto ? (
+                          <Bike className="w-5 h-5" />
+                        ) : (
+                          <Car className="w-5 h-5" />
+                        )}
                       </div>
                       <div>
                         <div className="flex items-center space-x-1.5">
-                          <h4 className="font-black text-white text-xs">{ride.vehicleName || 'Moto Express'}</h4>
+                          <h4 className="font-black text-white text-xs">{ride.vehicleName || (isDelivery ? 'Moto Flash Encomienda' : 'Moto Express')}</h4>
+                          {isDelivery && (
+                            <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-[#00D2FF]/20 text-[#00D2FF] border border-[#00D2FF]/30">
+                              Envío
+                            </span>
+                          )}
                           <span className="text-[10px] text-[#FFB800] font-bold">★ {ride.rating || 5}</span>
                         </div>
                         <span className="text-[10px] text-slate-400 block font-mono">
@@ -196,6 +243,24 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                       <span className="text-[11px] font-black text-[#00E599] block">{formatBs(ride.fareBs)}</span>
                     </div>
                   </div>
+
+                  {/* Paquete / Destinatario si es Delivery */}
+                  {ride.packageDetails && (
+                    <div className="p-2.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-[11px]">
+                      <div className="flex items-center space-x-1.5">
+                        <Package className="w-3.5 h-3.5 text-[#00D2FF] flex-shrink-0" />
+                        <span className="text-slate-300 truncate">
+                          Para: <strong className="text-white">{ride.packageDetails.receiverName || 'Destinatario'}</strong>
+                        </span>
+                      </div>
+                      {ride.packageDetails.deliveryPin && (
+                        <span className="flex items-center space-x-1 font-mono font-black text-[#00E599] bg-[#00E599]/10 px-2 py-0.5 rounded-lg border border-[#00E599]/20 flex-shrink-0">
+                          <KeyRound className="w-3 h-3" />
+                          <span>PIN: {ride.packageDetails.deliveryPin}</span>
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   {/* Trayecto visual con conector estilo Uber / Google Maps */}
                   <div className="space-y-2 text-xs relative pl-4 border-l-2 border-dashed border-white/20 ml-2.5 my-1">

@@ -22,7 +22,13 @@ import { VENEZUELAN_BANKS } from '../utils/banks.js';
 import { DEFAULT_BCV_RATE } from '../../shared/constants.js';
 import { triggerHaptic, playAcceptChime } from '../utils/soundEffects.js';
 
-export function WalletView({ bcvRate = DEFAULT_BCV_RATE, role = 'passenger' }) {
+export function WalletView({
+  bcvRate = DEFAULT_BCV_RATE,
+  role = 'passenger',
+  currentUser = null,
+  onOpenVipModal
+}) {
+  const isVip = Boolean(currentUser?.isVip);
   const [balanceUsd, setBalanceUsd] = useState(role === 'driver' ? 84.50 : 25.00);
   const [copiedBank, setCopiedBank] = useState(false);
 
@@ -242,6 +248,12 @@ export function WalletView({ bcvRate = DEFAULT_BCV_RATE, role = 'passenger' }) {
               <span className="text-[9px] bg-white/[0.08] text-white px-1.5 py-0.2 rounded font-mono font-bold">
                 TITANIUM
               </span>
+              {isVip && (
+                <span className="text-[9px] bg-amber-400/20 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full font-black flex items-center space-x-1 shadow-sm">
+                  <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                  <span>VIP 0% FEES</span>
+                </span>
+              )}
             </div>
             <div className="text-3xl font-black text-white tracking-tight mt-1">
               {formatUsd(balanceUsd)}
@@ -295,6 +307,30 @@ export function WalletView({ bcvRate = DEFAULT_BCV_RATE, role = 'passenger' }) {
           </button>
         </div>
       </div>
+
+      {/* Banner Promocional RideX Pass VIP */}
+      {!isVip && role === 'passenger' && (
+        <div
+          onClick={() => {
+            triggerHaptic(40);
+            if (onOpenVipModal) onOpenVipModal();
+          }}
+          className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-[#141A26] to-[#0D111A] border border-amber-500/30 flex items-center justify-between cursor-pointer active:scale-[0.99] transition hover:border-amber-400/50 shadow-md"
+        >
+          <div className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <h4 className="text-xs font-black text-white">RideX Pass VIP</h4>
+              <p className="text-[10px] text-slate-300">0% comisiones en recargas y 15% OFF en viajes y envíos</p>
+            </div>
+          </div>
+          <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider pl-2 flex-shrink-0">
+            Ver &gt;
+          </span>
+        </div>
+      )}
 
       {/* 3. Cuentas Afiliadas para Pago Móvil */}
       <div className="space-y-2.5">

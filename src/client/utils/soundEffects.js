@@ -117,6 +117,41 @@ export function playArrivalChime() {
 }
 
 /**
+ * Tono futurista de bienvenida para la pantalla de inicio (Splash Screen).
+ */
+export function playStartupChime() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    // Acorde etéreo de bienvenida: F#4 -> A#4 -> C#5 -> F#5
+    const freqs = [369.99, 466.16, 554.37, 739.99];
+    freqs.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+      gain.gain.setValueAtTime(0, now + idx * 0.08);
+      gain.gain.linearRampToValueAtTime(0.2, now + idx * 0.08 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.9);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.95);
+    });
+
+    triggerHaptic([40, 60, 80]);
+  } catch (err) {
+    console.warn('Audio feedback error:', err);
+  }
+}
+
+/**
  * Dispara vibración háptica en teléfonos Android compatibles.
  */
 export function triggerHaptic(pattern = 100) {

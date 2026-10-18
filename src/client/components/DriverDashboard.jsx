@@ -14,7 +14,8 @@ import {
   Banknote,
   Sparkles,
   MapPin,
-  TrendingUp
+  TrendingUp,
+  Package
 } from 'lucide-react';
 import { RIDE_STATUS, PAYMENT_METHODS } from '../../shared/constants.js';
 import { formatUsd, formatBs } from '../utils/formatters.js';
@@ -133,17 +134,25 @@ export function DriverDashboard({
         </div>
       </div>
 
-      {/* 3. Oferta Entrante de Viaje (Modal / Alerta Flotante) */}
+      {/* 3. Oferta Entrante de Viaje O Encomienda */}
       {incomingOffer && (
         <div className="p-4 rounded-3xl bg-gradient-to-b from-[#121A2A] to-[#0A0F1A] border-2 border-[#00E599] shadow-[0_0_35px_rgba(0,229,153,0.3)] space-y-4 animate-slide-up">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="w-8 h-8 rounded-full bg-[#00E599]/20 text-[#00E599] flex items-center justify-center font-black text-sm">
-                ⚡
+              <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${
+                incomingOffer.serviceMode === 'delivery'
+                  ? 'bg-[#00D2FF]/20 text-[#00D2FF]'
+                  : 'bg-[#00E599]/20 text-[#00E599]'
+              }`}>
+                {incomingOffer.serviceMode === 'delivery' ? <Package className="w-4 h-4" /> : '⚡'}
               </span>
               <div>
-                <h4 className="font-black text-white text-base">¡Nueva Carrera Disponible!</h4>
-                <p className="text-xs text-slate-400">Solicitud de pasajero cercano</p>
+                <h4 className="font-black text-white text-base">
+                  {incomingOffer.serviceMode === 'delivery' ? '¡Nueva Encomienda Disponible!' : '¡Nueva Carrera Disponible!'}
+                </h4>
+                <p className="text-xs text-slate-400">
+                  {incomingOffer.serviceMode === 'delivery' ? 'Entrega de paquete urbano' : 'Solicitud de pasajero cercano'}
+                </p>
               </div>
             </div>
 
@@ -152,6 +161,14 @@ export function DriverDashboard({
               {offerCountdown}s
             </div>
           </div>
+
+          {/* Destinatario si es Delivery */}
+          {incomingOffer.packageDetails && (
+            <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-between text-xs">
+              <span className="text-slate-400">Recibe: <strong className="text-white">{incomingOffer.packageDetails.receiverName}</strong></span>
+              <span className="text-[10px] text-[#00D2FF] font-bold">Entrega con PIN</span>
+            </div>
+          )}
 
           {/* Rutas y Tarifas */}
           <div className="p-3 rounded-2xl bg-black/40 border border-white/[0.08] space-y-2 text-xs">
@@ -191,33 +208,45 @@ export function DriverDashboard({
               }}
               className="py-3 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/30 transition active:scale-95 flex items-center justify-center space-x-1"
             >
-              <span>ACEPTAR CARRERA</span>
+              <span>{incomingOffer.serviceMode === 'delivery' ? 'ACEPTAR ENVÍO' : 'ACEPTAR CARRERA'}</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>
         </div>
       )}
 
-      {/* 4. Viaje Activo para el Conductor */}
+      {/* 4. Viaje o Delivery Activo para el Conductor */}
       {activeRide && (
         <div className="p-4 rounded-3xl bg-[#0D111A] border border-white/[0.12] shadow-2xl space-y-4 animate-slide-up">
           <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
             <div>
               <span className="text-[10px] font-black text-[#00E599] uppercase tracking-wider block">
-                Viaje en Curso
+                {activeRide.serviceMode === 'delivery' ? '📦 Encomienda en Curso' : '🚗 Viaje en Curso'}
               </span>
               <h4 className="font-black text-white text-base">
-                {activeRide.passenger?.name || 'Pasajero RideX'}
+                {activeRide.serviceMode === 'delivery'
+                  ? `Para: ${activeRide.packageDetails?.receiverName || 'Destinatario'}`
+                  : (activeRide.passenger?.name || 'Pasajero RideX')}
               </h4>
             </div>
 
             <a
-              href={`tel:${activeRide.passenger?.phone || '04141234567'}`}
+              href={`tel:${activeRide.serviceMode === 'delivery' ? (activeRide.packageDetails?.receiverPhone || '04141234567') : (activeRide.passenger?.phone || '04141234567')}`}
               className="w-10 h-10 rounded-2xl bg-[#00D2FF]/15 text-[#00D2FF] flex items-center justify-center border border-[#00D2FF]/30 active:scale-95 transition"
             >
               <Phone className="w-4 h-4" />
             </a>
           </div>
+
+          {/* Información del PIN para Delivery */}
+          {activeRide.serviceMode === 'delivery' && activeRide.packageDetails?.deliveryPin && (
+            <div className="p-2.5 rounded-2xl bg-black/40 border border-[#00D2FF]/30 flex items-center justify-between text-xs">
+              <span className="text-slate-400">PIN de Verificación del Destinatario:</span>
+              <strong className="text-sm font-mono font-black text-[#00E599] bg-[#00E599]/10 px-2 py-0.5 rounded border border-[#00E599]/30">
+                {activeRide.packageDetails.deliveryPin}
+              </strong>
+            </div>
+          )}
 
           {/* Botones de Progresión del Viaje */}
           <div className="space-y-2">
@@ -229,7 +258,7 @@ export function DriverDashboard({
                 }}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00D2FF] to-blue-500 text-black font-black text-xs shadow-lg shadow-[#00D2FF]/20 active:scale-95 transition"
               >
-                He llegado al sitio de recogida
+                {activeRide.serviceMode === 'delivery' ? 'He llegado al sitio de recogida del paquete' : 'He llegado al sitio de recogida'}
               </button>
             )}
 
@@ -241,7 +270,7 @@ export function DriverDashboard({
                 }}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/20 active:scale-95 transition"
               >
-                Iniciar Recorrido con el Pasajero
+                {activeRide.serviceMode === 'delivery' ? 'Paquete recibido • Iniciar entrega' : 'Iniciar Recorrido con el Pasajero'}
               </button>
             )}
 
@@ -253,7 +282,7 @@ export function DriverDashboard({
                 }}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-lg shadow-[#FFB800]/20 active:scale-95 transition"
               >
-                Finalizar Carrera en Destino
+                {activeRide.serviceMode === 'delivery' ? 'Entregar paquete en destino con PIN' : 'Finalizar Carrera en Destino'}
               </button>
             )}
 
