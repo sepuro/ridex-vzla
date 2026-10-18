@@ -16,7 +16,7 @@ export function BottomNav({ activeTab, onSelectTab, badgeCount = 0 }) {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-[#06080D]/90 backdrop-blur-2xl border-t border-white/[0.08] px-3 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] shadow-[0_-12px_40px_rgba(0,0,0,0.65)] select-none">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-[#06080D]/85 backdrop-blur-2xl border-t border-white/[0.06] px-3 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] shadow-[0_-12px_36px_rgba(0,0,0,0.6)] select-none">
       <div className="flex items-center justify-around">
         {tabs.map(({ id, label, icon: IconComponent, badge }) => {
           const isActive = activeTab === id;
@@ -25,7 +25,7 @@ export function BottomNav({ activeTab, onSelectTab, badgeCount = 0 }) {
             <button
               key={id}
               onClick={() => handleTabClick(id)}
-              className={`flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all duration-200 relative active:scale-90 ${
+              className={`flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all duration-200 relative active:scale-95 ${
                 isActive
                   ? 'text-[#00E599] font-black'
                   : 'text-slate-400 hover:text-slate-200 font-medium'
@@ -35,7 +35,7 @@ export function BottomNav({ activeTab, onSelectTab, badgeCount = 0 }) {
               <div
                 className={`relative px-4 py-1.5 rounded-full transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#00E599]/15 text-[#00E599] shadow-[0_0_15px_rgba(0,229,153,0.2)] border border-[#00E599]/30'
+                    ? 'bg-[#00E599]/15 text-[#00E599] shadow-[0_0_16px_rgba(0,229,153,0.25)] border border-[#00E599]/30'
                     : 'hover:bg-white/[0.04]'
                 }`}
               >
@@ -51,11 +51,14 @@ export function BottomNav({ activeTab, onSelectTab, badgeCount = 0 }) {
                 )}
               </div>
               <span
-                className={`text-[10px] mt-0.5 tracking-tight transition-colors ${
+                className={`text-[10px] mt-0.5 tracking-tight transition-colors flex items-center space-x-1 ${
                   isActive ? 'text-white font-black' : 'text-slate-400'
                 }`}
               >
-                {label}
+                <span>{label}</span>
+                {isActive && (
+                  <span className="w-1 h-1 rounded-full bg-[#00E599] inline-block shadow-[0_0_6px_#00E599]" />
+                )}
               </span>
             </button>
           );

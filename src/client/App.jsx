@@ -597,17 +597,17 @@ export default function App() {
               <>
                 {!activeRide ? (
                   <div className="space-y-3.5 animate-fade-in">
-                    {/* Selector de Modo de Servicio: 🚗 Viajes | 📦 Envíos */}
-                    <div className="grid grid-cols-2 gap-1.5 p-1 rounded-2xl bg-[#06080D]/90 border border-white/[0.08] backdrop-blur-xl shadow-inner">
+                    {/* 1. Selector Segmentado: Viajes vs Envíos */}
+                    <div className="flex p-1 rounded-2xl bg-[#06080D]/80 border border-white/[0.08] backdrop-blur-xl shadow-inner">
                       <button
                         type="button"
                         onClick={() => {
                           triggerHaptic(30);
                           setServiceMode(SERVICE_MODES.RIDES);
                         }}
-                        className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-all duration-200 active:scale-95 ${
                           serviceMode === SERVICE_MODES.RIDES
-                            ? 'bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black shadow-md shadow-[#00E599]/20'
+                            ? 'bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black shadow-lg shadow-[#00E599]/25 font-black'
                             : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
                         }`}
                       >
@@ -621,87 +621,119 @@ export default function App() {
                           triggerHaptic(30);
                           setServiceMode(SERVICE_MODES.DELIVERY);
                         }}
-                        className={`py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-1.5 transition active:scale-95 relative ${
+                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-all duration-200 active:scale-95 relative ${
                           serviceMode === SERVICE_MODES.DELIVERY
-                            ? 'bg-gradient-to-r from-[#00D2FF] to-[#00E599] text-black shadow-md shadow-[#00D2FF]/20'
+                            ? 'bg-gradient-to-r from-[#00D2FF] to-[#00E599] text-black shadow-lg shadow-[#00D2FF]/25 font-black'
                             : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
                         }`}
                       >
                         <Package className="w-3.5 h-3.5" />
                         <span>Envíos</span>
                         {currentUser?.isVip ? (
-                          <span className="px-1.5 py-0.2 rounded-full bg-amber-400 text-black text-[8px] font-black uppercase tracking-tight">
+                          <span className="px-1.5 py-0.5 rounded-full bg-amber-400 text-black text-[8px] font-black tracking-tight">
                             VIP 15%
                           </span>
                         ) : (
-                          <span className="px-1.5 py-0.2 rounded-full bg-[#00E599]/20 text-[#00E599] border border-[#00E599]/30 text-[8px] font-black uppercase tracking-tight">
+                          <span className="px-1.5 py-0.5 rounded-full bg-[#00E599]/20 text-[#00E599] border border-[#00E599]/30 text-[8px] font-black tracking-tight">
                             FLASH
                           </span>
                         )}
                       </button>
                     </div>
 
-                    {/* Selector de Origen y Destino con búsqueda integrada */}
-                    <div className="bg-[#06080D]/90 backdrop-blur-xl p-3.5 rounded-2xl border border-white/[0.08] relative space-y-2 shadow-inner">
-                      {/* Origen */}
-                      <div
-                        onClick={() => handleOpenSearchModal('pickup')}
-                        className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer active:scale-[0.99] ${
-                          selectingMapMode === 'pickup'
-                            ? 'bg-[#141A26] border border-[#00E599]/60 shadow-[0_0_15px_rgba(0,229,153,0.15)]'
-                            : 'hover:bg-white/[0.04]'
-                        }`}
-                      >
-                        <span className="w-6 h-6 rounded-full bg-[#00E599]/20 text-[#00E599] flex items-center justify-center font-black text-xs flex-shrink-0 shadow-sm">
-                          A
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                            {serviceMode === SERVICE_MODES.DELIVERY ? 'Punto de Recogida (Dónde retirar)' : 'Punto de Recogida'}
-                          </span>
-                          <p className="text-xs font-semibold text-white truncate">{pickup.name}</p>
+                    {/* 2. Tarjeta Conectada de Ruta (Pickup -> Dropoff) */}
+                    <div className="bg-[#090D15]/90 backdrop-blur-2xl p-3.5 rounded-2xl border border-white/[0.08] relative shadow-lg">
+                      <div className="flex items-center">
+                        {/* Conector Vertical de Ruta */}
+                        <div className="flex flex-col items-center mr-3 py-1 self-stretch justify-between">
+                          <span className="w-3 h-3 rounded-full bg-[#00E599] shadow-[0_0_8px_rgba(0,229,153,0.8)] flex-shrink-0" />
+                          <div className="w-0.5 flex-1 bg-gradient-to-b from-[#00E599] via-slate-600 to-[#00D2FF] my-1" />
+                          <span className="w-3 h-3 rounded-[4px] bg-[#00D2FF] shadow-[0_0_8px_rgba(0,210,255,0.8)] flex-shrink-0" />
                         </div>
-                        <Search className="w-3.5 h-3.5 text-slate-400" />
+
+                        {/* Entradas de Origen y Destino */}
+                        <div className="flex-1 space-y-2">
+                          <div
+                            onClick={() => handleOpenSearchModal('pickup')}
+                            className={`p-2 rounded-xl transition cursor-pointer active:scale-[0.99] flex items-center justify-between ${
+                              selectingMapMode === 'pickup'
+                                ? 'bg-white/[0.08] border border-[#00E599]/40'
+                                : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.04]'
+                            }`}
+                          >
+                            <div className="min-w-0 pr-2">
+                              <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                                {serviceMode === SERVICE_MODES.DELIVERY ? 'Recogida de paquete' : 'Punto de partida'}
+                              </span>
+                              <p className="text-xs font-bold text-white truncate">{pickup.name}</p>
+                            </div>
+                            <Search className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                          </div>
+
+                          <div
+                            onClick={() => handleOpenSearchModal('dropoff')}
+                            className={`p-2 rounded-xl transition cursor-pointer active:scale-[0.99] flex items-center justify-between ${
+                              selectingMapMode === 'dropoff'
+                                ? 'bg-white/[0.08] border border-[#00D2FF]/40'
+                                : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.04]'
+                            }`}
+                          >
+                            <div className="min-w-0 pr-2">
+                              <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                                {serviceMode === SERVICE_MODES.DELIVERY ? 'Destino de entrega' : '¿A dónde vas?'}
+                              </span>
+                              <p className="text-xs font-bold text-white truncate">{dropoff.name}</p>
+                            </div>
+                            <Search className="w-3.5 h-3.5 text-[#00D2FF] flex-shrink-0" />
+                          </div>
+                        </div>
+
+                        {/* Botón Circular Invertir Ruta */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSwapLocations();
+                          }}
+                          className="ml-2 w-9 h-9 rounded-xl bg-white/[0.04] border border-white/10 hover:border-[#00D2FF]/50 text-slate-300 hover:text-white flex items-center justify-center active:scale-90 transition shadow-sm"
+                          title="Invertir origen y destino"
+                        >
+                          <ArrowUpDown className="w-4 h-4" />
+                        </button>
                       </div>
 
-                      {/* Destino */}
-                      <div
-                        onClick={() => handleOpenSearchModal('dropoff')}
-                        className={`flex items-center space-x-2.5 p-2 rounded-xl transition cursor-pointer active:scale-[0.99] ${
-                          selectingMapMode === 'dropoff'
-                            ? 'bg-[#141A26] border border-[#FF3B5C]/60 shadow-[0_0_15px_rgba(255,59,92,0.15)]'
-                            : 'hover:bg-white/[0.04]'
-                        }`}
-                      >
-                        <span className="w-6 h-6 rounded-full bg-[#FF3B5C]/20 text-[#FF7088] flex items-center justify-center font-black text-xs flex-shrink-0 shadow-sm">
-                          B
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                            {serviceMode === SERVICE_MODES.DELIVERY ? 'Punto de Entrega (Destino paquete)' : 'Destino'}
-                          </span>
-                          <p className="text-xs font-semibold text-white truncate">{dropoff.name}</p>
-                        </div>
-                        <Search className="w-3.5 h-3.5 text-slate-400" />
+                      {/* Atajos Rápidos de Destino */}
+                      <div className="flex space-x-1.5 overflow-x-auto no-scrollbar pt-2.5 mt-2.5 border-t border-white/[0.06]">
+                        {POPULAR_LOCATIONS.slice(0, 4).map((spot, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              triggerHaptic(30);
+                              setDropoff(spot);
+                            }}
+                            className="flex-shrink-0 px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-[10px] font-semibold text-slate-300 hover:text-white active:scale-95 transition"
+                          >
+                            📍 {spot.name.split(',')[0]}
+                          </button>
+                        ))}
                       </div>
-
-                      {/* Botón para intercambiar origen y destino */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSwapLocations();
-                        }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0D111A] border border-white/[0.12] text-slate-300 flex items-center justify-center active:scale-90 transition hover:text-white hover:border-[#00D2FF] shadow-lg"
-                        title="Invertir ruta"
-                      >
-                        <ArrowUpDown className="w-3.5 h-3.5" />
-                      </button>
                     </div>
 
-                    {/* Telemetría de Ruta */}
-                    <div className="flex items-center justify-between px-2 text-xs text-slate-400 font-medium">
-                      <span>Distancia: <strong className="text-white font-bold">{formatDistance(effectiveDistanceKm)}</strong></span>
-                      <span>Tiempo: <strong className="text-white font-bold">{formatDuration(streetRoute?.durationMin || currentFare.estimatedMinutes)}</strong></span>
+                    {/* 3. Telemetría de Ruta (Pills compactos de distancia y tiempo) */}
+                    <div className="flex items-center justify-between px-1">
+                      <div className="flex items-center space-x-2">
+                        <span className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-[11px] text-slate-300 font-semibold flex items-center space-x-1">
+                          <span>📍</span>
+                          <span>{formatDistance(effectiveDistanceKm)}</span>
+                        </span>
+                        <span className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-[11px] text-slate-300 font-semibold flex items-center space-x-1">
+                          <span>⚡</span>
+                          <span>{formatDuration(streetRoute?.durationMin || currentFare.estimatedMinutes)}</span>
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Tasa BCV: <span className="text-[#00E599] font-bold">Bs. {typeof bcvRate === 'number' ? bcvRate.toFixed(2) : bcvRate}</span>
+                      </span>
                     </div>
 
                     {/* Selector de Categorías de Viaje O Delivery */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bike, Car, Sparkles, Clock, Check, Users, Shield } from 'lucide-react';
+import { Bike, Car, Sparkles, Clock, Check, Users, Shield, CheckCircle2 } from 'lucide-react';
 import { VEHICLE_TYPES, VEHICLE_CONFIGS } from '../../shared/constants.js';
 import { calculateFare } from '../utils/pricing.js';
 import { formatUsd, formatBs } from '../utils/formatters.js';
@@ -115,9 +115,12 @@ export function VehicleSelector({
               </div>
 
               {/* Precios en USD y Bs */}
-              <div className="text-right pl-2">
-                <div className="text-base font-black text-white tracking-tight">
-                  {formatUsd(fare.fareUsd)}
+              <div className="text-right pl-2 flex flex-col items-end justify-center">
+                <div className="text-base font-black text-white tracking-tight flex items-center space-x-1.5">
+                  <span>{formatUsd(fare.fareUsd)}</span>
+                  {isSelected && (
+                    <CheckCircle2 className="w-4 h-4 text-[#00E599] stroke-[2.5]" />
+                  )}
                 </div>
                 <div className="text-xs font-black text-[#00E599] mt-0.5">
                   {formatBs(fare.fareBs)}

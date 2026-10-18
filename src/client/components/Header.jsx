@@ -24,15 +24,15 @@ export function Header({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 max-w-md mx-auto bg-[#06080D]/85 backdrop-blur-2xl border-b border-white/[0.08] px-3.5 pt-[max(10px,env(safe-area-inset-top))] pb-2.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.6)] select-none">
+    <header className="fixed top-0 left-0 right-0 z-40 max-w-md mx-auto bg-[#06080D]/80 backdrop-blur-2xl border-b border-white/[0.06] px-3.5 pt-[max(10px,env(safe-area-inset-top))] pb-2.5 flex items-center justify-between shadow-[0_8px_30px_rgba(0,0,0,0.55)] select-none">
       {/* 1. Logo & Identidad de Marca */}
       <div className="flex items-center space-x-2.5">
-        <div className="relative w-8 h-8 rounded-xl bg-gradient-to-br from-[#00E599] via-[#00F5A0] to-[#00D2FF] p-[1.5px] shadow-[0_0_16px_rgba(0,229,153,0.35)] active:scale-95 transition-transform">
-          <div className="w-full h-full bg-[#06080D] rounded-[10px] flex items-center justify-center">
-            <span className="font-black text-transparent bg-clip-text bg-gradient-to-tr from-[#00E599] to-[#00D2FF] text-sm tracking-tighter">
-              RX
-            </span>
-          </div>
+        <div className="relative w-8 h-8 rounded-xl overflow-hidden shadow-[0_0_18px_rgba(0,229,153,0.35)] active:scale-95 transition-transform border border-white/10 flex-shrink-0">
+          <img
+            src="/icons/icon.svg"
+            alt="RideX"
+            className="w-full h-full object-cover"
+          />
         </div>
 
         <div>
@@ -40,12 +40,12 @@ export function Header({
             <span className="font-black tracking-tight text-white text-base leading-none">
               Ride<span className="text-[#00E599]">X</span>
             </span>
-            <span className="text-[9px] bg-white/[0.08] text-slate-300 px-1.5 py-0.5 rounded-md font-bold tracking-wider border border-white/10 uppercase">
+            <span className="text-[9px] bg-white/[0.08] text-slate-300 px-1.5 py-0.5 rounded-md font-extrabold tracking-wider border border-white/10 uppercase">
               VZLA
             </span>
           </div>
           <span className="text-[10px] text-slate-400 font-medium tracking-wide block -mt-0.5">
-            Movilidad Inteligente
+            Movilidad Urbana
           </span>
         </div>
       </div>

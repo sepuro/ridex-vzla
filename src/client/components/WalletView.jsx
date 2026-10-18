@@ -29,7 +29,10 @@ export function WalletView({
   onOpenVipModal
 }) {
   const isVip = Boolean(currentUser?.isVip);
-  const [balanceUsd, setBalanceUsd] = useState(role === 'driver' ? 84.50 : 25.00);
+  const initialBalance = typeof currentUser?.walletBalanceUsd === 'number'
+    ? currentUser.walletBalanceUsd
+    : (role === 'driver' ? 84.50 : 25.00);
+  const [balanceUsd, setBalanceUsd] = useState(initialBalance);
   const [copiedBank, setCopiedBank] = useState(false);
 
   // Modales de Billetera
