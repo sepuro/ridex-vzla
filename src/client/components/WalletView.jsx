@@ -292,7 +292,7 @@ export function WalletView({
               triggerHaptic(40);
               setShowTopUpModal(true);
             }}
-            className="py-3 px-3 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/25 transition active:scale-95 flex items-center justify-center space-x-1.5"
+            className="py-3 px-3 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/25 tap-scale shimmer-button transition-transform duration-140 flex items-center justify-center space-x-1.5"
           >
             <ArrowDownLeft className="w-4 h-4 stroke-[2.5]" />
             <span>Recargar Saldo</span>
@@ -303,7 +303,7 @@ export function WalletView({
               triggerHaptic(40);
               setShowWithdrawModal(true);
             }}
-            className="py-3 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.12] text-white font-black text-xs transition active:scale-95 flex items-center justify-center space-x-1.5"
+            className="py-3 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.12] text-white font-black text-xs tap-scale transition-colors duration-140 flex items-center justify-center space-x-1.5"
           >
             <ArrowUpRight className="w-4 h-4 text-[#FFB800]" />
             <span>Retirar Fondos</span>
@@ -318,7 +318,7 @@ export function WalletView({
             triggerHaptic(40);
             if (onOpenVipModal) onOpenVipModal();
           }}
-          className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-[#141A26] to-[#0D111A] border border-amber-500/30 flex items-center justify-between cursor-pointer active:scale-[0.99] transition hover:border-amber-400/50 shadow-md"
+          className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-[#141A26] to-[#0D111A] border border-amber-500/30 flex items-center justify-between cursor-pointer tap-scale transition-[border-color,background-color] duration-140 hover:border-amber-400/50 shadow-md"
         >
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
@@ -479,7 +479,7 @@ export function WalletView({
                       key={amt}
                       type="button"
                       onClick={() => setTopUpAmountUsd(amt)}
-                      className={`py-2 rounded-xl border text-center font-bold transition active:scale-95 ${
+                      className={`py-2 rounded-xl border text-center font-bold tap-scale transition-[background-color,border-color,color] duration-140 ${
                         topUpAmountUsd === amt
                           ? 'bg-[#00E599]/20 border-[#00E599] text-[#00E599]'
                           : 'bg-white/[0.05] border-white/10 text-slate-400 hover:text-white'
@@ -509,7 +509,7 @@ export function WalletView({
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/25 active:scale-98 transition flex items-center justify-center space-x-1.5"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/25 tap-scale shimmer-button transition-transform duration-140 flex items-center justify-center space-x-1.5"
               >
                 <span>Confirmar y Acreditar Saldo</span>
               </button>
@@ -521,7 +521,7 @@ export function WalletView({
       {/* --- MODAL 2: RETIRO DE FONDOS --- */}
       {showWithdrawModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb">
-          <div className="w-full max-w-sm rounded-[28px] bg-[#0D111A] border border-white/15 p-5 shadow-2xl backdrop-blur-2xl text-slate-100 space-y-4">
+          <div className="w-full max-w-sm rounded-[28px] bg-[#0D111A] border border-white/15 p-5 shadow-2xl backdrop-blur-2xl text-slate-100 space-y-4 animate-slide-up-drawer">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
               <div className="flex items-center space-x-2">
                 <ArrowUpRight className="w-5 h-5 text-[#FFB800]" />
@@ -579,7 +579,7 @@ export function WalletView({
               <button
                 type="submit"
                 disabled={balanceUsd <= 0}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-lg active:scale-98 transition disabled:opacity-50"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-lg tap-scale shimmer-button transition-transform duration-140 disabled:opacity-50"
               >
                 <span>Procesar Retiro Inmediato</span>
               </button>
@@ -591,12 +591,12 @@ export function WalletView({
       {/* --- MODAL 3: AGREGAR NUEVA CUENTA DE PAGO MÓVIL --- */}
       {showAddAccountModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb">
-          <div className="w-full max-w-sm rounded-[28px] bg-[#0D111A] border border-white/15 p-5 shadow-2xl backdrop-blur-2xl text-slate-100 space-y-4">
+          <div className="w-full max-w-sm rounded-[28px] bg-[#0D111A] border border-white/15 p-5 shadow-2xl backdrop-blur-2xl text-slate-100 space-y-4 animate-slide-up-drawer">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
               <h3 className="font-black text-white text-sm">Registrar Cuenta Pago Móvil</h3>
               <button
                 onClick={() => setShowAddAccountModal(false)}
-                className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white"
+                className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white tap-scale transition-colors duration-140"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -644,7 +644,7 @@ export function WalletView({
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg active:scale-98 transition"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg tap-scale shimmer-button transition-transform duration-140"
               >
                 Guardar Cuenta
               </button>

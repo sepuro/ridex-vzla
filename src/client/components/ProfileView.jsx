@@ -77,7 +77,7 @@ export function ProfileView({
                 triggerHaptic(30);
                 onOpenEditProfile();
               }}
-              className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#00E599] text-black flex items-center justify-center shadow-md active:scale-90 transition border border-black font-black"
+              className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#00E599] text-black flex items-center justify-center shadow-md tap-scale transition-colors duration-140 border border-black font-black"
               title="Cambiar foto de perfil"
             >
               <Camera className="w-3.5 h-3.5" />
@@ -117,7 +117,7 @@ export function ProfileView({
               triggerHaptic(30);
               onOpenEditProfile();
             }}
-            className="py-2.5 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-black text-slate-200 flex items-center justify-center space-x-1.5 transition active:scale-95"
+            className="py-2.5 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-black text-slate-200 flex items-center justify-center space-x-1.5 tap-scale transition-colors duration-140"
           >
             <Edit3 className="w-3.5 h-3.5 text-[#00D2FF]" />
             <span>Editar Datos</span>
@@ -128,7 +128,7 @@ export function ProfileView({
               triggerHaptic(40);
               onToggleRole();
             }}
-            className={`py-2.5 px-3 rounded-2xl border text-xs font-black flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+            className={`py-2.5 px-3 rounded-2xl border text-xs font-black flex items-center justify-center space-x-1.5 tap-scale transition-colors duration-140 ${
               role === 'driver'
                 ? 'bg-[#FFB800]/20 border-[#FFB800]/40 text-[#FFB800]'
                 : 'bg-[#00E599]/20 border-[#00E599]/40 text-[#00E599]'
@@ -174,7 +174,7 @@ export function ProfileView({
                 triggerHaptic(40);
                 if (onOpenVipModal) onOpenVipModal();
               }}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black text-xs shadow-md transition active:scale-95"
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black text-xs shadow-md tap-scale shimmer-button transition-transform duration-140"
             >
               {currentUser?.isVip ? 'Gestionar' : 'Activar VIP'}
             </button>
@@ -301,7 +301,7 @@ export function ProfileView({
         ) : (
           <button
             onClick={handleTriggerSos}
-            className="w-full py-2.5 rounded-2xl bg-[#FF3B5C] hover:bg-rose-600 text-white font-black text-xs shadow-lg shadow-[#FF3B5C]/25 transition active:scale-95 flex items-center justify-center space-x-2"
+            className="w-full py-2.5 rounded-2xl bg-[#FF3B5C] hover:bg-rose-600 text-white font-black text-xs shadow-lg shadow-[#FF3B5C]/25 tap-scale transition-colors duration-140 flex items-center justify-center space-x-2"
           >
             <AlertTriangle className="w-4 h-4" />
             <span>Activar Alerta de Seguridad SOS</span>
@@ -375,7 +375,7 @@ export function ProfileView({
             href="https://wa.me/584120000000"
             target="_blank"
             rel="noreferrer"
-            className="p-3.5 flex items-center justify-between text-slate-200 hover:text-white transition"
+            className="p-3.5 flex items-center justify-between text-slate-200 hover:text-white transition-colors duration-140"
           >
             <div className="flex items-center space-x-2.5">
               <MessageSquare className="w-4 h-4 text-[#00E599]" />
@@ -393,7 +393,7 @@ export function ProfileView({
             triggerHaptic(30);
             onOpenAuthModal();
           }}
-          className="w-full py-3 px-4 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-black text-[#00D2FF] flex items-center justify-center space-x-2 transition active:scale-95"
+          className="w-full py-3 px-4 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-black text-[#00D2FF] flex items-center justify-center space-x-2 tap-scale transition-colors duration-140"
         >
           <User className="w-4 h-4" />
           <span>Cambiar de Cuenta o Registrar Nuevo Usuario</span>
@@ -401,7 +401,7 @@ export function ProfileView({
 
         <button
           onClick={onLogout}
-          className="w-full py-3 px-4 rounded-2xl bg-[#FF3B5C]/10 hover:bg-[#FF3B5C]/20 border border-[#FF3B5C]/30 text-xs font-black text-[#FF7088] flex items-center justify-center space-x-2 transition active:scale-95"
+          className="w-full py-3 px-4 rounded-2xl bg-[#FF3B5C]/10 hover:bg-[#FF3B5C]/20 border border-[#FF3B5C]/30 text-xs font-black text-[#FF7088] flex items-center justify-center space-x-2 tap-scale transition-colors duration-140"
         >
           <LogOut className="w-4 h-4" />
           <span>Cerrar Sesión</span>

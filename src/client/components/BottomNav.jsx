@@ -25,7 +25,7 @@ export function BottomNav({ activeTab, onSelectTab, badgeCount = 0 }) {
             <button
               key={id}
               onClick={() => handleTabClick(id)}
-              className={`flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all duration-200 relative active:scale-95 ${
+              className={`flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl tap-scale transition-colors duration-140 relative ${
                 isActive
                   ? 'text-[#00E599] font-black'
                   : 'text-slate-400 hover:text-slate-200 font-medium'
@@ -33,19 +33,19 @@ export function BottomNav({ activeTab, onSelectTab, badgeCount = 0 }) {
             >
               {/* Contenedor del icono con pill activo y sutil resplandor */}
               <div
-                className={`relative px-4 py-1.5 rounded-full transition-all duration-200 ${
+                className={`relative px-4 py-1.5 rounded-full transition-[background-color,border-color,box-shadow,color] duration-180 ease-out-emil ${
                   isActive
                     ? 'bg-[#00E599]/15 text-[#00E599] shadow-[0_0_16px_rgba(0,229,153,0.25)] border border-[#00E599]/30'
                     : 'hover:bg-white/[0.04]'
                 }`}
               >
                 <IconComponent
-                  className={`w-5 h-5 transition-transform duration-200 ${
+                  className={`w-5 h-5 transition-transform duration-180 ease-out-emil ${
                     isActive ? 'stroke-[2.5] scale-110' : 'stroke-[1.8]'
                   }`}
                 />
                 {badge > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FFB800] text-black text-[9px] font-black flex items-center justify-center shadow-lg animate-bounce">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FFB800] text-black text-[9px] font-black flex items-center justify-center shadow-lg animate-pulse">
                     {badge}
                   </span>
                 )}

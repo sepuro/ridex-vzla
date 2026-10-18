@@ -92,7 +92,7 @@ export function SearchLocationModal({
                   triggerHaptic(20);
                   setSelectedCategory(id);
                 }}
-                className={`flex-shrink-0 flex items-center space-x-1 px-3 py-1 rounded-full text-[11px] font-bold transition border active:scale-95 ${
+                className={`flex-shrink-0 flex items-center space-x-1 px-3 py-1 rounded-full text-[11px] font-bold tap-scale transition-[background-color,border-color,color] duration-140 border ${
                   selectedCategory === id
                     ? 'bg-[#00E599]/20 border-[#00E599] text-[#00E599]'
                     : 'bg-white/[0.04] border-white/10 text-slate-400 hover:text-white'
@@ -105,12 +105,22 @@ export function SearchLocationModal({
           </div>
         </div>
 
-        {/* Lista de Resultados */}
-        <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1.5">
+        {/* Lista de Resultados con Skeletons Shimmer */}
+        <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2">
           {loading && (
-            <div className="py-8 text-center text-xs text-slate-400">
-              <span className="inline-block w-5 h-5 border-2 border-[#00E599] border-t-transparent rounded-full animate-spin mb-2" />
-              <p>Consultando mapa de Venezuela...</p>
+            <div className="space-y-2 animate-fade-in">
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="w-full p-3 rounded-2xl bg-white/[0.02] border border-white/[0.04] flex items-center space-x-3 skeleton-shimmer"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.06] flex-shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 w-3/5 bg-white/[0.08] rounded-md" />
+                    <div className="h-2 w-4/5 bg-white/[0.04] rounded-md" />
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
@@ -135,7 +145,7 @@ export function SearchLocationModal({
                 });
                 onClose();
               }}
-              className="w-full text-left p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.06] hover:border-[#00E599]/40 transition flex items-center space-x-3 active:scale-[0.98]"
+              className="w-full text-left p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] hover:border-[#00E599]/40 transition-colors duration-140 flex items-center space-x-3 tap-scale"
             >
               <div className="w-10 h-10 rounded-xl bg-black/60 border border-white/10 flex items-center justify-center flex-shrink-0 text-[#FFB800]">
                 <MapPin className="w-5 h-5" />

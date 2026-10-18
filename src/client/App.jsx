@@ -605,7 +605,7 @@ export default function App() {
                           triggerHaptic(30);
                           setServiceMode(SERVICE_MODES.RIDES);
                         }}
-                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-all duration-200 active:scale-95 ${
+                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-colors duration-140 tap-scale ${
                           serviceMode === SERVICE_MODES.RIDES
                             ? 'bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black shadow-lg shadow-[#00E599]/25 font-black'
                             : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
@@ -621,7 +621,7 @@ export default function App() {
                           triggerHaptic(30);
                           setServiceMode(SERVICE_MODES.DELIVERY);
                         }}
-                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-all duration-200 active:scale-95 relative ${
+                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-colors duration-140 tap-scale relative ${
                           serviceMode === SERVICE_MODES.DELIVERY
                             ? 'bg-gradient-to-r from-[#00D2FF] to-[#00E599] text-black shadow-lg shadow-[#00D2FF]/25 font-black'
                             : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
@@ -655,7 +655,7 @@ export default function App() {
                         <div className="flex-1 space-y-2">
                           <div
                             onClick={() => handleOpenSearchModal('pickup')}
-                            className={`p-2 rounded-xl transition cursor-pointer active:scale-[0.99] flex items-center justify-between ${
+                            className={`p-2 rounded-xl transition-colors duration-140 cursor-pointer tap-scale flex items-center justify-between ${
                               selectingMapMode === 'pickup'
                                 ? 'bg-white/[0.08] border border-[#00E599]/40'
                                 : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.04]'
@@ -672,7 +672,7 @@ export default function App() {
 
                           <div
                             onClick={() => handleOpenSearchModal('dropoff')}
-                            className={`p-2 rounded-xl transition cursor-pointer active:scale-[0.99] flex items-center justify-between ${
+                            className={`p-2 rounded-xl transition-colors duration-140 cursor-pointer tap-scale flex items-center justify-between ${
                               selectingMapMode === 'dropoff'
                                 ? 'bg-white/[0.08] border border-[#00D2FF]/40'
                                 : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.04]'
@@ -688,13 +688,13 @@ export default function App() {
                           </div>
                         </div>
 
-                        {/* Botón Circular Invertir Ruta */}
+                        {/* Botón Invertir Ruta */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSwapLocations();
                           }}
-                          className="ml-2 w-9 h-9 rounded-xl bg-white/[0.04] border border-white/10 hover:border-[#00D2FF]/50 text-slate-300 hover:text-white flex items-center justify-center active:scale-90 transition shadow-sm"
+                          className="ml-2 w-9 h-9 rounded-xl bg-white/[0.04] border border-white/10 hover:border-[#00D2FF]/50 text-slate-300 hover:text-white flex items-center justify-center tap-scale transition-colors shadow-sm"
                           title="Invertir origen y destino"
                         >
                           <ArrowUpDown className="w-4 h-4" />
@@ -711,7 +711,7 @@ export default function App() {
                               triggerHaptic(30);
                               setDropoff(spot);
                             }}
-                            className="flex-shrink-0 px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-[10px] font-semibold text-slate-300 hover:text-white active:scale-95 transition"
+                            className="flex-shrink-0 px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-[10px] font-semibold text-slate-300 hover:text-white tap-scale transition-colors"
                           >
                             📍 {spot.name.split(',')[0]}
                           </button>
@@ -768,10 +768,10 @@ export default function App() {
                     {/* Botón Principal de Solicitud con degradado Electric Emerald y brillo */}
                     <button
                       onClick={handleRequestRide}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E599] via-[#00F5A0] to-[#00D2FF] text-black font-black text-sm tracking-wide shadow-xl shadow-[#00E599]/30 transition active:scale-[0.98] flex items-center justify-center space-x-2 mt-2 select-none relative overflow-hidden group"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E599] via-[#00F5A0] to-[#00D2FF] text-black font-black text-sm tracking-[-0.01em] shadow-xl shadow-[#00E599]/30 tap-scale flex items-center justify-center space-x-2 mt-2 select-none relative overflow-hidden shimmer-button"
                     >
-                      <Navigation className="w-4 h-4 fill-current" />
-                      <span>
+                      <Navigation className="w-4 h-4 fill-current flex-shrink-0" />
+                      <span className="truncate">
                         {serviceMode === SERVICE_MODES.DELIVERY ? 'SOLICITAR ENVÍO' : 'SOLICITAR RIDEX'} • {formatUsd(currentFare.fareUsd)} ({formatBs(currentFare.fareBs)})
                       </span>
                     </button>

@@ -271,7 +271,7 @@ export function AuthModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in safe-area-pb overflow-y-auto select-none">
-      <div className="w-full max-w-md my-auto rounded-[32px] bg-[#0D111A] border border-white/15 p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-slate-100 space-y-4">
+      <div className="w-full max-w-md my-auto rounded-[32px] bg-[#0D111A] border border-white/15 p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-slate-100 space-y-4 animate-slide-up-drawer">
         {/* Cabecera Modal */}
         <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
           <div className="flex items-center space-x-2.5">
@@ -288,7 +288,7 @@ export function AuthModal({
               triggerHaptic(30);
               onClose();
             }}
-            className="w-8 h-8 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white transition active:scale-90"
+            className="w-8 h-8 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white tap-scale transition-colors duration-140"
           >
             <X className="w-4 h-4" />
           </button>
@@ -302,7 +302,7 @@ export function AuthModal({
               triggerHaptic(30);
               setActiveTab('register');
             }}
-            className={`py-2 rounded-xl transition-all ${
+            className={`py-2 rounded-xl tap-scale transition-colors duration-140 ${
               activeTab === 'register'
                 ? 'bg-[#00E599] text-black shadow-md'
                 : 'text-slate-400 hover:text-white'
@@ -316,7 +316,7 @@ export function AuthModal({
               triggerHaptic(30);
               setActiveTab('login');
             }}
-            className={`py-2 rounded-xl transition-all ${
+            className={`py-2 rounded-xl tap-scale transition-colors duration-140 ${
               activeTab === 'login'
                 ? 'bg-[#00E599] text-black shadow-md'
                 : 'text-slate-400 hover:text-white'
@@ -395,7 +395,7 @@ export function AuthModal({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-pixel-green text-black flex items-center justify-center shadow-lg active:scale-90 transition"
+                  className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-pixel-green text-black flex items-center justify-center shadow-lg tap-scale transition-colors duration-140"
                   title="Subir foto desde galería o cámara"
                 >
                   <Camera className="w-3.5 h-3.5" />
@@ -419,7 +419,7 @@ export function AuthModal({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/15 text-[10px] font-bold text-white transition active:scale-95"
+                    className="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/15 text-[10px] font-bold text-white tap-scale transition-colors duration-140"
                   >
                     Subir Foto
                   </button>
@@ -646,7 +646,7 @@ export function AuthModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pixel-green to-emerald-400 text-black font-black text-sm tracking-wide shadow-xl shadow-pixel-green/30 active:scale-98 transition disabled:opacity-50 flex items-center justify-center space-x-2"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pixel-green to-emerald-400 text-black font-black text-sm tracking-wide shadow-xl shadow-pixel-green/30 tap-scale shimmer-button transition-transform duration-140 disabled:opacity-50 flex items-center justify-center space-x-2"
             >
               <span>{loading ? 'Creando tu cuenta en RideX...' : 'Completar Registro Oficial'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -692,7 +692,7 @@ export function AuthModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-2xl bg-pixel-green text-black font-black text-sm tracking-wide shadow-xl shadow-pixel-green/30 active:scale-98 transition disabled:opacity-50 flex items-center justify-center space-x-2"
+              className="w-full py-3.5 rounded-2xl bg-pixel-green text-black font-black text-sm tracking-wide shadow-xl shadow-pixel-green/30 tap-scale shimmer-button transition-transform duration-140 disabled:opacity-50 flex items-center justify-center space-x-2"
             >
               <span>{loading ? 'Verificando...' : 'Iniciar Sesión'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -705,14 +705,14 @@ export function AuthModal({
                 <button
                   type="button"
                   onClick={() => handleQuickDemo('0414-2345678')}
-                  className="py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-bold text-pixel-blueLight transition active:scale-95"
+                  className="py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-bold text-pixel-blueLight tap-scale transition-colors duration-140"
                 >
                   👩 Mariana (Pasajera)
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickDemo('0412-9876543')}
-                  className="py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-bold text-pixel-yellowLight transition active:scale-95"
+                  className="py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-bold text-pixel-yellowLight tap-scale transition-colors duration-140"
                 >
                   🏍️ Carlos (Conductor)
                 </button>

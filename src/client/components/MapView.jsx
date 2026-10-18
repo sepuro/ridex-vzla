@@ -320,7 +320,7 @@ export function MapView({
       <div className="absolute top-16 left-3 right-3 z-20 flex items-center space-x-2">
         <button
           onClick={onOpenSearch}
-          className="flex-1 flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-[#06080D]/85 backdrop-blur-2xl border border-white/[0.12] text-xs font-bold text-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.5)] active:scale-98 transition hover:border-[#00D2FF]/60"
+          className="flex-1 flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-[#06080D]/85 backdrop-blur-2xl border border-white/[0.12] text-xs font-bold text-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.5)] tap-scale transition-[border-color,background-color] duration-140 hover:border-[#00D2FF]/60"
         >
           <Search className="w-4 h-4 text-[#00D2FF] flex-shrink-0" />
           <span className="truncate">¿A dónde vas en Venezuela? (Buscar...)</span>
@@ -340,7 +340,7 @@ export function MapView({
                 onSelectDropoff(loc);
               }
             }}
-            className="flex-shrink-0 flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.1] text-[11px] font-bold text-slate-200 shadow-md active:scale-95 transition hover:border-[#00E599]/50"
+            className="flex-shrink-0 flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.1] text-[11px] font-bold text-slate-200 shadow-md tap-scale transition-[border-color,background-color] duration-140 hover:border-[#00E599]/50"
           >
             <MapPin className="w-3 h-3 text-[#FFB800]" />
             <span className="truncate max-w-[130px]">{loc.name.split(',')[0]}</span>
@@ -356,7 +356,7 @@ export function MapView({
             triggerHaptic(40);
             setIsLayerMenuOpen(!isLayerMenuOpen);
           }}
-          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-[#00D2FF]"
+          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center tap-scale transition-[border-color,background-color] duration-140 hover:border-[#00D2FF]"
           title="Cambiar capa de mapa (Google Maps / Satélite / Dark)"
         >
           <Layers className="w-5 h-5 text-[#00D2FF]" />
@@ -368,7 +368,7 @@ export function MapView({
             triggerHaptic(50);
             onCenterUser();
           }}
-          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-[#00E599]"
+          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center tap-scale transition-[border-color,background-color] duration-140 hover:border-[#00E599]"
           title="Centrar en mi ubicación GPS"
         >
           <Crosshair className="w-5 h-5 text-[#00E599]" />
@@ -377,7 +377,7 @@ export function MapView({
         {/* Recenter Ruta */}
         <button
           onClick={handleRecenterRoute}
-          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center active:scale-90 transition hover:border-[#FFB800]"
+          className="w-11 h-11 rounded-2xl bg-[#06080D]/90 backdrop-blur-xl border border-white/[0.12] text-white shadow-xl flex items-center justify-center tap-scale transition-[border-color,background-color] duration-140 hover:border-[#FFB800]"
           title="Ver ruta completa"
         >
           <Compass className="w-5 h-5 text-[#FFB800]" />
@@ -402,7 +402,7 @@ export function MapView({
                 <button
                   key={provider.id}
                   onClick={() => handleSelectProvider(provider.id)}
-                  className={`w-full flex items-center justify-between p-2 rounded-2xl text-left text-xs transition active:scale-95 ${
+                  className={`w-full flex items-center justify-between p-2 rounded-2xl text-left text-xs tap-scale transition-colors duration-140 ${
                     isSelected
                       ? 'bg-[#00D2FF]/15 border border-[#00D2FF]/40 text-white font-black'
                       : 'hover:bg-white/[0.05] text-slate-300 font-medium'

@@ -127,7 +127,7 @@ export function SubscriptionModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-md bg-[#0D111A] border-t sm:border border-white/[0.12] rounded-t-[32px] sm:rounded-3xl shadow-2xl p-5 sm:p-6 overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="relative w-full max-w-md bg-[#0D111A] border-t sm:border border-white/[0.12] rounded-t-[32px] sm:rounded-3xl shadow-2xl p-5 sm:p-6 overflow-hidden max-h-[90vh] flex flex-col animate-slide-up-drawer">
         {/* Luces de fondo ambient */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00E599]/10 rounded-full blur-[80px] pointer-events-none" />
@@ -150,7 +150,7 @@ export function SubscriptionModal({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-slate-400 hover:text-white transition"
+            className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center text-slate-400 hover:text-white tap-scale transition-colors duration-140"
           >
             <X className="w-4 h-4" />
           </button>
@@ -209,7 +209,7 @@ export function SubscriptionModal({
                   setSelectedPlanId('pass_vip_monthly');
                   triggerHaptic(40);
                 }}
-                className={`p-3.5 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between ${
+                className={`p-3.5 rounded-2xl border tap-scale transition-[border-color,background-color,box-shadow] duration-140 cursor-pointer relative flex flex-col justify-between ${
                   selectedPlanId === 'pass_vip_monthly'
                     ? 'bg-[#141A26] border-[#00E599] shadow-[0_0_20px_rgba(0,229,153,0.2)]'
                     : 'bg-[#06080D]/60 border-white/[0.08] hover:border-white/20'
@@ -236,7 +236,7 @@ export function SubscriptionModal({
                   setSelectedPlanId('pass_vip_annual');
                   triggerHaptic(40);
                 }}
-                className={`p-3.5 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between ${
+                className={`p-3.5 rounded-2xl border tap-scale transition-[border-color,background-color,box-shadow] duration-140 cursor-pointer relative flex flex-col justify-between ${
                   selectedPlanId === 'pass_vip_annual'
                     ? 'bg-[#141A26] border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.2)]'
                     : 'bg-[#06080D]/60 border-white/[0.08] hover:border-white/20'
@@ -330,7 +330,7 @@ export function SubscriptionModal({
             <button
               onClick={handleSubscribe}
               disabled={loading}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-[#00E599] text-black font-black text-sm tracking-wide shadow-xl shadow-amber-500/20 active:scale-[0.98] transition flex items-center justify-center space-x-2 disabled:opacity-50"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-[#00E599] text-black font-black text-sm tracking-wide shadow-xl shadow-amber-500/20 tap-scale shimmer-button transition-transform duration-140 flex items-center justify-center space-x-2 disabled:opacity-50"
             >
               <Crown className="w-4 h-4 fill-black" />
               <span>
@@ -342,13 +342,13 @@ export function SubscriptionModal({
               <button
                 onClick={handleCancel}
                 disabled={loading}
-                className="flex-1 py-3 rounded-xl bg-white/[0.06] hover:bg-rose-500/20 border border-white/[0.1] hover:border-rose-500/40 text-rose-300 font-bold text-xs transition active:scale-95"
+                className="flex-1 py-3 rounded-xl bg-white/[0.06] hover:bg-rose-500/20 border border-white/[0.1] hover:border-rose-500/40 text-rose-300 font-bold text-xs tap-scale transition-colors duration-140"
               >
                 {loading ? 'Procesando...' : 'Cancelar Renovación'}
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 py-3 rounded-xl bg-white/[0.1] hover:bg-white/[0.16] text-white font-bold text-xs transition active:scale-95"
+                className="flex-1 py-3 rounded-xl bg-white/[0.1] hover:bg-white/[0.16] text-white font-bold text-xs tap-scale transition-colors duration-140"
               >
                 Cerrar
               </button>

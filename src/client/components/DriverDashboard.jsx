@@ -59,7 +59,7 @@ export function DriverDashboard({
     <div className="space-y-4 select-none">
       {/* 1. Barra de Disponibilidad del Conductor */}
       <div
-        className={`p-4 rounded-3xl border transition-all duration-300 shadow-xl flex items-center justify-between relative overflow-hidden ${
+        className={`p-4 rounded-3xl border transition-colors duration-200 shadow-xl flex items-center justify-between relative overflow-hidden ${
           isOnline
             ? 'bg-gradient-to-r from-[#0D1420] via-[#101D2E] to-[#0D1420] border-[#00E599]/40 shadow-[0_0_25px_rgba(0,229,153,0.15)]'
             : 'bg-[#0D111A] border-white/[0.08]'
@@ -67,7 +67,7 @@ export function DriverDashboard({
       >
         <div className="flex items-center space-x-3.5">
           <div
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${
+            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-colors duration-200 ${
               isOnline
                 ? 'bg-gradient-to-tr from-[#00E599] to-[#00D2FF] text-black shadow-lg shadow-[#00E599]/30'
                 : 'bg-white/[0.05] text-slate-500'
@@ -99,7 +99,7 @@ export function DriverDashboard({
             triggerHaptic(50);
             onToggleOnline();
           }}
-          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none p-1 ${
+          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors duration-140 focus:outline-none p-1 tap-scale ${
             isOnline ? 'bg-[#00E599]' : 'bg-white/[0.1] border border-white/[0.1]'
           }`}
         >
@@ -107,6 +107,7 @@ export function DriverDashboard({
             className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-200 shadow-md ${
               isOnline ? 'translate-x-8 bg-black' : 'translate-x-0'
             }`}
+            style={{ transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)' }}
           />
         </button>
       </div>
@@ -197,7 +198,7 @@ export function DriverDashboard({
                 triggerHaptic(30);
                 onRejectOffer(incomingOffer.id);
               }}
-              className="py-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 font-bold text-xs transition active:scale-95"
+              className="py-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 font-bold text-xs tap-scale transition-colors duration-140"
             >
               Rechazar
             </button>
@@ -206,7 +207,7 @@ export function DriverDashboard({
                 triggerHaptic(80);
                 onAcceptOffer(incomingOffer.id);
               }}
-              className="py-3 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/30 transition active:scale-95 flex items-center justify-center space-x-1"
+              className="py-3 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/30 tap-scale shimmer-button transition-transform duration-140 flex items-center justify-center space-x-1"
             >
               <span>{incomingOffer.serviceMode === 'delivery' ? 'ACEPTAR ENVÍO' : 'ACEPTAR CARRERA'}</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -232,7 +233,7 @@ export function DriverDashboard({
 
             <a
               href={`tel:${activeRide.serviceMode === 'delivery' ? (activeRide.packageDetails?.receiverPhone || '04141234567') : (activeRide.passenger?.phone || '04141234567')}`}
-              className="w-10 h-10 rounded-2xl bg-[#00D2FF]/15 text-[#00D2FF] flex items-center justify-center border border-[#00D2FF]/30 active:scale-95 transition"
+              className="w-10 h-10 rounded-2xl bg-[#00D2FF]/15 text-[#00D2FF] flex items-center justify-center border border-[#00D2FF]/30 tap-scale transition-colors duration-140"
             >
               <Phone className="w-4 h-4" />
             </a>
@@ -256,7 +257,7 @@ export function DriverDashboard({
                   triggerHaptic(60);
                   onUpdateRideStatus(activeRide.id, RIDE_STATUS.ARRIVED);
                 }}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00D2FF] to-blue-500 text-black font-black text-xs shadow-lg shadow-[#00D2FF]/20 active:scale-95 transition"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00D2FF] to-blue-500 text-black font-black text-xs shadow-lg shadow-[#00D2FF]/20 tap-scale transition-transform duration-140"
               >
                 {activeRide.serviceMode === 'delivery' ? 'He llegado al sitio de recogida del paquete' : 'He llegado al sitio de recogida'}
               </button>
@@ -268,7 +269,7 @@ export function DriverDashboard({
                   triggerHaptic(60);
                   onUpdateRideStatus(activeRide.id, RIDE_STATUS.IN_PROGRESS);
                 }}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/20 active:scale-95 transition"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/20 tap-scale transition-transform duration-140"
               >
                 {activeRide.serviceMode === 'delivery' ? 'Paquete recibido • Iniciar entrega' : 'Iniciar Recorrido con el Pasajero'}
               </button>
@@ -280,7 +281,7 @@ export function DriverDashboard({
                   triggerHaptic(60);
                   onUpdateRideStatus(activeRide.id, RIDE_STATUS.COMPLETED);
                 }}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-lg shadow-[#FFB800]/20 active:scale-95 transition"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-lg shadow-[#FFB800]/20 tap-scale transition-transform duration-140"
               >
                 {activeRide.serviceMode === 'delivery' ? 'Entregar paquete en destino con PIN' : 'Finalizar Carrera en Destino'}
               </button>
@@ -292,7 +293,7 @@ export function DriverDashboard({
                   triggerHaptic(80);
                   onConfirmPayment(activeRide.id);
                 }}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00F5A0] text-black font-black text-xs shadow-lg shadow-[#00E599]/30 active:scale-95 transition"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00F5A0] text-black font-black text-xs shadow-lg shadow-[#00E599]/30 tap-scale shimmer-button transition-transform duration-140"
               >
                 Confirmar Pago Recibido (${activeRide.fareUsd?.toFixed(2)})
               </button>

@@ -172,7 +172,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
               triggerHaptic(25);
               setFilter(id);
             }}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-black transition border whitespace-nowrap active:scale-95 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-black tap-scale transition-[background-color,border-color,color] duration-140 border whitespace-nowrap ${
               filter === id
                 ? 'bg-[#00E599] text-black border-[#00E599] shadow-md shadow-[#00E599]/20'
                 : 'bg-[#0D111A] border-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.05]'
@@ -201,7 +201,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
             return (
               <div
                 key={ride.id}
-                className="rounded-3xl bg-[#0D111A]/95 border border-white/[0.08] shadow-lg hover:border-white/20 transition-all overflow-hidden"
+                className="rounded-3xl bg-[#0D111A]/95 border border-white/[0.08] shadow-lg hover:border-white/20 transition-[border-color,background-color] duration-180 overflow-hidden"
               >
                 {/* Cabecera del Viaje */}
                 <div className="p-4 space-y-3">
@@ -304,7 +304,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                     {/* Botón 1: Pedir de nuevo (Re-order) */}
                     <button
                       onClick={() => onReorderRide && onReorderRide(ride)}
-                      className="py-2.5 px-3 rounded-2xl bg-[#00D2FF]/15 hover:bg-[#00D2FF]/25 border border-[#00D2FF]/30 text-[#00D2FF] text-xs font-black flex items-center justify-center space-x-1.5 active:scale-95 transition"
+                      className="py-2.5 px-3 rounded-2xl bg-[#00D2FF]/15 hover:bg-[#00D2FF]/25 border border-[#00D2FF]/30 text-[#00D2FF] text-xs font-black flex items-center justify-center space-x-1.5 tap-scale transition-colors duration-140"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       <span>Pedir de nuevo</span>
@@ -313,7 +313,7 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                     {/* Botón 2: Ver Recibo */}
                     <button
                       onClick={() => onSelectRideForReceipt(ride)}
-                      className="py-2.5 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white text-xs font-black flex items-center justify-center space-x-1.5 active:scale-95 transition"
+                      className="py-2.5 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white text-xs font-black flex items-center justify-center space-x-1.5 tap-scale transition-colors duration-140"
                     >
                       <FileText className="w-3.5 h-3.5 text-[#00E599]" />
                       <span>Ver Recibo</span>
@@ -324,10 +324,10 @@ export function ActivityView({ activeRide, onSelectRideForReceipt, onReorderRide
                 {/* Detalle Desplegable opcional */}
                 <div
                   onClick={() => toggleExpand(ride.id)}
-                  className="px-4 py-2 bg-black/40 border-t border-white/[0.04] flex items-center justify-between text-[10px] text-slate-400 font-semibold cursor-pointer hover:text-white transition"
+                  className="px-4 py-2 bg-black/40 border-t border-white/[0.04] flex items-center justify-between text-[10px] text-slate-400 font-semibold cursor-pointer hover:text-white transition-colors duration-140"
                 >
                   <span>Detalles de pago y referencia</span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-180 ease-out-emil ${isExpanded ? 'rotate-180' : ''}`} />
                 </div>
 
                 {isExpanded && (

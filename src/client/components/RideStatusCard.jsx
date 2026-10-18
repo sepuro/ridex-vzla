@@ -93,18 +93,18 @@ export function RideStatusCard({
                 triggerHaptic(30);
                 setShowCancelConfirm(true);
               }}
-              className="w-full py-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 font-bold text-xs transition active:scale-95 flex items-center justify-center space-x-1"
+              className="w-full py-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 font-bold text-xs tap-scale transition-colors duration-140 flex items-center justify-center space-x-1"
             >
               <X className="w-4 h-4 text-[#FF3B5C]" />
               <span>Cancelar Solicitud</span>
             </button>
           ) : (
-            <div className="p-3 rounded-2xl bg-[#FF3B5C]/10 border border-[#FF3B5C]/30 space-y-2">
+            <div className="p-3 rounded-2xl bg-[#FF3B5C]/10 border border-[#FF3B5C]/30 space-y-2 animate-fade-in">
               <p className="text-xs text-[#FF7088] font-bold">¿Seguro que deseas cancelar la carrera?</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setShowCancelConfirm(false)}
-                  className="py-1.5 rounded-xl bg-white/10 text-white text-xs font-semibold active:scale-95 transition"
+                  className="py-1.5 rounded-xl bg-white/10 text-white text-xs font-semibold tap-scale transition-colors duration-140"
                 >
                   Seguir esperando
                 </button>
@@ -113,7 +113,7 @@ export function RideStatusCard({
                     triggerHaptic(50);
                     onCancel(ride.id);
                   }}
-                  className="py-1.5 rounded-xl bg-[#FF3B5C] text-white text-xs font-black shadow-md active:scale-95 transition"
+                  className="py-1.5 rounded-xl bg-[#FF3B5C] text-white text-xs font-black shadow-md tap-scale transition-transform duration-140"
                 >
                   Sí, Cancelar
                 </button>
@@ -226,14 +226,14 @@ export function RideStatusCard({
             <div className="flex items-center space-x-2">
               <button
                 onClick={handleShareWhatsApp}
-                className="w-9 h-9 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 flex items-center justify-center active:scale-95 transition"
+                className="w-9 h-9 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 flex items-center justify-center tap-scale transition-colors duration-140"
                 title="Compartir ruta en WhatsApp"
               >
                 <Share2 className="w-4 h-4" />
               </button>
               <a
                 href={`tel:${ride.driver?.phone || '04121234567'}`}
-                className="w-9 h-9 rounded-xl bg-[#00D2FF]/20 hover:bg-[#00D2FF]/30 border border-[#00D2FF]/30 text-[#00D2FF] flex items-center justify-center active:scale-95 transition"
+                className="w-9 h-9 rounded-xl bg-[#00D2FF]/20 hover:bg-[#00D2FF]/30 border border-[#00D2FF]/30 text-[#00D2FF] flex items-center justify-center tap-scale transition-colors duration-140"
                 title="Llamar al conductor"
               >
                 <Phone className="w-4 h-4" />
@@ -248,7 +248,7 @@ export function RideStatusCard({
                 triggerHaptic(50);
                 onOpenPayment();
               }}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E599] via-[#00F5A0] to-[#00D2FF] text-black font-black text-sm tracking-wide shadow-xl shadow-[#00E599]/30 transition active:scale-[0.98] flex items-center justify-center space-x-2"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E599] via-[#00F5A0] to-[#00D2FF] text-black font-black text-sm tracking-[-0.01em] shadow-xl shadow-[#00E599]/30 tap-scale shimmer-button transition-transform duration-140 flex items-center justify-center space-x-2"
             >
               <CreditCard className="w-4 h-4" />
               <span>PAGAR VIAJE • {formatUsd(ride.fareUsd)} ({formatBs(ride.fareBs)})</span>
@@ -259,19 +259,19 @@ export function RideStatusCard({
           {(isAccepted || isArrived) && !showCancelConfirm && (
             <button
               onClick={() => setShowCancelConfirm(true)}
-              className="w-full py-2 text-center text-xs text-slate-400 hover:text-[#FF7088] transition font-semibold"
+              className="w-full py-2 text-center text-xs text-slate-400 hover:text-[#FF7088] transition-colors duration-140 font-semibold tap-scale"
             >
               ¿Deseas cancelar este viaje?
             </button>
           )}
 
           {showCancelConfirm && (
-            <div className="p-3 rounded-2xl bg-[#FF3B5C]/10 border border-[#FF3B5C]/30 space-y-2">
+            <div className="p-3 rounded-2xl bg-[#FF3B5C]/10 border border-[#FF3B5C]/30 space-y-2 animate-fade-in">
               <p className="text-xs text-[#FF7088] font-bold">¿Cancelar carrera con conductor en camino?</p>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setShowCancelConfirm(false)}
-                  className="py-1.5 rounded-xl bg-white/10 text-white text-xs font-semibold"
+                  className="py-1.5 rounded-xl bg-white/10 text-white text-xs font-semibold tap-scale transition-colors duration-140"
                 >
                   Continuar viaje
                 </button>
@@ -280,7 +280,7 @@ export function RideStatusCard({
                     triggerHaptic(50);
                     onCancel(ride.id);
                   }}
-                  className="py-1.5 rounded-xl bg-[#FF3B5C] text-white text-xs font-black"
+                  className="py-1.5 rounded-xl bg-[#FF3B5C] text-white text-xs font-black tap-scale transition-transform duration-140"
                 >
                   Confirmar Cancelación
                 </button>

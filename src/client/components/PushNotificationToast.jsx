@@ -101,13 +101,13 @@ export function PushNotificationToast({ onNotificationClick }) {
           <div className="flex items-center space-x-1">
             <button
               onClick={handleEnablePermissions}
-              className="px-2.5 py-1 rounded-xl bg-[#00E599] text-black font-black text-[11px] shadow-sm active:scale-95 transition"
+              className="px-2.5 py-1 rounded-xl bg-[#00E599] text-black font-black text-[11px] shadow-sm tap-scale transition-colors duration-140"
             >
               Activar
             </button>
             <button
               onClick={handleDismissPrompt}
-              className="w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white"
+              className="w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white tap-scale transition-colors duration-140"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -123,7 +123,7 @@ export function PushNotificationToast({ onNotificationClick }) {
             if (onNotificationClick) onNotificationClick(activeToast);
             setActiveToast(null);
           }}
-          className="pointer-events-auto p-3.5 rounded-2xl bg-[#0D111A]/95 backdrop-blur-2xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.7)] animate-slide-down flex items-start justify-between space-x-3 text-slate-100 cursor-pointer active:scale-98 transition"
+          className="pointer-events-auto p-3.5 rounded-2xl bg-[#0D111A]/95 backdrop-blur-2xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.7)] animate-slide-down flex items-start justify-between space-x-3 text-slate-100 cursor-pointer tap-scale transition-transform duration-140"
         >
           <div className="flex items-start space-x-2.5 flex-1 min-w-0">
             <div className="w-9 h-9 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0 shadow-inner mt-0.5">

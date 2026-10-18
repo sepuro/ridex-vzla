@@ -67,7 +67,7 @@ export function VehicleSelector({
                 triggerHaptic(40);
                 onSelectType(type);
               }}
-              className={`w-full text-left p-3.5 rounded-2xl transition-all duration-200 border flex items-center justify-between backdrop-blur-xl relative overflow-hidden active:scale-[0.98] ${
+              className={`w-full text-left p-3.5 rounded-2xl transition-colors duration-140 border flex items-center justify-between backdrop-blur-xl relative overflow-hidden tap-scale ${
                 isSelected
                   ? `${activeBg} ${activeBorder} ${glow} ring-1 ring-white/20 bg-[#0E1420]`
                   : 'bg-[#0D111A]/90 border-white/[0.08] hover:border-white/20 hover:bg-[#141A26]'

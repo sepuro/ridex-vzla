@@ -27,7 +27,7 @@ export function Header({
     <header className="fixed top-0 left-0 right-0 z-40 max-w-md mx-auto bg-[#06080D]/80 backdrop-blur-2xl border-b border-white/[0.06] px-3.5 pt-[max(10px,env(safe-area-inset-top))] pb-2.5 flex items-center justify-between shadow-[0_8px_30px_rgba(0,0,0,0.55)] select-none">
       {/* 1. Logo & Identidad de Marca */}
       <div className="flex items-center space-x-2.5">
-        <div className="relative w-8 h-8 rounded-xl overflow-hidden shadow-[0_0_18px_rgba(0,229,153,0.35)] active:scale-95 transition-transform border border-white/10 flex-shrink-0">
+        <div className="relative w-8 h-8 rounded-xl overflow-hidden shadow-[0_0_18px_rgba(0,229,153,0.35)] tap-scale border border-white/10 flex-shrink-0">
           <img
             src="/icons/icon.svg"
             alt="RideX"
@@ -59,7 +59,7 @@ export function Header({
               triggerHaptic(30);
               if (onOpenVipModal) onOpenVipModal();
             }}
-            className={`flex items-center space-x-1 px-2 py-1.5 rounded-full text-[10px] font-black tracking-wider transition-all active:scale-95 border ${
+            className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-full text-[10px] font-black tracking-wider tap-scale transition-[background-color,border-color,color] duration-140 border ${
               isVip
                 ? 'bg-gradient-to-r from-amber-500/20 to-yellow-400/20 text-amber-300 border-amber-400/60 shadow-[0_0_12px_rgba(251,191,36,0.25)]'
                 : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border-white/10 hover:border-amber-400/40'
@@ -74,7 +74,7 @@ export function Header({
         {/* Ticker Tasa BCV Oficial */}
         <button
           onClick={handleRateClick}
-          className="group flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.12] hover:border-[#00E599]/50 text-slate-200 active:scale-95 transition-all shadow-sm"
+          className="group flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.12] hover:border-[#00E599]/50 text-slate-200 tap-scale transition-[background-color,border-color] duration-140 shadow-sm"
           title="Tasa de cambio oficial BCV. Toca para ver detalles o ajustar."
         >
           <span className="relative flex h-2 w-2">
@@ -94,7 +94,7 @@ export function Header({
         {/* Switch de Rol: Pasajero / Conductor */}
         <button
           onClick={handleToggle}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all shadow-md active:scale-95 border ${
+          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-black tap-scale transition-[background-image,box-shadow,border-color] duration-180 shadow-md border ${
             role === 'driver'
               ? 'bg-gradient-to-r from-[#FFB800] to-[#FFA000] text-black border-amber-300/40 shadow-amber-500/20'
               : 'bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black border-emerald-300/40 shadow-emerald-500/20'

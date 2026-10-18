@@ -87,17 +87,17 @@ export function RateSettingsModal({
               triggerHaptic(30);
               onClose();
             }}
-            className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white transition active:scale-90"
+            className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-slate-400 hover:text-white tap-scale transition-colors duration-140"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Tarjeta de Tasa Oficial Activa */}
-        <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] shadow-inner space-y-3">
+        {/* Tarjeta de Tasa Oficial Activa con Estado Shimmer en Carga */}
+        <div className={`p-4 rounded-2xl bg-black/40 border border-white/[0.08] shadow-inner space-y-3 relative overflow-hidden ${loading ? 'skeleton-shimmer' : ''}`}>
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span className="flex items-center space-x-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse" />
+              <span className={`w-2 h-2 rounded-full ${loading ? 'bg-[#00D2FF] animate-ping' : 'bg-[#00E599] animate-pulse'}`} />
               <span className="font-semibold text-slate-300">Dólar Oficial (USD)</span>
             </span>
             <span className="px-2 py-0.5 rounded-full bg-[#00E599]/15 text-[#00E599] text-[10px] font-bold border border-[#00E599]/30">
@@ -106,7 +106,7 @@ export function RateSettingsModal({
           </div>
 
           <div className="flex items-baseline space-x-2">
-            <span className="text-3xl font-black text-white tracking-tight">
+            <span className="text-3xl font-black text-white tracking-[-0.02em]">
               Bs. {activeRateNum.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
             <span className="text-xs text-slate-400 font-bold">/ 1.00 USD</span>
@@ -124,14 +124,14 @@ export function RateSettingsModal({
         <button
           onClick={handleRefresh}
           disabled={loading}
-          className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#00D2FF] to-blue-500 hover:brightness-105 active:scale-95 transition text-black font-black text-xs flex items-center justify-center space-x-2 shadow-lg shadow-[#00D2FF]/20 disabled:opacity-50"
+          className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#00D2FF] to-blue-500 hover:brightness-105 tap-scale shimmer-button transition-transform duration-140 text-black font-black text-xs flex items-center justify-center space-x-2 shadow-lg shadow-[#00D2FF]/20 disabled:opacity-50"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           <span>{loading ? 'Consultando al BCV en tiempo real...' : 'Sincronizar con el BCV Oficial'}</span>
         </button>
 
         {syncStatus && (
-          <div className={`p-2.5 rounded-xl text-xs flex items-center space-x-2 border ${
+          <div className={`p-2.5 rounded-xl text-xs flex items-center space-x-2 border animate-fade-in ${
             syncStatus.type === 'success'
               ? 'bg-[#00E599]/15 text-[#00E599] border-[#00E599]/30'
               : 'bg-[#FF3B5C]/15 text-[#FF7088] border-[#FF3B5C]/30'
@@ -191,7 +191,7 @@ export function RateSettingsModal({
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-[#00E599] text-black font-black text-xs active:scale-95 transition"
+                  className="px-4 py-2 rounded-xl bg-[#00E599] text-black font-black text-xs tap-scale shimmer-button transition-transform duration-140"
                 >
                   Guardar
                 </button>

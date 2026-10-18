@@ -108,7 +108,7 @@ export function DeliverySelector({
                   triggerHaptic(30);
                   onSelectCategory(cat.id);
                 }}
-                className={`p-2 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 active:scale-95 ${
+                className={`p-2 rounded-xl border text-center transition-colors duration-140 flex flex-col items-center justify-center space-y-1 tap-scale ${
                   isSelected
                     ? 'bg-[#141A26] border-[#00E599] text-white shadow-[0_0_12px_rgba(0,229,153,0.25)]'
                     : 'bg-[#06080D]/80 border-white/[0.08] text-slate-400 hover:border-white/20'
@@ -213,7 +213,7 @@ export function DeliverySelector({
                   triggerHaptic(40);
                   onSelectType(type);
                 }}
-                className={`w-full text-left p-3 rounded-2xl transition-all duration-200 border flex items-center justify-between backdrop-blur-xl relative overflow-hidden active:scale-[0.98] ${
+                className={`w-full text-left p-3 rounded-2xl transition-colors duration-140 border flex items-center justify-between backdrop-blur-xl relative overflow-hidden tap-scale ${
                   isSelected
                     ? `${activeBg} ${activeBorder} ${glow} ring-1 ring-white/20 bg-[#0E1420]`
                     : 'bg-[#0D111A]/90 border-white/[0.08] hover:border-white/20 hover:bg-[#141A26]'

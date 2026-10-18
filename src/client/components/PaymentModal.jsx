@@ -136,7 +136,7 @@ export function PaymentModal({
               triggerHaptic(30);
               setActiveTab(PAYMENT_METHODS.PAGO_MOVIL);
             }}
-            className={`py-2 px-1.5 rounded-2xl flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-1 text-[11px] font-black transition border active:scale-95 ${
+            className={`py-2 px-1.5 rounded-2xl flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-1 text-[11px] font-black transition-colors duration-140 border tap-scale ${
               activeTab === PAYMENT_METHODS.PAGO_MOVIL
                 ? 'bg-[#00E599] text-black border-[#00E599] shadow-lg shadow-[#00E599]/25'
                 : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.08]'
@@ -151,7 +151,7 @@ export function PaymentModal({
               triggerHaptic(30);
               setActiveTab(PAYMENT_METHODS.WALLET);
             }}
-            className={`py-2 px-1.5 rounded-2xl flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-1 text-[11px] font-black transition border active:scale-95 ${
+            className={`py-2 px-1.5 rounded-2xl flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-1 text-[11px] font-black transition-colors duration-140 border tap-scale ${
               activeTab === PAYMENT_METHODS.WALLET
                 ? 'bg-[#00D2FF] text-black border-[#00D2FF] shadow-lg shadow-[#00D2FF]/25'
                 : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.08]'
@@ -166,7 +166,7 @@ export function PaymentModal({
               triggerHaptic(30);
               setActiveTab(PAYMENT_METHODS.EFECTIVO_USD);
             }}
-            className={`py-2 px-1.5 rounded-2xl flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-1 text-[11px] font-black transition border active:scale-95 ${
+            className={`py-2 px-1.5 rounded-2xl flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-1 text-[11px] font-black transition-colors duration-140 border tap-scale ${
               activeTab === PAYMENT_METHODS.EFECTIVO_USD
                 ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/25'
                 : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.08]'
@@ -240,9 +240,9 @@ export function PaymentModal({
                   });
                   onClose();
                 }}
-                className={`w-full py-3.5 rounded-2xl font-black text-xs shadow-xl transition flex items-center justify-center space-x-2 ${
+                className={`w-full py-3.5 rounded-2xl font-black text-xs shadow-xl transition-transform duration-140 flex items-center justify-center space-x-2 ${
                   hasSufficientBalance
-                    ? 'bg-gradient-to-r from-[#00D2FF] to-[#00E599] text-black shadow-[#00D2FF]/30 active:scale-98 cursor-pointer'
+                    ? 'bg-gradient-to-r from-[#00D2FF] to-[#00E599] text-black shadow-[#00D2FF]/30 tap-scale cursor-pointer shimmer-button'
                     : 'bg-white/10 text-slate-500 cursor-not-allowed shadow-none'
                 }`}
               >
@@ -264,7 +264,7 @@ export function PaymentModal({
                 </span>
                 <button
                   onClick={handleCopyPaymentData}
-                  className="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-[#00E599]/15 text-[#00E599] hover:bg-[#00E599]/25 border border-[#00E599]/30 text-[11px] font-bold transition active:scale-95"
+                  className="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-[#00E599]/15 text-[#00E599] hover:bg-[#00E599]/25 border border-[#00E599]/30 text-[11px] font-bold tap-scale transition-colors duration-140"
                 >
                   {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-[#00E599]" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? '¡Copiado!' : 'Copiar todo'}</span>
@@ -361,7 +361,7 @@ export function PaymentModal({
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-xl shadow-[#00E599]/30 transition active:scale-98 mt-2 flex items-center justify-center space-x-1.5"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-xl shadow-[#00E599]/30 tap-scale shimmer-button transition-transform duration-140 mt-2 flex items-center justify-center space-x-1.5"
               >
                 <span>Enviar Comprobante de Pago</span>
                 <ArrowRight className="w-4 h-4" />
@@ -392,7 +392,7 @@ export function PaymentModal({
                       triggerHaptic(25);
                       setCashBill(bill);
                     }}
-                    className={`py-2 rounded-xl font-black text-sm transition border active:scale-95 ${
+                    className={`py-2 rounded-xl font-black text-sm border tap-scale transition-colors duration-140 ${
                       cashBill === bill
                         ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-md shadow-[#FFB800]/25'
                         : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.08]'
@@ -430,7 +430,7 @@ export function PaymentModal({
             <button
               type="button"
               onClick={handleSubmitCash}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-xl shadow-[#FFB800]/25 transition active:scale-98"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#FFB800] to-amber-500 text-black font-black text-xs shadow-xl shadow-[#FFB800]/25 tap-scale shimmer-button transition-transform duration-140"
             >
               Confirmar Pago en Efectivo (${cashBill})
             </button>

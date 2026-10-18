@@ -18,7 +18,7 @@ export function ReceiptModal({ isOpen, onClose, ride }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in select-none">
-      <div className="w-full max-w-sm rounded-[28px] bg-[#0D111A] border border-white/15 p-5 shadow-2xl space-y-4 text-slate-100">
+      <div className="w-full max-w-sm rounded-[28px] bg-[#0D111A] border border-white/15 p-5 shadow-2xl space-y-4 text-slate-100 animate-slide-up-drawer">
         {/* Cabecera del Recibo */}
         <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
           <div className="flex items-center space-x-2">
@@ -35,7 +35,7 @@ export function ReceiptModal({ isOpen, onClose, ride }) {
               triggerHaptic(30);
               onClose();
             }}
-            className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/[0.05]"
+            className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/[0.05] tap-scale transition-colors duration-140"
           >
             <X className="w-4 h-4" />
           </button>
@@ -135,7 +135,7 @@ export function ReceiptModal({ isOpen, onClose, ride }) {
         <div className="flex space-x-2">
           <button
             onClick={handleCopy}
-            className="flex-1 py-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-bold text-slate-200 flex items-center justify-center space-x-1.5 transition active:scale-95"
+            className="flex-1 py-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-bold text-slate-200 flex items-center justify-center space-x-1.5 tap-scale transition-colors duration-140"
           >
             <Copy className="w-3.5 h-3.5 text-[#FFB800]" />
             <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
@@ -145,7 +145,7 @@ export function ReceiptModal({ isOpen, onClose, ride }) {
               triggerHaptic(40);
               onClose();
             }}
-            className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/30 transition active:scale-95"
+            className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#00E599] to-[#00D2FF] text-black font-black text-xs shadow-lg shadow-[#00E599]/30 tap-scale shimmer-button transition-transform duration-140"
           >
             Listo
           </button>

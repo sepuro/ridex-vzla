@@ -80,6 +80,17 @@ export default {
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Roboto', 'Segoe UI', 'sans-serif']
       },
+      transitionTimingFunction: {
+        'ease-out-emil': 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'ease-in-out-emil': 'cubic-bezier(0.77, 0, 0.175, 1)',
+        'ease-drawer': 'cubic-bezier(0.32, 0.72, 0, 1)'
+      },
+      transitionDuration: {
+        '140': '140ms',
+        '180': '180ms',
+        '220': '220ms',
+        '280': '280ms'
+      },
       keyframes: {
         shimmer: {
           '0%': { transform: 'translateX(-100%)' },
