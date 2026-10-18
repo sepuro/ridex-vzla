@@ -837,6 +837,7 @@ export default function App() {
         onClose={() => setIsPaymentModalOpen(false)}
         ride={activeRide}
         onSubmitPayment={handleSubmitPayment}
+        currentUser={currentUser}
       />
 
       <SearchLocationModal

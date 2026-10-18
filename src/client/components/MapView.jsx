@@ -201,12 +201,20 @@ export function MapView({
       markersRef.current.dropoff = null;
     }
 
-    // 3. Marcador del Conductor con animación
+    // 3. Marcador del Conductor con animación de baliza en vivo
     if (driverLocation?.lat && driverLocation?.lng) {
-      const isMoto = vehicleType === 'moto';
-      const iconSvg = isMoto
-        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>`
-        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>`;
+      const isMoto = vehicleType === 'moto' || vehicleType === 'delivery_moto';
+      const isTruck = vehicleType === 'delivery_carga';
+      const isDelivery = vehicleType?.startsWith('delivery_');
+
+      let iconSvg;
+      if (isTruck) {
+        iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18.5" r="2.5"/><circle cx="7" cy="18.5" r="2.5"/></svg>`;
+      } else if (isMoto) {
+        iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>`;
+      } else {
+        iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>`;
+      }
 
       if (markersRef.current.driver) {
         markersRef.current.driver.setLatLng([driverLocation.lat, driverLocation.lng]);
@@ -214,12 +222,15 @@ export function MapView({
         const driverIcon = L.divIcon({
           className: 'driver-marker',
           html: `
-            <div style="background: linear-gradient(135deg, #00E599 0%, #00D2FF 100%); width: 40px; height: 40px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 0 24px rgba(0,229,153,0.9); display: flex; align-items: center; justify-content: center;">
-              ${iconSvg}
+            <div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+              <span style="position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 229, 153, 0.35); animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
+              <div style="position: relative; background: linear-gradient(135deg, #00E599 0%, #00D2FF 100%); width: 38px; height: 38px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 0 24px rgba(0,229,153,0.95); display: flex; align-items: center; justify-content: center;">
+                ${iconSvg}
+              </div>
             </div>
           `,
-          iconSize: [40, 40],
-          iconAnchor: [20, 20]
+          iconSize: [44, 44],
+          iconAnchor: [22, 22]
         });
         markersRef.current.driver = L.marker([driverLocation.lat, driverLocation.lng], { icon: driverIcon }).addTo(map);
       }

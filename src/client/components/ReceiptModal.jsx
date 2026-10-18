@@ -81,12 +81,38 @@ export function ReceiptModal({ isOpen, onClose, ride }) {
             </div>
           </div>
 
+          {/* Información de Encomienda si es Delivery */}
+          {ride.serviceMode === 'delivery' && (
+            <div className="pt-2 border-t border-white/[0.08] space-y-1">
+              <div className="flex justify-between text-[11px] text-slate-400">
+                <span>Servicio:</span>
+                <span className="font-bold text-[#00D2FF]">📦 RideX Envíos Express</span>
+              </div>
+              {ride.packageDetails?.receiverName && (
+                <div className="flex justify-between text-[11px] text-slate-400">
+                  <span>Destinatario:</span>
+                  <span className="font-medium text-white">{ride.packageDetails.receiverName}</span>
+                </div>
+              )}
+              {ride.packageDetails?.deliveryPin && (
+                <div className="flex justify-between text-[11px] text-slate-400">
+                  <span>PIN Verificado:</span>
+                  <span className="font-mono font-bold text-[#00E599]">{ride.packageDetails.deliveryPin}</span>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Desglose de Pago */}
           <div className="pt-2 border-t border-dashed border-white/20 space-y-1">
             <div className="flex justify-between text-slate-400">
               <span>Método de pago:</span>
               <span className="font-bold text-white">
-                {ride.payment?.method === 'pago_movil' ? 'Pago Móvil Interbancario' : 'Efectivo Divisas (USD)'}
+                {ride.payment?.method === 'pago_movil'
+                  ? 'Pago Móvil Interbancario'
+                  : ride.payment?.method === 'wallet'
+                  ? 'Billetera Digital RideX'
+                  : 'Efectivo Divisas (USD)'}
               </span>
             </div>
             {ride.payment?.reference && (
